@@ -60,8 +60,34 @@ class TOsc {
  public:
   TOsc() {
     cout<<endl<<" ---> Hello TOsc"<<endl<<endl;
+
+    default_oldworld_rows = 0;
+    default_newworld_rows = 0;
   }
 
+  ////////////////////////////////////////////////////// data members
+
+  TMatrixD matrix_transform;
+
+  map<int, TH1D*>map_default_h1d_meas;
+  vector<double> vector_newworld_meas;
+  TMatrixD matrix_newworld_meas;
+
+  map<int, TH1D*>map_default_h1d_pred;
+  vector<double> vector_oldworld_pred;
+  TMatrixD matrix_oldworld_pred;
+  TMatrixD matrix_newworld_pred;
+  
+  ////////////////////////////////////////////////////// member functions
+
+  void Set_default_cv_cov(TString default_cv_file, TString default_mcstat_file, TString default_fluxXs_dir, TString default_detector_dir);
+  
+  ////////////////////////////////////////////////////// data members
+
+ private:
+  int default_oldworld_rows;
+  int default_newworld_rows;
+  
 };
 
 #endif
