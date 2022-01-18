@@ -26,11 +26,25 @@ void TOsc::Set_default_cv_cov(TString default_cv_file, TString default_mcstat_fi
   TMatrixD *temp_mat_collapse = (TMatrixD*)roofile_default_cv_file->Get("mat_collapse");  
   default_oldworld_rows = temp_mat_collapse->GetNrows();
   default_newworld_rows = temp_mat_collapse->GetNcols();
-  matrix_transform.Clear();
-  matrix_transform.ResizeTo(default_oldworld_rows, default_newworld_rows);
+  matrix_transform.Clear(); matrix_transform.ResizeTo(default_oldworld_rows, default_newworld_rows);
   matrix_transform += (*temp_mat_collapse);
   delete temp_mat_collapse;
 
+  ///////
+  matrix_default_oldworld_abs_syst_addi.Clear();   matrix_default_oldworld_abs_syst_addi.ResizeTo(default_oldworld_rows, default_oldworld_rows);
+  matrix_default_oldworld_abs_syst_mcstat.Clear(); matrix_default_oldworld_abs_syst_mcstat.ResizeTo(default_oldworld_rows, default_oldworld_rows);
+  matrix_default_oldworld_abs_syst_flux.Clear();   matrix_default_oldworld_abs_syst_flux.ResizeTo(default_oldworld_rows, default_oldworld_rows);
+  matrix_default_oldworld_abs_syst_geant.Clear();  matrix_default_oldworld_abs_syst_geant.ResizeTo(default_oldworld_rows, default_oldworld_rows);
+  matrix_default_oldworld_abs_syst_Xs.Clear();     matrix_default_oldworld_abs_syst_Xs.ResizeTo(default_oldworld_rows, default_oldworld_rows);
+  matrix_default_oldworld_abs_syst_det.Clear();    matrix_default_oldworld_abs_syst_det.ResizeTo(default_oldworld_rows, default_oldworld_rows);
+
+  matrix_default_newworld_abs_syst_addi.Clear();   matrix_default_newworld_abs_syst_addi.ResizeTo(default_newworld_rows, default_newworld_rows);
+  matrix_default_newworld_abs_syst_mcstat.Clear(); matrix_default_newworld_abs_syst_mcstat.ResizeTo(default_newworld_rows, default_newworld_rows);
+  matrix_default_newworld_abs_syst_flux.Clear();   matrix_default_newworld_abs_syst_flux.ResizeTo(default_newworld_rows, default_newworld_rows);
+  matrix_default_newworld_abs_syst_geant.Clear();  matrix_default_newworld_abs_syst_geant.ResizeTo(default_newworld_rows, default_newworld_rows);
+  matrix_default_newworld_abs_syst_Xs.Clear();     matrix_default_newworld_abs_syst_Xs.ResizeTo(default_newworld_rows, default_newworld_rows);
+  matrix_default_newworld_abs_syst_det.Clear();    matrix_default_newworld_abs_syst_det.ResizeTo(default_newworld_rows, default_newworld_rows); 
+  
   ///////
   cout<<endl;
   cout<<"      ---> measurement"<<endl;
@@ -81,8 +95,111 @@ void TOsc::Set_default_cv_cov(TString default_cv_file, TString default_mcstat_fi
   matrix_oldworld_pred.ResizeTo(1, default_oldworld_rows);
   for(int idx=0; idx<(int)(vector_oldworld_pred.size()); idx++)  matrix_oldworld_pred(0, idx) = vector_oldworld_pred.at(idx);
   
-  ///////
+  //////////////////////////////////////
+  
   cout<<endl;
+  cout<<"      ---> Dirt: additional uncertainty"<<endl;
+  {
+    TMatrixD *matrix_temp = (TMatrixD*)roofile_default_cv_file->Get("cov_mat_add");
+    matrix_default_oldworld_abs_syst_addi = (*matrix_temp);
+    delete matrix_temp;
+  }
+  
+  ///////
+  
   delete roofile_default_cv_file;
 
+  //////////////////////////////////////
+  
+  cout<<endl;
+  cout<<"      ---> MCstat"<<endl;
+  {
+    ifstream file_mcstat_aa(default_mcstat_file, ios::in);
+    if(!file_mcstat_aa) { cerr<<" Error: No file_mcstat_aa"<<endl; exit(1); }
+    int count_aa = 0;
+    string str_count_aa;    
+    ifstream file_check_aa(default_mcstat_file);
+    while( getline(file_check_aa, str_count_aa) ) count_aa++;
+    if( count_aa-1 != default_newworld_rows ) { cerr<<" Error: mcstat != default_newworld_rows"<<endl; exit(1);  }
+
+    ifstream file_mcstat_bb(default_mcstat_file, ios::in);
+    double Lee = 1; double run = 1;
+    file_mcstat_bb >> Lee >> run;
+    int gch = 0; int lbin = 0; double val_pred = 0; double mc_stat = 0; double nn_stat = 0;
+    for(int idx=1; idx<=default_newworld_rows; idx++) {
+      file_mcstat_bb >> gch >> lbin >> val_pred >> mc_stat >> nn_stat;
+      matrix_default_newworld_abs_syst_mcstat(idx-1, idx-1) = mc_stat;
+    }
+  }
+
+  //////////////////////////////////////
+  
+  cout<<endl;
+  cout<<"      ---> flux, geant, and Xs"<<endl;
+  {
+    TFile *roofile_syst_flux = new TFile(default_fluxXs_dir+"cov_3.root", "read");
+    TMatrixD *matrix_temp_flux = (TMatrixD*)roofile_syst_flux->Get("frac_cov_xf_mat_3");
+    matrix_default_oldworld_abs_syst_flux = (*matrix_temp_flux);
+    delete matrix_temp_flux;
+    delete roofile_syst_flux;
+    for(int ibin=0; ibin<default_oldworld_rows; ibin++) {
+      for(int jbin=0; jbin<default_oldworld_rows; jbin++) {
+	double rel_cov = matrix_default_oldworld_abs_syst_flux(ibin, jbin);
+	double cv_i = matrix_oldworld_pred(0, ibin);
+	double cv_j = matrix_oldworld_pred(0, jbin);
+	double abs_cov = rel_cov * cv_i * cv_j;
+	matrix_default_oldworld_abs_syst_flux(ibin, jbin) = abs_cov;
+      }
+    }
+  }
+  
+  
+  {
+    for(int idx=14; idx<=16; idx++) {
+      TFile *roofile_syst_geant = new TFile(default_fluxXs_dir+TString::Format("cov_%d.root", idx), "read");
+      TMatrixD *matrix_temp_geant = (TMatrixD*)roofile_syst_geant->Get(TString::Format("frac_cov_xf_mat_%d", idx) );
+      matrix_default_oldworld_abs_syst_geant += (*matrix_temp_geant);
+      delete matrix_temp_geant;
+      delete roofile_syst_geant;
+    }
+    for(int ibin=0; ibin<default_oldworld_rows; ibin++) {
+      for(int jbin=0; jbin<default_oldworld_rows; jbin++) {
+	double rel_cov = matrix_default_oldworld_abs_syst_geant(ibin, jbin);
+	double cv_i = matrix_oldworld_pred(0, ibin);
+	double cv_j = matrix_oldworld_pred(0, jbin);
+	double abs_cov = rel_cov * cv_i * cv_j;
+	matrix_default_oldworld_abs_syst_geant(ibin, jbin) = abs_cov;
+      }
+    }
+  }
+
+  
+  {
+    TFile *roofile_syst_Xs = new TFile(default_fluxXs_dir+"cov_17.root", "read");
+    TMatrixD *matrix_temp_Xs = (TMatrixD*)roofile_syst_Xs->Get("frac_cov_xf_mat_17");
+    matrix_default_oldworld_abs_syst_Xs = (*matrix_temp_Xs);
+    delete matrix_temp_Xs;
+    delete roofile_syst_Xs;
+    for(int ibin=0; ibin<default_oldworld_rows; ibin++) {
+      for(int jbin=0; jbin<default_oldworld_rows; jbin++) {
+	double rel_cov = matrix_default_oldworld_abs_syst_Xs(ibin, jbin);
+	double cv_i = matrix_oldworld_pred(0, ibin);
+	double cv_j = matrix_oldworld_pred(0, jbin);
+	double abs_cov = rel_cov * cv_i * cv_j;
+	matrix_default_oldworld_abs_syst_Xs(ibin, jbin) = abs_cov;
+      }
+    }
+  }
+    
+  //////////////////////////////////////
+  
+  cout<<endl;
+  cout<<"      ---> detector"<<endl;
+  {
+
+  }
+  
+  //////////////////////////////////////
+  
+  cout<<endl;
 }

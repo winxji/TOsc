@@ -77,6 +77,20 @@ class TOsc {
   vector<double> vector_oldworld_pred;
   TMatrixD matrix_oldworld_pred;
   TMatrixD matrix_newworld_pred;
+
+  TMatrixD matrix_default_oldworld_abs_syst_addi;
+  TMatrixD matrix_default_oldworld_abs_syst_mcstat;
+  TMatrixD matrix_default_oldworld_abs_syst_flux;
+  TMatrixD matrix_default_oldworld_abs_syst_geant;
+  TMatrixD matrix_default_oldworld_abs_syst_Xs;
+  TMatrixD matrix_default_oldworld_abs_syst_det;
+  
+  TMatrixD matrix_default_newworld_abs_syst_addi;
+  TMatrixD matrix_default_newworld_abs_syst_mcstat;
+  TMatrixD matrix_default_newworld_abs_syst_flux;
+  TMatrixD matrix_default_newworld_abs_syst_geant;
+  TMatrixD matrix_default_newworld_abs_syst_Xs;
+  TMatrixD matrix_default_newworld_abs_syst_det;
   
   ////////////////////////////////////////////////////// member functions
 
