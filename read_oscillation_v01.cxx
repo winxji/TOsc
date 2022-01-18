@@ -69,10 +69,45 @@ int main(int argc, char** argv)
 
   TOsc *osc_test = new TOsc();
 
+  ///////
+  
+  osc_test->flag_NuMI_nue2nue   = Configure_Osc::flag_NuMI_nue2nue;
+  osc_test->flag_NuMI_numu2numu = Configure_Osc::flag_NuMI_numu2numu;
+  osc_test->flag_NuMI_numu2nue  = Configure_Osc::flag_NuMI_numu2nue;  
+  osc_test->flag_NuMI_nue2numu  = Configure_Osc::flag_NuMI_nue2numu;
+  osc_test->flag_NuMI_NC_1minus_nue2sterile  = Configure_Osc::flag_NuMI_NC_1minus_nue2sterile;
+  osc_test->flag_NuMI_NC_1minus_numu2sterile = Configure_Osc::flag_NuMI_NC_1minus_numu2sterile;
+  
+  osc_test->flag_BNB_nue2nue   = Configure_Osc::flag_BNB_nue2nue;
+  osc_test->flag_BNB_numu2numu = Configure_Osc::flag_BNB_numu2numu;
+  osc_test->flag_BNB_numu2nue  = Configure_Osc::flag_BNB_numu2nue;  
+  osc_test->flag_BNB_nue2numu  = Configure_Osc::flag_BNB_nue2numu;
+  osc_test->flag_BNB_NC_1minus_nue2sterile  = Configure_Osc::flag_BNB_NC_1minus_nue2sterile;
+  osc_test->flag_BNB_NC_1minus_numu2sterile = Configure_Osc::flag_BNB_NC_1minus_numu2sterile;
+
+  ///////
   
   osc_test->Set_default_cv_cov(Configure_Osc::default_cv_file, Configure_Osc::default_mcstat_file, Configure_Osc::default_fluxXs_dir, Configure_Osc::default_detector_dir);
   
   ///////////////////////////////////////////////////////////
 
+  cout<<endl;
+  cout<<" ----------------------------> check information"<<endl;
+  cout<<endl;
+  cout<<" osc_test->flag_NuMI_nue2nue   " <<osc_test->flag_NuMI_nue2nue<<endl;
+  cout<<" osc_test->flag_NuMI_numu2numu " <<osc_test->flag_NuMI_numu2numu<<endl;
+  cout<<" osc_test->flag_NuMI_numu2nue  " <<osc_test->flag_NuMI_numu2nue<<endl;  
+  cout<<" osc_test->flag_NuMI_nue2numu  " <<osc_test->flag_NuMI_nue2numu<<endl;
+  cout<<" osc_test->flag_NuMI_NC_1minus_nue2sterile  " <<osc_test->flag_NuMI_NC_1minus_nue2sterile<<endl;
+  cout<<" osc_test->flag_NuMI_NC_1minus_numu2sterile " <<osc_test->flag_NuMI_NC_1minus_numu2sterile<<endl;
+  cout<<endl;
+  cout<<" osc_test->flag_BNB_nue2nue   " <<osc_test->flag_BNB_nue2nue<<endl;
+  cout<<" osc_test->flag_BNB_numu2numu " <<osc_test->flag_BNB_numu2numu<<endl;
+  cout<<" osc_test->flag_BNB_numu2nue  " <<osc_test->flag_BNB_numu2nue<<endl;  
+  cout<<" osc_test->flag_BNB_nue2numu  " <<osc_test->flag_BNB_nue2numu<<endl;
+  cout<<" osc_test->flag_BNB_NC_1minus_nue2sterile  " <<osc_test->flag_BNB_NC_1minus_nue2sterile<<endl;
+  cout<<" osc_test->flag_BNB_NC_1minus_numu2sterile " <<osc_test->flag_BNB_NC_1minus_numu2sterile<<endl;
+  cout<<endl;  
+  
   return 0;
 }

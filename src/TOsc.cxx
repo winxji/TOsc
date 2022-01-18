@@ -60,15 +60,15 @@ void TOsc::Set_default_cv_cov(TString default_cv_file, TString default_mcstat_fi
     for(int ibin=1; ibin<=bins+1; ibin++) {
       double content = h1f_temp->GetBinContent(ibin);
       map_default_h1d_meas[idx]->SetBinContent(ibin, content );
-      vector_newworld_meas.push_back( content );      
+      vector_default_newworld_meas.push_back( content );      
     }
     delete h1f_temp;    
   }
 
-  if( default_newworld_rows!=(int)(vector_newworld_meas.size()) ) { cerr<<" ---> ERROR: default_newworld_rows!=vector_newworld_meas"<<endl; exit(1); }
-  matrix_newworld_meas.Clear();
-  matrix_newworld_meas.ResizeTo(1, default_newworld_rows);
-  for(int idx=0; idx<(int)(vector_newworld_meas.size()); idx++)  matrix_newworld_meas(0, idx) = vector_newworld_meas.at(idx);
+  if( default_newworld_rows!=(int)(vector_default_newworld_meas.size()) ) { cerr<<" ---> ERROR: default_newworld_rows!=vector_default_newworld_meas"<<endl; exit(1); }
+  matrix_default_newworld_meas.Clear();
+  matrix_default_newworld_meas.ResizeTo(1, default_newworld_rows);
+  for(int idx=0; idx<(int)(vector_default_newworld_meas.size()); idx++)  matrix_default_newworld_meas(0, idx) = vector_default_newworld_meas.at(idx);
   
   ///////
   cout<<endl;
@@ -85,15 +85,15 @@ void TOsc::Set_default_cv_cov(TString default_cv_file, TString default_mcstat_fi
     for(int ibin=1; ibin<=bins+1; ibin++) {
       double content = h1f_temp->GetBinContent(ibin);
       map_default_h1d_pred[idx]->SetBinContent(ibin, content );
-      vector_oldworld_pred.push_back( content );      
+      vector_default_oldworld_pred.push_back( content );      
     }
     delete h1f_temp;     
   }
 
-  if( default_oldworld_rows!=(int)(vector_oldworld_pred.size()) ) { cerr<<" ---> ERROR: default_oldworld_rows!=vector_oldworld_pred"<<endl; exit(1); }
-  matrix_oldworld_pred.Clear();
-  matrix_oldworld_pred.ResizeTo(1, default_oldworld_rows);
-  for(int idx=0; idx<(int)(vector_oldworld_pred.size()); idx++)  matrix_oldworld_pred(0, idx) = vector_oldworld_pred.at(idx);
+  if( default_oldworld_rows!=(int)(vector_default_oldworld_pred.size()) ) { cerr<<" ---> ERROR: default_oldworld_rows!=vector_default_oldworld_pred"<<endl; exit(1); }
+  matrix_default_oldworld_pred.Clear();
+  matrix_default_oldworld_pred.ResizeTo(1, default_oldworld_rows);
+  for(int idx=0; idx<(int)(vector_default_oldworld_pred.size()); idx++)  matrix_default_oldworld_pred(0, idx) = vector_default_oldworld_pred.at(idx);
   
   //////////////////////////////////////
   
@@ -145,8 +145,8 @@ void TOsc::Set_default_cv_cov(TString default_cv_file, TString default_mcstat_fi
     for(int ibin=0; ibin<default_oldworld_rows; ibin++) {
       for(int jbin=0; jbin<default_oldworld_rows; jbin++) {
 	double rel_cov = matrix_default_oldworld_abs_syst_flux(ibin, jbin);
-	double cv_i = matrix_oldworld_pred(0, ibin);
-	double cv_j = matrix_oldworld_pred(0, jbin);
+	double cv_i = matrix_default_oldworld_pred(0, ibin);
+	double cv_j = matrix_default_oldworld_pred(0, jbin);
 	double abs_cov = rel_cov * cv_i * cv_j;
 	matrix_default_oldworld_abs_syst_flux(ibin, jbin) = abs_cov;
       }
@@ -165,8 +165,8 @@ void TOsc::Set_default_cv_cov(TString default_cv_file, TString default_mcstat_fi
     for(int ibin=0; ibin<default_oldworld_rows; ibin++) {
       for(int jbin=0; jbin<default_oldworld_rows; jbin++) {
 	double rel_cov = matrix_default_oldworld_abs_syst_geant(ibin, jbin);
-	double cv_i = matrix_oldworld_pred(0, ibin);
-	double cv_j = matrix_oldworld_pred(0, jbin);
+	double cv_i = matrix_default_oldworld_pred(0, ibin);
+	double cv_j = matrix_default_oldworld_pred(0, jbin);
 	double abs_cov = rel_cov * cv_i * cv_j;
 	matrix_default_oldworld_abs_syst_geant(ibin, jbin) = abs_cov;
       }
@@ -183,8 +183,8 @@ void TOsc::Set_default_cv_cov(TString default_cv_file, TString default_mcstat_fi
     for(int ibin=0; ibin<default_oldworld_rows; ibin++) {
       for(int jbin=0; jbin<default_oldworld_rows; jbin++) {
 	double rel_cov = matrix_default_oldworld_abs_syst_Xs(ibin, jbin);
-	double cv_i = matrix_oldworld_pred(0, ibin);
-	double cv_j = matrix_oldworld_pred(0, jbin);
+	double cv_i = matrix_default_oldworld_pred(0, ibin);
+	double cv_j = matrix_default_oldworld_pred(0, jbin);
 	double abs_cov = rel_cov * cv_i * cv_j;
 	matrix_default_oldworld_abs_syst_Xs(ibin, jbin) = abs_cov;
       }
@@ -196,7 +196,36 @@ void TOsc::Set_default_cv_cov(TString default_cv_file, TString default_mcstat_fi
   cout<<endl;
   cout<<"      ---> detector"<<endl;
   {
+    map<int, TString>map_detectorfile_str;    
+    map_detectorfile_str[1] = default_detector_dir+"cov_LYDown.root";
+    map_detectorfile_str[2] = default_detector_dir+"cov_LYRayleigh.root";
+    map_detectorfile_str[3] = default_detector_dir+"cov_Recomb2.root";
+    map_detectorfile_str[4] = default_detector_dir+"cov_SCE.root";
+    //map_detectorfile_str[5] = default_detector_dir+"cov_WMdEdx.root";
+    map_detectorfile_str[6] = default_detector_dir+"cov_WMThetaXZ.root";
+    map_detectorfile_str[7] = default_detector_dir+"cov_WMThetaYZ.root";
+    map_detectorfile_str[8] = default_detector_dir+"cov_WMX.root";
+    map_detectorfile_str[9] = default_detector_dir+"cov_WMYZ.root";
+    map_detectorfile_str[10]= default_detector_dir+"cov_LYatt.root";
 
+    for(auto it_map=map_detectorfile_str.begin(); it_map!=map_detectorfile_str.end(); it_map++) {
+      int idx = it_map->first;
+      TFile *roofile_det = new TFile(map_detectorfile_str[idx], "read");
+      TMatrixD *matrix_temp_det = (TMatrixD*)roofile_det->Get(TString::Format("frac_cov_det_mat_%d", idx) );
+      matrix_default_oldworld_abs_syst_det += (*matrix_temp_det);
+      delete matrix_temp_det;
+      delete roofile_det;
+    }
+
+    for(int ibin=0; ibin<default_oldworld_rows; ibin++) {
+      for(int jbin=0; jbin<default_oldworld_rows; jbin++) {
+	double rel_cov = matrix_default_oldworld_abs_syst_det(ibin, jbin);
+	double cv_i = matrix_default_oldworld_pred(0, ibin);
+	double cv_j = matrix_default_oldworld_pred(0, jbin);
+	double abs_cov = rel_cov * cv_i * cv_j;
+	matrix_default_oldworld_abs_syst_det(ibin, jbin) = abs_cov;
+      }
+    }      
   }
   
   //////////////////////////////////////

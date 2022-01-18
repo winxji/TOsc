@@ -63,6 +63,21 @@ class TOsc {
 
     default_oldworld_rows = 0;
     default_newworld_rows = 0;
+  
+    flag_NuMI_nue2nue   = 0;
+    flag_NuMI_numu2numu = 0;
+    flag_NuMI_numu2nue  = 0;  
+    flag_NuMI_nue2numu  = 0;
+    flag_NuMI_NC_1minus_nue2sterile  = 0;
+    flag_NuMI_NC_1minus_numu2sterile = 0;
+  
+    flag_BNB_nue2nue   = 0;
+    flag_BNB_numu2numu = 0;
+    flag_BNB_numu2nue  = 0;  
+    flag_BNB_nue2numu  = 0;
+    flag_BNB_NC_1minus_nue2sterile  = 0;
+    flag_BNB_NC_1minus_numu2sterile = 0;
+    
   }
 
   ////////////////////////////////////////////////////// data members
@@ -70,27 +85,44 @@ class TOsc {
   TMatrixD matrix_transform;
 
   map<int, TH1D*>map_default_h1d_meas;
-  vector<double> vector_newworld_meas;
-  TMatrixD matrix_newworld_meas;
+  vector<double> vector_default_newworld_meas;
+  TMatrixD matrix_default_newworld_meas;
 
   map<int, TH1D*>map_default_h1d_pred;
-  vector<double> vector_oldworld_pred;
-  TMatrixD matrix_oldworld_pred;
-  TMatrixD matrix_newworld_pred;
+  vector<double> vector_default_oldworld_pred;
+  TMatrixD matrix_default_oldworld_pred;
+  TMatrixD matrix_default_newworld_pred;
 
-  TMatrixD matrix_default_oldworld_abs_syst_addi;
-  TMatrixD matrix_default_oldworld_abs_syst_mcstat;
+  TMatrixD matrix_default_oldworld_abs_syst_addi;// for dirt additional syst
+  TMatrixD matrix_default_oldworld_abs_syst_mcstat;// only newworld
   TMatrixD matrix_default_oldworld_abs_syst_flux;
   TMatrixD matrix_default_oldworld_abs_syst_geant;
   TMatrixD matrix_default_oldworld_abs_syst_Xs;
   TMatrixD matrix_default_oldworld_abs_syst_det;
   
   TMatrixD matrix_default_newworld_abs_syst_addi;
-  TMatrixD matrix_default_newworld_abs_syst_mcstat;
+  TMatrixD matrix_default_newworld_abs_syst_mcstat;// only newworld
   TMatrixD matrix_default_newworld_abs_syst_flux;
   TMatrixD matrix_default_newworld_abs_syst_geant;
   TMatrixD matrix_default_newworld_abs_syst_Xs;
   TMatrixD matrix_default_newworld_abs_syst_det;
+
+  ///////
+  
+  bool flag_NuMI_nue2nue;
+  bool flag_NuMI_numu2numu;
+  bool flag_NuMI_numu2nue;  
+  bool flag_NuMI_nue2numu;
+  bool flag_NuMI_NC_1minus_nue2sterile;
+  bool flag_NuMI_NC_1minus_numu2sterile;
+  
+  bool flag_BNB_nue2nue;
+  bool flag_BNB_numu2numu;
+  bool flag_BNB_numu2nue;  
+  bool flag_BNB_nue2numu;
+  bool flag_BNB_NC_1minus_nue2sterile;
+  bool flag_BNB_NC_1minus_numu2sterile;
+  
   
   ////////////////////////////////////////////////////// member functions
 
