@@ -139,46 +139,27 @@ class TOsc {
   bool flag_BNB_NC_1minus_numu2sterile;
   
   ///////
-
-  TMatrixD matrix_oscillation_base_NuMI_nueCC;
-  TMatrixD matrix_oscillation_base_NuMI_numuCC;
-  TMatrixD matrix_oscillation_base_NuMI_nueNC;
-  TMatrixD matrix_oscillation_base_NuMI_numuNC;
+  TMatrixD matrix_oscillation_base;
   
-  TMatrixD matrix_oscillation_base_NuMIdirt_nueCC;
-  TMatrixD matrix_oscillation_base_NuMIdirt_numuCC;
-  TMatrixD matrix_oscillation_base_NuMIdirt_nueNC;
-  TMatrixD matrix_oscillation_base_NuMIdirt_numuNC;
+  vector<double>vector_oscillation_base_NuMI_nueCC_scaleFPOT; vector< vector<EventInfo> >vector_vector_oscillation_base_NuMI_nueCC;
+  vector<double>vector_oscillation_base_NuMI_numuCC_scaleFPOT;
+  vector<double>vector_oscillation_base_NuMI_nueNC_scaleFPOT;
+  vector<double>vector_oscillation_base_NuMI_numuNC_scaleFPOT;
   
-  TMatrixD matrix_oscillation_base_BNB_nueCC;
-  TMatrixD matrix_oscillation_base_BNB_numuCC;
-  TMatrixD matrix_oscillation_base_BNB_nueNC;
-  TMatrixD matrix_oscillation_base_BNB_numuNC;
-
-  TMatrixD matrix_oscillation_base_BNBdirt_nueCC;
-  TMatrixD matrix_oscillation_base_BNBdirt_numuCC;
-  TMatrixD matrix_oscillation_base_BNBdirt_nueNC;
-  TMatrixD matrix_oscillation_base_BNBdirt_numuNC;
-
-  vector<TMatrixD> vector_matrix_oscillation_base_NuMI_nueCC;  vector<double>vector_matrix_oscillation_base_NuMI_nueCC_scaleFPOT; vector< vector<EventInfo> >vector_vector_matrix_oscillation_base_NuMI_nueCC;
-  vector<TMatrixD> vector_matrix_oscillation_base_NuMI_numuCC; vector<double>vector_matrix_oscillation_base_NuMI_numuCC_scaleFPOT;
-  vector<TMatrixD> vector_matrix_oscillation_base_NuMI_nueNC;  vector<double>vector_matrix_oscillation_base_NuMI_nueNC_scaleFPOT;
-  vector<TMatrixD> vector_matrix_oscillation_base_NuMI_numuNC; vector<double>vector_matrix_oscillation_base_NuMI_numuNC_scaleFPOT;
+  vector<double>vector_oscillation_base_NuMIdirt_nueCC_scaleFPOT;
+  vector<double>vector_oscillation_base_NuMIdirt_numuCC_scaleFPOT;
+  vector<double>vector_oscillation_base_NuMIdirt_nueNC_scaleFPOT;
+  vector<double>vector_oscillation_base_NuMIdirt_numuNC_scaleFPOT;
   
-  vector<TMatrixD> vector_matrix_oscillation_base_NuMIdirt_nueCC;  vector<double>vector_matrix_oscillation_base_NuMIdirt_nueCC_scaleFPOT;
-  vector<TMatrixD> vector_matrix_oscillation_base_NuMIdirt_numuCC; vector<double>vector_matrix_oscillation_base_NuMIdirt_numuCC_scaleFPOT;
-  vector<TMatrixD> vector_matrix_oscillation_base_NuMIdirt_nueNC;  vector<double>vector_matrix_oscillation_base_NuMIdirt_nueNC_scaleFPOT;
-  vector<TMatrixD> vector_matrix_oscillation_base_NuMIdirt_numuNC; vector<double>vector_matrix_oscillation_base_NuMIdirt_numuNC_scaleFPOT;
+  vector<double>vector_oscillation_base_BNB_nueCC_scaleFPOT;
+  vector<double>vector_oscillation_base_BNB_numuCC_scaleFPOT;
+  vector<double>vector_oscillation_base_BNB_nueNC_scaleFPOT;
+  vector<double>vector_oscillation_base_BNB_numuNC_scaleFPOT;
   
-  vector<TMatrixD> vector_matrix_oscillation_base_BNB_nueCC;  vector<double>vector_matrix_oscillation_base_BNB_nueCC_scaleFPOT;
-  vector<TMatrixD> vector_matrix_oscillation_base_BNB_numuCC; vector<double>vector_matrix_oscillation_base_BNB_numuCC_scaleFPOT;
-  vector<TMatrixD> vector_matrix_oscillation_base_BNB_nueNC;  vector<double>vector_matrix_oscillation_base_BNB_nueNC_scaleFPOT;
-  vector<TMatrixD> vector_matrix_oscillation_base_BNB_numuNC; vector<double>vector_matrix_oscillation_base_BNB_numuNC_scaleFPOT;
-  
-  vector<TMatrixD> vector_matrix_oscillation_base_BNBdirt_nueCC;  vector<double>vector_matrix_oscillation_base_BNBdirt_nueCC_scaleFPOT;
-  vector<TMatrixD> vector_matrix_oscillation_base_BNBdirt_numuCC; vector<double>vector_matrix_oscillation_base_BNBdirt_numuCC_scaleFPOT;
-  vector<TMatrixD> vector_matrix_oscillation_base_BNBdirt_nueNC;  vector<double>vector_matrix_oscillation_base_BNBdirt_nueNC_scaleFPOT;
-  vector<TMatrixD> vector_matrix_oscillation_base_BNBdirt_numuNC; vector<double>vector_matrix_oscillation_base_BNBdirt_numuNC_scaleFPOT;
+  vector<double>vector_oscillation_base_BNBdirt_nueCC_scaleFPOT;
+  vector<double>vector_oscillation_base_BNBdirt_numuCC_scaleFPOT;
+  vector<double>vector_oscillation_base_BNBdirt_nueNC_scaleFPOT;
+  vector<double>vector_oscillation_base_BNBdirt_numuNC_scaleFPOT;
   
   ////////////////////////////////////////////////////// member functions
 
