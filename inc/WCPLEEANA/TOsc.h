@@ -90,7 +90,7 @@ class TOsc {
   }
 
   ////////////////////////////////////////////////////// data members
-
+  
   TMatrixD matrix_transform;
 
   map<int, TH1D*>map_default_h1d_meas;
@@ -141,7 +141,7 @@ class TOsc {
   ///////
   TMatrixD matrix_oscillation_base;
   
-  vector<double>vector_oscillation_base_NuMI_nueCC_scaleFPOT; vector< vector<EventInfo> >vector_vector_oscillation_base_NuMI_nueCC;
+  vector<double>vector_oscillation_base_NuMI_nueCC_scaleFPOT; vector< vector<EventInfo> >vector_vector_oscillation_base_NuMI_nueCC_info;
   vector<double>vector_oscillation_base_NuMI_numuCC_scaleFPOT;
   vector<double>vector_oscillation_base_NuMI_nueNC_scaleFPOT;
   vector<double>vector_oscillation_base_NuMI_numuNC_scaleFPOT;

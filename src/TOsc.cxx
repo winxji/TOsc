@@ -104,24 +104,24 @@ void TOsc::Set_oscillation_base()
       TString strfile_mcPOT = "./data_inputs/hist_rootfiles_default_noosc/checkout_prodgenie_bnb_intrinsic_nue_overlay_run1.root";
       TString strfile_dataPOT = "./data_inputs/hist_rootfiles_default_noosc/run1_data_bnb.root";
       TString strfile_mc_e2e = "./data_inputs/hist_rootfiles_default_noosc/roofile_obj_NuMI_run1_intrinsic_nue.root";
-      Set_oscillation_base_subfunc(strfile_mcPOT, strfile_dataPOT, &vector_oscillation_base_NuMI_nueCC_scaleFPOT, strfile_mc_e2e, &vector_vector_oscillation_base_NuMI_nueCC);
+      Set_oscillation_base_subfunc(strfile_mcPOT, strfile_dataPOT, &vector_oscillation_base_NuMI_nueCC_scaleFPOT, strfile_mc_e2e, &vector_vector_oscillation_base_NuMI_nueCC_info);
     }
 
     ///////////////////
-    
-    TMatrixD matrix_oscillation_base_subtract(1, default_oldworld_rows);
-    
-    int size = vector_vector_oscillation_base_NuMI_nueCC.size();
+            
+    int size = vector_vector_oscillation_base_NuMI_nueCC_info.size();
     for(int isize=0; isize<size; isize++) {
+      
+      TMatrixD matrix_oscillation_base_subtract(1, default_oldworld_rows);
       
       TH1D *h1_FC = (TH1D*)map_default_h1d_pred[1]->Clone("h1_FC"); h1_FC->Reset();// define and clear
       TH1D *h1_PC = (TH1D*)map_default_h1d_pred[2]->Clone("h1_PC"); h1_PC->Reset();// define and clear
     
       double scaleFPOT = vector_oscillation_base_NuMI_nueCC_scaleFPOT.at(isize);
-      int num_events = vector_vector_oscillation_base_NuMI_nueCC.at(isize).size();
+      int num_events = vector_vector_oscillation_base_NuMI_nueCC_info.at(isize).size();
 
       for(int ievent=0; ievent<num_events; ievent++) {
-	EventInfo info = vector_vector_oscillation_base_NuMI_nueCC.at(isize).at(ievent);		
+	EventInfo info = vector_vector_oscillation_base_NuMI_nueCC_info.at(isize).at(ievent);
 	if( info.e2e_flag_FC ) h1_FC->Fill(info.e2e_Ereco, info.e2e_weight_xs);
 	else h1_PC->Fill(info.e2e_Ereco, info.e2e_weight_xs);
       }
@@ -129,14 +129,14 @@ void TOsc::Set_oscillation_base()
       h1_FC->Scale( scaleFPOT );
       h1_PC->Scale( scaleFPOT );
 
-      /// hack for nueCC
-      for(int ibin=1; ibin<=h1_FC->GetNbinsX()+1; ibin++) matrix_oscillation_base_subtract(0, ibin-1) += h1_FC->GetBinContent(ibin);
-      for(int ibin=1; ibin<=h1_PC->GetNbinsX()+1; ibin++) matrix_oscillation_base_subtract(0, h1_FC->GetNbinsX() + ibin-1) += h1_PC->GetBinContent(ibin);
+      /// hack for NuMI nueCC
+      for(int ibin=1; ibin<=h1_FC->GetNbinsX()+1; ibin++) matrix_oscillation_base_subtract(0, ibin-1) = h1_FC->GetBinContent(ibin);
+      for(int ibin=1; ibin<=h1_PC->GetNbinsX()+1; ibin++) matrix_oscillation_base_subtract(0, (h1_FC->GetNbinsX()+1) +ibin-1) = h1_PC->GetBinContent(ibin);
       matrix_oscillation_base -= matrix_oscillation_base_subtract;
       
       delete h1_FC;
       delete h1_PC;      
-    }// for(int isize=0; isize<size; isize++)        
+    }// for(int isize=0; isize<size; isize++)
     
   }// if( flag_NuMI_nue2nue )
   
