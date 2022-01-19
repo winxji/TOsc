@@ -88,6 +88,8 @@ int main(int argc, char** argv)
   ///////
   
   osc_test->Set_default_cv_cov(Configure_Osc::default_cv_file, Configure_Osc::default_mcstat_file, Configure_Osc::default_fluxXs_dir, Configure_Osc::default_detector_dir);
+
+  osc_test->Set_oscillation_base();
   
   ///////////////////////////////////////////////////////////
 

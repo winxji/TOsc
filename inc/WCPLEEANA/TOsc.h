@@ -54,6 +54,15 @@ using namespace std;
 #include "Math/Functor.h"
 #include "Minuit2/Minuit2Minimizer.h"
 
+struct EventInfo {
+  int           e2e_pdg;
+  int           e2e_flag_FC;
+  double        e2e_Etrue;
+  double        e2e_Ereco;
+  double        e2e_weight_xs;
+  double        e2e_baseline;
+};
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////// TOsc
 
 class TOsc {
@@ -85,10 +94,16 @@ class TOsc {
   TMatrixD matrix_transform;
 
   map<int, TH1D*>map_default_h1d_meas;
+  map<int, int>map_default_h1d_meas_bins;
+  map<int, double>map_default_h1d_meas_xlow;
+  map<int, double>map_default_h1d_meas_xhgh;  
   vector<double> vector_default_newworld_meas;
   TMatrixD matrix_default_newworld_meas;
 
   map<int, TH1D*>map_default_h1d_pred;
+  map<int, int>map_default_h1d_pred_bins;
+  map<int, double>map_default_h1d_pred_xlow;
+  map<int, double>map_default_h1d_pred_xhgh;  
   vector<double> vector_default_oldworld_pred;
   TMatrixD matrix_default_oldworld_pred;
   TMatrixD matrix_default_newworld_pred;
@@ -123,10 +138,54 @@ class TOsc {
   bool flag_BNB_NC_1minus_nue2sterile;
   bool flag_BNB_NC_1minus_numu2sterile;
   
+  ///////
+
+  TMatrixD matrix_oscillation_base_NuMI_nueCC;
+  TMatrixD matrix_oscillation_base_NuMI_numuCC;
+  TMatrixD matrix_oscillation_base_NuMI_nueNC;
+  TMatrixD matrix_oscillation_base_NuMI_numuNC;
+  
+  TMatrixD matrix_oscillation_base_NuMIdirt_nueCC;
+  TMatrixD matrix_oscillation_base_NuMIdirt_numuCC;
+  TMatrixD matrix_oscillation_base_NuMIdirt_nueNC;
+  TMatrixD matrix_oscillation_base_NuMIdirt_numuNC;
+  
+  TMatrixD matrix_oscillation_base_BNB_nueCC;
+  TMatrixD matrix_oscillation_base_BNB_numuCC;
+  TMatrixD matrix_oscillation_base_BNB_nueNC;
+  TMatrixD matrix_oscillation_base_BNB_numuNC;
+
+  TMatrixD matrix_oscillation_base_BNBdirt_nueCC;
+  TMatrixD matrix_oscillation_base_BNBdirt_numuCC;
+  TMatrixD matrix_oscillation_base_BNBdirt_nueNC;
+  TMatrixD matrix_oscillation_base_BNBdirt_numuNC;
+
+  vector<TMatrixD> vector_matrix_oscillation_base_NuMI_nueCC;  vector<double>vector_matrix_oscillation_base_NuMI_nueCC_scaleFPOT; vector< vector<EventInfo> >vector_vector_matrix_oscillation_base_NuMI_nueCC;
+  vector<TMatrixD> vector_matrix_oscillation_base_NuMI_numuCC; vector<double>vector_matrix_oscillation_base_NuMI_numuCC_scaleFPOT;
+  vector<TMatrixD> vector_matrix_oscillation_base_NuMI_nueNC;  vector<double>vector_matrix_oscillation_base_NuMI_nueNC_scaleFPOT;
+  vector<TMatrixD> vector_matrix_oscillation_base_NuMI_numuNC; vector<double>vector_matrix_oscillation_base_NuMI_numuNC_scaleFPOT;
+  
+  vector<TMatrixD> vector_matrix_oscillation_base_NuMIdirt_nueCC;  vector<double>vector_matrix_oscillation_base_NuMIdirt_nueCC_scaleFPOT;
+  vector<TMatrixD> vector_matrix_oscillation_base_NuMIdirt_numuCC; vector<double>vector_matrix_oscillation_base_NuMIdirt_numuCC_scaleFPOT;
+  vector<TMatrixD> vector_matrix_oscillation_base_NuMIdirt_nueNC;  vector<double>vector_matrix_oscillation_base_NuMIdirt_nueNC_scaleFPOT;
+  vector<TMatrixD> vector_matrix_oscillation_base_NuMIdirt_numuNC; vector<double>vector_matrix_oscillation_base_NuMIdirt_numuNC_scaleFPOT;
+  
+  vector<TMatrixD> vector_matrix_oscillation_base_BNB_nueCC;  vector<double>vector_matrix_oscillation_base_BNB_nueCC_scaleFPOT;
+  vector<TMatrixD> vector_matrix_oscillation_base_BNB_numuCC; vector<double>vector_matrix_oscillation_base_BNB_numuCC_scaleFPOT;
+  vector<TMatrixD> vector_matrix_oscillation_base_BNB_nueNC;  vector<double>vector_matrix_oscillation_base_BNB_nueNC_scaleFPOT;
+  vector<TMatrixD> vector_matrix_oscillation_base_BNB_numuNC; vector<double>vector_matrix_oscillation_base_BNB_numuNC_scaleFPOT;
+  
+  vector<TMatrixD> vector_matrix_oscillation_base_BNBdirt_nueCC;  vector<double>vector_matrix_oscillation_base_BNBdirt_nueCC_scaleFPOT;
+  vector<TMatrixD> vector_matrix_oscillation_base_BNBdirt_numuCC; vector<double>vector_matrix_oscillation_base_BNBdirt_numuCC_scaleFPOT;
+  vector<TMatrixD> vector_matrix_oscillation_base_BNBdirt_nueNC;  vector<double>vector_matrix_oscillation_base_BNBdirt_nueNC_scaleFPOT;
+  vector<TMatrixD> vector_matrix_oscillation_base_BNBdirt_numuNC; vector<double>vector_matrix_oscillation_base_BNBdirt_numuNC_scaleFPOT;
   
   ////////////////////////////////////////////////////// member functions
 
   void Set_default_cv_cov(TString default_cv_file, TString default_mcstat_file, TString default_fluxXs_dir, TString default_detector_dir);
+
+  void Set_oscillation_base();
+  void Set_oscillation_base_subfunc(TString strfile_mcPOT, TString strfile_dataPOT, vector<double> *vec_ratioPOT, TString strfile_mc_e2e, vector< vector<EventInfo> > *vec_vec_eventinfo);
   
   ////////////////////////////////////////////////////// data members
 
