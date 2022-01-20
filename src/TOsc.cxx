@@ -2,11 +2,217 @@
 
 #include "draw.icc"
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////// ccc
+
+void TOsc::Set_apply_POT()
+{
+  ////////////////////////// hack for POT scale, should know which part is BNB, and which part is NuMI
+  
+  matrix_default_oldworld_abs_syst_addi_POT = matrix_default_oldworld_abs_syst_addi;
+  
+  for(int idx=0; idx<default_oldworld_rows; idx++) {
+    matrix_oscillation_effect_result_oldworld(0, idx) *= scaleF_POT_BNB;
+    matrix_default_oldworld_abs_syst_addi_POT(idx, idx) *= (scaleF_POT_BNB*scaleF_POT_BNB);
+  }
+
+  matrix_default_newworld_abs_syst_mcstat_POT = matrix_default_newworld_abs_syst_mcstat;
+  for(int idx=0; idx<default_newworld_rows; idx++) {
+    matrix_default_newworld_abs_syst_mcstat_POT(idx, idx) *= (scaleF_POT_BNB*scaleF_POT_BNB);
+  }
+  
+  //////////////////////////
+  
+  for(int idx=0; idx<default_oldworld_rows; idx++) {        
+    for(int jdx=0; jdx<default_oldworld_rows; jdx++) {
+      double cv_i = matrix_oscillation_effect_result_oldworld(0, idx);
+      double cv_j = matrix_oscillation_effect_result_oldworld(0, jdx);
+
+      /// flux
+      matrix_default_oldworld_abs_syst_flux(idx,jdx) = cv_i*cv_j*matrix_default_oldworld_rel_syst_flux(idx,jdx);
+
+      /// geant
+      matrix_default_oldworld_abs_syst_geant(idx,jdx) = cv_i*cv_j*matrix_default_oldworld_rel_syst_geant(idx,jdx);
+      
+      /// Xs
+      matrix_default_oldworld_abs_syst_Xs(idx,jdx) = cv_i*cv_j*matrix_default_oldworld_rel_syst_Xs(idx,jdx);
+            
+      /// det
+      matrix_default_oldworld_abs_syst_det(idx,jdx) = cv_i*cv_j*matrix_default_oldworld_rel_syst_det(idx,jdx);      
+    }
+  }
+
+  //////////////////////////
+
+  TMatrixD matrix_transform_T =  matrix_transform.T();  matrix_transform.T();
+  
+  matrix_default_newworld_pred = matrix_oscillation_effect_result_oldworld * matrix_transform;
+  
+  /// dirt addi
+  matrix_default_newworld_abs_syst_addi = matrix_transform_T * matrix_default_oldworld_abs_syst_addi_POT * matrix_transform;
+
+  /// flux
+  matrix_default_newworld_abs_syst_flux = matrix_transform_T * matrix_default_oldworld_abs_syst_flux * matrix_transform;
+ 
+  /// geant
+  matrix_default_newworld_abs_syst_geant = matrix_transform_T * matrix_default_oldworld_abs_syst_geant * matrix_transform;
+  
+  /// Xs
+  matrix_default_newworld_abs_syst_Xs = matrix_transform_T * matrix_default_oldworld_abs_syst_Xs * matrix_transform;
+  
+  /// det
+  matrix_default_newworld_abs_syst_det = matrix_transform_T * matrix_default_oldworld_abs_syst_det * matrix_transform;
+
+  ///
+  matrix_default_newworld_abs_syst_total += matrix_default_newworld_abs_syst_addi;
+  matrix_default_newworld_abs_syst_total += matrix_default_newworld_abs_syst_flux;
+  matrix_default_newworld_abs_syst_total += matrix_default_newworld_abs_syst_geant;
+  matrix_default_newworld_abs_syst_total += matrix_default_newworld_abs_syst_Xs;
+  matrix_default_newworld_abs_syst_total += matrix_default_newworld_abs_syst_det;
+  matrix_default_newworld_abs_syst_total += matrix_default_newworld_abs_syst_mcstat_POT;
+
+  ///
+  if( 0 ) {
+    TString roostr = "";
+    
+    roostr = "h1_newworld_pred_test";
+    TH1D *h1_newworld_pred_test = new TH1D(roostr, "", default_newworld_rows, 0, default_newworld_rows);
+    
+    roostr = "h1_newworld_pred_relerr_test";
+    TH1D *h1_newworld_pred_relerr_test = new TH1D(roostr, "", default_newworld_rows, 0, default_newworld_rows);
+    
+    for(int ibin=1; ibin<default_newworld_rows; ibin++) {
+      double content = matrix_default_newworld_pred(0, ibin-1);
+      double abs_err = sqrt( matrix_default_newworld_abs_syst_total(ibin, ibin) );
+      h1_newworld_pred_test->SetBinContent(ibin, content);
+      h1_newworld_pred_test->SetBinError(ibin, abs_err);
+
+      double relerr = 0;
+      if(content!=0) relerr = abs_err*100./content;
+      h1_newworld_pred_relerr_test->SetBinContent(ibin, relerr);
+    }
+
+    roostr = "canv_h1_newworld_pred_test";
+    TCanvas *canv_h1_newworld_pred_test = new TCanvas(roostr, roostr, 1000, 600);
+    func_canv_margin(canv_h1_newworld_pred_test, 0.1, 0.1, 0.1, 0.15);
+    canv_h1_newworld_pred_test->SetLogy();
+    TH1D *h1_newworld_pred_test_err = (TH1D*)h1_newworld_pred_test->Clone("h1_newworld_pred_test_err");
+    h1_newworld_pred_test_err->Draw("e2");
+    h1_newworld_pred_test_err->SetMinimum(1e-1);
+    h1_newworld_pred_test_err->SetFillColor(kRed-9);
+    h1_newworld_pred_test_err->SetMarkerSize(0);
+    h1_newworld_pred_test->Draw("same hist");
+    h1_newworld_pred_test->SetLineColor(kBlack);
+    canv_h1_newworld_pred_test->SaveAs("canv_h1_newworld_pred_test.root");
+    canv_h1_newworld_pred_test->SaveAs("canv_h1_newworld_pred_test.png");
+      
+    roostr = "canv_h1_newworld_pred_relerr_test";
+    TCanvas *canv_h1_newworld_pred_relerr_test = new TCanvas(roostr, roostr, 1000, 600);
+    func_canv_margin(canv_h1_newworld_pred_relerr_test, 0.1, 0.1, 0.1, 0.15);
+    h1_newworld_pred_relerr_test->SetMinimum(0);
+    h1_newworld_pred_relerr_test->SetMaximum(150);
+    //h1_newworld_pred_relerr_test->SetFillColor(kRed-9);
+    //h1_newworld_pred_relerr_test->SetMarkerSize(0);
+    h1_newworld_pred_relerr_test->Draw("hist");
+    h1_newworld_pred_relerr_test->SetLineColor(kRed);
+    canv_h1_newworld_pred_relerr_test->SaveAs("canv_h1_newworld_pred_relerr_test.root");
+    canv_h1_newworld_pred_relerr_test->SaveAs("canv_h1_newworld_pred_relerr_test.png");
+  }
+}
+ 
+//////////////////////////////////////////////////////////////////////////////////////////////////// ccc
+
+double TOsc::Prob_oscillaion(double Etrue, double baseline, TString strflag_osc) {
+  int flag_osc = -1;
+  double prob = 0;
+    
+  if( strflag_osc=="nue2nue" )        flag_osc = 1;
+  else if( strflag_osc=="numu2numu" ) flag_osc = 2;
+  else if( strflag_osc=="numu2nue" )  flag_osc = 3;
+  else if( strflag_osc=="nue2numu" )  flag_osc = 4;
+  else flag_osc = -1;
+
+  if( flag_osc==-1 ) {
+    cerr<<" ERROR: flag_osc==-1, strflag_osc=="<<strflag_osc<<" ---> Candidates: nue2nue numu2numu numu2nue nue2numu"<<endl;
+    exit(1);
+  }
+
+  const int nue2nue   = 1;
+  const int numu2numu = 2;
+  const int numu2nue  = 3;
+  const int nue2numu  = 4;
+
+  /// dm2*L/4E = 1.267 * dm2(eV2) * L(m) / E(MeV)
+    
+  switch( flag_osc ) {
+  case nue2nue:
+    prob = 1 - sin2_2theta_14 * pow(TMath::Sin(1.267 * dm2_41 * baseline/Etrue), 2);
+    break;
+  case numu2numu:
+    break;
+  case numu2nue:
+    break;
+  case nue2numu:
+    break;
+  default:
+    cerr<<"ERROR: NAN flag_osc"<<endl; exit(1);
+  }
+    
+  return prob;
+}
+  
+//////////////////////////////////////////////////////////////////////////////////////////////////// ccc
+
+void TOsc::Apply_oscillation()
+{
+  cout<<endl<<" ---> Apply_oscillation"<<endl;  
+  
+  matrix_oscillation_effect_result_oldworld.Clear(); matrix_oscillation_effect_result_oldworld.ResizeTo(1, default_oldworld_rows);
+  matrix_oscillation_effect_result_oldworld = matrix_oscillation_base;
+    
+  //////////////////////////////////////
+
+  if( flag_NuMI_nue2nue ) {
+            
+    int size = vector_vector_oscillation_base_NuMI_nueCC_info.size();
+    for(int isize=0; isize<size; isize++) {
+      
+      TMatrixD matrix_oscillation_base_add(1, default_oldworld_rows);
+      
+      TH1D *h1_FC = (TH1D*)map_default_h1d_pred[1]->Clone("h1_FC"); h1_FC->Reset();// define and clear
+      TH1D *h1_PC = (TH1D*)map_default_h1d_pred[2]->Clone("h1_PC"); h1_PC->Reset();// define and clear
+      
+      double scaleFPOT = vector_oscillation_base_NuMI_nueCC_scaleFPOT.at(isize);
+      int num_events = vector_vector_oscillation_base_NuMI_nueCC_info.at(isize).size();
+      
+      for(int ievent=0; ievent<num_events; ievent++) {
+	EventInfo info = vector_vector_oscillation_base_NuMI_nueCC_info.at(isize).at(ievent);
+
+	double prob = Prob_oscillaion(info.e2e_Etrue, info.e2e_baseline, "nue2nue");
+	
+	if( info.e2e_flag_FC ) h1_FC->Fill(info.e2e_Ereco, prob * info.e2e_weight_xs);
+	else h1_PC->Fill(info.e2e_Ereco, prob * info.e2e_weight_xs);
+      }
+      
+      h1_FC->Scale( scaleFPOT );
+      h1_PC->Scale( scaleFPOT );
+      
+      /// hack for NuMI nueCC
+      for(int ibin=1; ibin<=h1_FC->GetNbinsX()+1; ibin++) matrix_oscillation_base_add(0, ibin-1) = h1_FC->GetBinContent(ibin);
+      for(int ibin=1; ibin<=h1_PC->GetNbinsX()+1; ibin++) matrix_oscillation_base_add(0, (h1_FC->GetNbinsX()+1) +ibin-1) = h1_PC->GetBinContent(ibin);
+      matrix_oscillation_effect_result_oldworld += matrix_oscillation_base_add;
+      
+      delete h1_FC;
+      delete h1_PC;      
+    }// for(int isize=0; isize<size; isize++)
+        
+  }
+    
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////// ccc
 
 void TOsc::Set_oscillation_base_subfunc(TString strfile_mcPOT, TString strfile_dataPOT, vector<double> *vec_ratioPOT, TString strfile_mc_e2e, vector< vector<EventInfo> > *vec_vec_eventinfo)
 {
-
   // Declaration of leaf types
   Int_t           e2e_pdg;
   Int_t           e2e_flag_FC;
@@ -35,7 +241,8 @@ void TOsc::Set_oscillation_base_subfunc(TString strfile_mcPOT, TString strfile_d
   tree_obj->SetBranchAddress("e2e_baseline", &e2e_baseline, &b_e2e_baseline);
       
   int entries = tree_obj->GetEntries();
-  
+
+  cout<<endl;
   cout<<TString::Format("      ---> entries %10d   %10s", entries, strfile_mc_e2e.Data())<<endl;
 
   vector<EventInfo>vector_eventinfo;
@@ -73,27 +280,26 @@ void TOsc::Set_oscillation_base_subfunc(TString strfile_mcPOT, TString strfile_d
   tree_data->GetEntry(0); data_pot = pot;
   delete tree_data;
   delete roofile_data;
-  
+
   cout<<"      ---> POT "<<mc_pot<<"\t"<<strfile_mcPOT<<endl;
   cout<<"      ---> POT "<<data_pot<<"\t"<<strfile_dataPOT<<endl;
-  cout<<endl;
   
   vec_ratioPOT->push_back( data_pot/mc_pot );// from the output of ./convert_histo.pl
   vec_vec_eventinfo->push_back( vector_eventinfo );
   
 }
  
+/////////////////////////////////////////////// ccc
 
 void TOsc::Set_oscillation_base()
 {
   TString roostr = "";
   
-  cout<<endl<<" ---> Set_oscillation_base"<<endl;
-
+  cout<<endl<<" ---> Set_oscillation_base: must appear only one time"<<endl;
+  
   //////////////////////////////////////
 
   matrix_oscillation_base.Clear();  matrix_oscillation_base.ResizeTo(1, default_oldworld_rows);
-
   matrix_oscillation_base = matrix_default_oldworld_pred;
   
   //////////////////////////////////////
@@ -188,9 +394,9 @@ void TOsc::Set_oscillation_base()
     
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////// ccc
 
-void TOsc::Set_default_cv_cov(TString default_cv_file, TString default_mcstat_file, TString default_fluxXs_dir, TString default_detector_dir)
+void TOsc::Set_default_cv_cov(TString default_cv_file, TString default_dirtadd_file, TString default_mcstat_file, TString default_fluxXs_dir, TString default_detector_dir)
 {
   TString roostr = "";
   
@@ -198,6 +404,7 @@ void TOsc::Set_default_cv_cov(TString default_cv_file, TString default_mcstat_fi
 
   cout<<endl;
   cout<<TString::Format("      ---> default_cv_file       %50s", default_cv_file.Data())<<endl;
+  cout<<TString::Format("      ---> default_dirtadd_file  %50s", default_dirtadd_file.Data())<<endl;
   cout<<TString::Format("      ---> default_mcstat_file   %50s", default_mcstat_file.Data())<<endl;
   cout<<TString::Format("      ---> default_fluxXs_dir    %50s", default_fluxXs_dir.Data())<<endl;
   cout<<TString::Format("      ---> default_detector_dir  %50s", default_detector_dir.Data())<<endl;
@@ -217,8 +424,16 @@ void TOsc::Set_default_cv_cov(TString default_cv_file, TString default_mcstat_fi
     matrix_transform += (*temp_mat_collapse);
     delete temp_mat_collapse;
 
+    /// hack, set LEE channel to 0
+    for(int idx=0; idx<default_oldworld_rows; idx++) {
+      for(int jdx=0; jdx<default_newworld_rows; jdx++) {
+	if(idx>=26*4+11*3 && idx<26*4+11*3+26*2) matrix_transform(idx, jdx) = 0;
+      }
+    }
+    
     ///////
     matrix_default_oldworld_abs_syst_addi.Clear();   matrix_default_oldworld_abs_syst_addi.ResizeTo(default_oldworld_rows, default_oldworld_rows);
+    matrix_default_oldworld_abs_syst_addi_POT.Clear();   matrix_default_oldworld_abs_syst_addi_POT.ResizeTo(default_oldworld_rows, default_oldworld_rows);
     matrix_default_oldworld_abs_syst_mcstat.Clear(); matrix_default_oldworld_abs_syst_mcstat.ResizeTo(default_oldworld_rows, default_oldworld_rows);
     matrix_default_oldworld_abs_syst_flux.Clear();   matrix_default_oldworld_abs_syst_flux.ResizeTo(default_oldworld_rows, default_oldworld_rows);
     matrix_default_oldworld_abs_syst_geant.Clear();  matrix_default_oldworld_abs_syst_geant.ResizeTo(default_oldworld_rows, default_oldworld_rows);
@@ -227,11 +442,30 @@ void TOsc::Set_default_cv_cov(TString default_cv_file, TString default_mcstat_fi
 
     matrix_default_newworld_abs_syst_addi.Clear();   matrix_default_newworld_abs_syst_addi.ResizeTo(default_newworld_rows, default_newworld_rows);
     matrix_default_newworld_abs_syst_mcstat.Clear(); matrix_default_newworld_abs_syst_mcstat.ResizeTo(default_newworld_rows, default_newworld_rows);
+    matrix_default_newworld_abs_syst_mcstat_POT.Clear(); matrix_default_newworld_abs_syst_mcstat_POT.ResizeTo(default_newworld_rows, default_newworld_rows);
     matrix_default_newworld_abs_syst_flux.Clear();   matrix_default_newworld_abs_syst_flux.ResizeTo(default_newworld_rows, default_newworld_rows);
     matrix_default_newworld_abs_syst_geant.Clear();  matrix_default_newworld_abs_syst_geant.ResizeTo(default_newworld_rows, default_newworld_rows);
     matrix_default_newworld_abs_syst_Xs.Clear();     matrix_default_newworld_abs_syst_Xs.ResizeTo(default_newworld_rows, default_newworld_rows);
     matrix_default_newworld_abs_syst_det.Clear();    matrix_default_newworld_abs_syst_det.ResizeTo(default_newworld_rows, default_newworld_rows); 
   
+    ///////
+    matrix_default_oldworld_rel_syst_addi.Clear();   matrix_default_oldworld_rel_syst_addi.ResizeTo(default_oldworld_rows, default_oldworld_rows);
+    matrix_default_oldworld_rel_syst_mcstat.Clear(); matrix_default_oldworld_rel_syst_mcstat.ResizeTo(default_oldworld_rows, default_oldworld_rows);
+    matrix_default_oldworld_rel_syst_flux.Clear();   matrix_default_oldworld_rel_syst_flux.ResizeTo(default_oldworld_rows, default_oldworld_rows);
+    matrix_default_oldworld_rel_syst_geant.Clear();  matrix_default_oldworld_rel_syst_geant.ResizeTo(default_oldworld_rows, default_oldworld_rows);
+    matrix_default_oldworld_rel_syst_Xs.Clear();     matrix_default_oldworld_rel_syst_Xs.ResizeTo(default_oldworld_rows, default_oldworld_rows);
+    matrix_default_oldworld_rel_syst_det.Clear();    matrix_default_oldworld_rel_syst_det.ResizeTo(default_oldworld_rows, default_oldworld_rows);
+
+    matrix_default_newworld_rel_syst_addi.Clear();   matrix_default_newworld_rel_syst_addi.ResizeTo(default_newworld_rows, default_newworld_rows);
+    matrix_default_newworld_rel_syst_mcstat.Clear(); matrix_default_newworld_rel_syst_mcstat.ResizeTo(default_newworld_rows, default_newworld_rows);
+    matrix_default_newworld_rel_syst_flux.Clear();   matrix_default_newworld_rel_syst_flux.ResizeTo(default_newworld_rows, default_newworld_rows);
+    matrix_default_newworld_rel_syst_geant.Clear();  matrix_default_newworld_rel_syst_geant.ResizeTo(default_newworld_rows, default_newworld_rows);
+    matrix_default_newworld_rel_syst_Xs.Clear();     matrix_default_newworld_rel_syst_Xs.ResizeTo(default_newworld_rows, default_newworld_rows);
+    matrix_default_newworld_rel_syst_det.Clear();    matrix_default_newworld_rel_syst_det.ResizeTo(default_newworld_rows, default_newworld_rows); 
+
+    ///////
+    matrix_default_newworld_abs_syst_total.Clear();  matrix_default_newworld_abs_syst_total.ResizeTo(default_newworld_rows, default_newworld_rows); 
+    
     ///////
     cout<<endl;
     cout<<"      ---> measurement"<<endl;
@@ -286,21 +520,9 @@ void TOsc::Set_default_cv_cov(TString default_cv_file, TString default_mcstat_fi
     }
   
     if( default_oldworld_rows!=(int)(vector_default_oldworld_pred.size()) ) { cerr<<" ---> ERROR: default_oldworld_rows!=vector_default_oldworld_pred"<<endl; exit(1); }
-    matrix_default_oldworld_pred.Clear();
-    matrix_default_oldworld_pred.ResizeTo(1, default_oldworld_rows);
+    matrix_default_newworld_pred.Clear(); matrix_default_newworld_pred.ResizeTo(1, default_newworld_rows);
+    matrix_default_oldworld_pred.Clear(); matrix_default_oldworld_pred.ResizeTo(1, default_oldworld_rows);
     for(int idx=0; idx<(int)(vector_default_oldworld_pred.size()); idx++)  matrix_default_oldworld_pred(0, idx) = vector_default_oldworld_pred.at(idx);
-  
-    //////////////////////////////////////
-  
-    cout<<endl;
-    cout<<"      ---> Dirt: additional uncertainty"<<endl;
-    {
-      TMatrixD *matrix_temp = (TMatrixD*)roofile_default_cv_file->Get("cov_mat_add");
-      matrix_default_oldworld_abs_syst_addi = (*matrix_temp);
-      delete matrix_temp;
-    }
-  
-    ///////
   
     delete roofile_default_cv_file;
   }
@@ -351,6 +573,18 @@ void TOsc::Set_default_cv_cov(TString default_cv_file, TString default_mcstat_fi
   }
   
   //////////////////////////////////////
+   
+  cout<<endl;
+  cout<<"      ---> Dirt: additional uncertainty"<<endl;
+  {
+    TFile *roofile_default_dirtadd_file = new TFile(default_dirtadd_file, "read");
+    TMatrixD *matrix_temp = (TMatrixD*)roofile_default_dirtadd_file->Get("cov_mat_add");
+    matrix_default_oldworld_abs_syst_addi = (*matrix_temp);
+    delete matrix_temp;
+    delete roofile_default_dirtadd_file;
+  }
+  
+  //////////////////////////////////////
   
   cout<<endl;
   cout<<"      ---> MCstat"<<endl;
@@ -381,6 +615,7 @@ void TOsc::Set_default_cv_cov(TString default_cv_file, TString default_mcstat_fi
     TFile *roofile_syst_flux = new TFile(default_fluxXs_dir+"cov_3.root", "read");
     TMatrixD *matrix_temp_flux = (TMatrixD*)roofile_syst_flux->Get("frac_cov_xf_mat_3");
     matrix_default_oldworld_abs_syst_flux = (*matrix_temp_flux);
+    matrix_default_oldworld_rel_syst_flux = (*matrix_temp_flux);
     delete matrix_temp_flux;
     delete roofile_syst_flux;
     for(int ibin=0; ibin<default_oldworld_rows; ibin++) {
@@ -400,6 +635,7 @@ void TOsc::Set_default_cv_cov(TString default_cv_file, TString default_mcstat_fi
       TFile *roofile_syst_geant = new TFile(default_fluxXs_dir+TString::Format("cov_%d.root", idx), "read");
       TMatrixD *matrix_temp_geant = (TMatrixD*)roofile_syst_geant->Get(TString::Format("frac_cov_xf_mat_%d", idx) );
       matrix_default_oldworld_abs_syst_geant += (*matrix_temp_geant);
+      matrix_default_oldworld_rel_syst_geant += (*matrix_temp_geant);
       delete matrix_temp_geant;
       delete roofile_syst_geant;
     }
@@ -419,6 +655,7 @@ void TOsc::Set_default_cv_cov(TString default_cv_file, TString default_mcstat_fi
     TFile *roofile_syst_Xs = new TFile(default_fluxXs_dir+"cov_17.root", "read");
     TMatrixD *matrix_temp_Xs = (TMatrixD*)roofile_syst_Xs->Get("frac_cov_xf_mat_17");
     matrix_default_oldworld_abs_syst_Xs = (*matrix_temp_Xs);
+    matrix_default_oldworld_rel_syst_Xs = (*matrix_temp_Xs);
     delete matrix_temp_Xs;
     delete roofile_syst_Xs;
     for(int ibin=0; ibin<default_oldworld_rows; ibin++) {
@@ -454,6 +691,7 @@ void TOsc::Set_default_cv_cov(TString default_cv_file, TString default_mcstat_fi
       TFile *roofile_det = new TFile(map_detectorfile_str[idx], "read");
       TMatrixD *matrix_temp_det = (TMatrixD*)roofile_det->Get(TString::Format("frac_cov_det_mat_%d", idx) );
       matrix_default_oldworld_abs_syst_det += (*matrix_temp_det);
+      matrix_default_oldworld_rel_syst_det += (*matrix_temp_det);
       delete matrix_temp_det;
       delete roofile_det;
     }
