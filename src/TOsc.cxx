@@ -19,6 +19,8 @@ int TOsc::Minimization_OscPars_FullCov(double init_dm2_41, double init_sin2_2the
     min_osc.SetTolerance(1e-4); // tolerance*2e-3 = edm precision
     min_osc.SetPrecision(1e-18); //precision in the target function
 
+    int cycle = 0;
+    
     /// set fitting parameters
     ROOT::Math::Functor Chi2Functor_osc( [&](const double *par) {// FCN
 	
@@ -42,12 +44,6 @@ int TOsc::Minimization_OscPars_FullCov(double init_dm2_41, double init_sin2_2the
 	TMatrixD matrix_cov_stat_total(rows, rows);
 	TMatrixD matrix_cov_total(rows, rows);
 
-	for(int idx=0; idx<=6; idx++) {
-	  double val_data = matrix_data_total(0, idx);
-	  double val_pred = matrix_pred_total(0, idx);       
-	  //cout<<TString::Format(" %3d  %8.4f %8.4f", idx+1, val_data, val_pred)<<endl;
-	}
-	
 	for(int idx=0; idx<rows; idx++) {
 	  double val_stat_cov = 0;        
 	  double val_data = matrix_data_total(0, idx);
@@ -64,6 +60,17 @@ int TOsc::Minimization_OscPars_FullCov(double init_dm2_41, double init_sin2_2the
 	}
 
 	matrix_cov_total = matrix_cov_syst_total + matrix_cov_stat_total;
+
+	///////
+	
+	// for(int idx=0; idx<=6; idx++) {
+	//   double val_data = matrix_data_total(0, idx);
+	//   double val_pred = matrix_pred_total(0, idx);
+	//   double val_err  = sqrt( matrix_cov_total(idx, idx) );
+	//   cout<<TString::Format(" %3d  (data) %8.4f, (pred) %8.4f, (err) %8.4f %8.4f %8.4f",
+	// 			idx+1, val_data, val_pred,
+	// 			val_err, sqrt(matrix_cov_syst_total(idx, idx)), sqrt(matrix_cov_stat_total(idx,idx)) )<<endl;
+	// }
 	
 	///////
 	
@@ -79,6 +86,9 @@ int TOsc::Minimization_OscPars_FullCov(double init_dm2_41, double init_sin2_2the
 	chi2_final = matrix_chi2(0,0);           
       
 	///////
+
+	cycle++;
+	//cout<<TString::Format(" ---> cycle %8d", cycle)<<endl;
 
 	return chi2_final;
 	
@@ -118,15 +128,15 @@ void TOsc::Set_apply_POT()
   /////// hack
   
   for(int idx=0; idx<default_oldworld_rows; idx++) {
-    matrix_oscillation_effect_result_oldworld(0, idx) *= scaleF_POT_BNB;
-    matrix_default_oldworld_abs_syst_addi_POT(idx, idx) *= (scaleF_POT_BNB*scaleF_POT_BNB);
+    matrix_oscillation_effect_result_oldworld(0, idx) *= scaleF_POT_NuMI;
+    matrix_default_oldworld_abs_syst_addi_POT(idx, idx) *= (scaleF_POT_NuMI*scaleF_POT_NuMI);
   }
 
   /////// hack
     
   for(int idx=0; idx<default_newworld_rows; idx++) {
-    matrix_default_newworld_abs_syst_mcstat_POT(idx, idx) *= (scaleF_POT_BNB*scaleF_POT_BNB);
-    matrix_default_newworld_meas_POT(0, idx) *= scaleF_POT_BNB;
+    matrix_default_newworld_abs_syst_mcstat_POT(idx, idx) *= (scaleF_POT_NuMI*scaleF_POT_NuMI);
+    matrix_default_newworld_meas_POT(0, idx) *= scaleF_POT_NuMI;
   }
   
   matrix_default_newworld_pred = matrix_oscillation_effect_result_oldworld * matrix_transform;
@@ -172,6 +182,7 @@ void TOsc::Set_apply_POT()
   matrix_default_newworld_abs_syst_det = matrix_transform_T * matrix_default_oldworld_abs_syst_det * matrix_transform;
 
   ///
+  matrix_default_newworld_abs_syst_total.Clear(); matrix_default_newworld_abs_syst_total.ResizeTo(default_newworld_rows, default_newworld_rows);
   matrix_default_newworld_abs_syst_total += matrix_default_newworld_abs_syst_addi;
   matrix_default_newworld_abs_syst_total += matrix_default_newworld_abs_syst_flux;
   matrix_default_newworld_abs_syst_total += matrix_default_newworld_abs_syst_geant;

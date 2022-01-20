@@ -128,7 +128,7 @@ int main(int argc, char** argv)
   osc_test->Set_meas2fitdata();
 
   ///
-  osc_test->Minimization_OscPars_FullCov(7.2, 0.2, 0, 0, "str_flag_fixpar");
+  osc_test->Minimization_OscPars_FullCov(8.0, 0.4, 0, 0, "str_flag_fixpar");
     
   ///////////////////////////////////////////////////////////
 
