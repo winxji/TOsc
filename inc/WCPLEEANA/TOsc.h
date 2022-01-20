@@ -93,7 +93,18 @@ class TOsc {
     dm2_41 = 0;
     sin2_2theta_14 = 0;
     sin2_theta_24  = 0;
-    sin2_theta_34  = 0;  
+    sin2_theta_34  = 0;
+
+    minimization_status     = -1;
+    minimization_chi2       = -1;
+    minimization_dm2_41_val = -1;
+    minimization_sin2_2theta_14_val = -1;
+    minimization_sin2_theta_24_val  = -1;
+    minimization_sin2_theta_34_val  = -1;
+    minimization_dm2_41_err         = -1;
+    minimization_sin2_2theta_14_err = -1;
+    minimization_sin2_theta_24_err  = -1;
+    minimization_sin2_theta_34_err  = -1;
   }
 
   ////////////////////////////////////////////////////// data members
@@ -110,6 +121,7 @@ class TOsc {
   map<int, double>map_default_h1d_meas_xhgh;  
   vector<double> vector_default_newworld_meas;
   TMatrixD matrix_default_newworld_meas;
+  TMatrixD matrix_default_newworld_meas_POT;
 
   map<int, TH1D*>map_default_h1d_pred;
   map<int, int>map_default_h1d_pred_bins;
@@ -195,6 +207,19 @@ class TOsc {
   double sin2_2theta_14;
   double sin2_theta_24;
   double sin2_theta_34;
+
+  TMatrixD matrix_meas2fitdata_newworld;
+  
+  int    minimization_status;
+  double minimization_chi2;
+  double minimization_dm2_41_val;
+  double minimization_sin2_2theta_14_val;
+  double minimization_sin2_theta_24_val;
+  double minimization_sin2_theta_34_val;
+  double minimization_dm2_41_err;
+  double minimization_sin2_2theta_14_err;
+  double minimization_sin2_theta_24_err;
+  double minimization_sin2_theta_34_err;
   
   ////////////////////////////////////////////////////// member functions
 
@@ -217,7 +242,14 @@ class TOsc {
   double Prob_oscillaion(double Etrue, double baseline, TString strflag_osc);
   
   void Set_apply_POT();
- 
+
+  void Set_meas2fitdata() {
+    //matrix_meas2fitdata_newworld = matrix_default_newworld_meas_POT;
+    matrix_meas2fitdata_newworld = matrix_default_newworld_pred;
+  }
+
+  int Minimization_OscPars_FullCov(double init_dm2_41, double init_sin2_2theta_14, double init_sin2_theta_24, double init_sin2_theta_34, TString roostr_flag_fixpar);
+  
   ////////////////////////////////////////////////////// data members
 
  private:

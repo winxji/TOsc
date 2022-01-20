@@ -4,21 +4,132 @@
 
 //////////////////////////////////////////////////////////////////////////////////////////////////// ccc
 
+int TOsc::Minimization_OscPars_FullCov(double init_dm2_41, double init_sin2_2theta_14, double init_sin2_theta_24, double init_sin2_theta_34, TString roostr_flag_fixpar)
+{
+  int flag_minimization = 0;
+
+  /////////////////////////////////////////// ddd
+
+  {
+    ROOT::Minuit2::Minuit2Minimizer min_osc( ROOT::Minuit2::kMigrad );
+    min_osc.SetPrintLevel(2);
+    min_osc.SetStrategy(1); //0- cursory, 1- default, 2- thorough yet no more successful
+    min_osc.SetMaxFunctionCalls(500000);
+    min_osc.SetMaxIterations(500000);
+    min_osc.SetTolerance(1e-4); // tolerance*2e-3 = edm precision
+    min_osc.SetPrecision(1e-18); //precision in the target function
+
+    /// set fitting parameters
+    ROOT::Math::Functor Chi2Functor_osc( [&](const double *par) {// FCN
+	
+	double chi2_final = 0;
+	double fit_dm2_41         = par[0];
+	double fit_sin2_2theta_14 = par[1];
+	
+	/////// standard order
+	Set_oscillation_pars(fit_dm2_41, fit_sin2_2theta_14, init_sin2_theta_24, init_sin2_theta_34);  
+	Apply_oscillation();
+	Set_apply_POT();// meas, CV, COV: all ready
+
+	///////
+	
+	TMatrixD matrix_data_total = matrix_meas2fitdata_newworld;
+	TMatrixD matrix_pred_total = matrix_default_newworld_pred;
+	
+	TMatrixD matrix_cov_syst_total = matrix_default_newworld_abs_syst_total;
+	int rows = matrix_cov_syst_total.GetNrows();
+
+	TMatrixD matrix_cov_stat_total(rows, rows);
+	TMatrixD matrix_cov_total(rows, rows);
+
+	for(int idx=0; idx<=6; idx++) {
+	  double val_data = matrix_data_total(0, idx);
+	  double val_pred = matrix_pred_total(0, idx);       
+	  //cout<<TString::Format(" %3d  %8.4f %8.4f", idx+1, val_data, val_pred)<<endl;
+	}
+	
+	for(int idx=0; idx<rows; idx++) {
+	  double val_stat_cov = 0;        
+	  double val_data = matrix_data_total(0, idx);
+	  double val_pred = matrix_pred_total(0, idx);
+        
+	  if( val_data==0 ) { val_stat_cov = val_pred/2; }
+	  else {
+	    if( val_pred!=0 ) val_stat_cov = 3./( 1./val_data + 2./val_pred );
+	    else val_stat_cov = val_data;
+	  }
+	
+	  matrix_cov_stat_total(idx, idx) += val_stat_cov;
+	  if( matrix_cov_syst_total(idx, idx)==0 ) matrix_cov_syst_total(idx, idx) = 1e-6;
+	}
+
+	matrix_cov_total = matrix_cov_syst_total + matrix_cov_stat_total;
+	
+	///////
+	
+	TMatrixD matrix_cov_total_inv = matrix_cov_total; matrix_cov_total_inv.Invert();
+	for(int idx=0; idx<rows; idx++) {
+	  if( matrix_cov_total(idx, idx)<=2e-6 ) cout<<idx<<"\t"<<matrix_cov_total(idx, idx)<<endl;
+	}
+      
+	TMatrixD matrix_delta = matrix_pred_total - matrix_data_total;
+	TMatrixD matrix_delta_T = matrix_delta.T(); matrix_delta.T();
+   
+	TMatrixD matrix_chi2 = matrix_delta * matrix_cov_total_inv *matrix_delta_T;
+	chi2_final = matrix_chi2(0,0);           
+      
+	///////
+
+	return chi2_final;
+	
+      },// end of FCN
+      2// number of fitting parameters
+      );
+
+
+    
+    min_osc.SetFunction(Chi2Functor_osc);
+    
+    min_osc.SetVariable( 0, "dm2_41", init_dm2_41, 1e-2);
+    min_osc.SetVariable( 1, "sin2_2theta_14", init_sin2_2theta_14, 1e-2);
+
+    //min_osc.SetLowerLimitedVariable(0, "dm2_41", init_dm2_41, 1e-3, 0);  
+    //min_osc.SetLimitedVariable(1, "sin2_2theta_14", init_sin2_2theta_14, 1e-3, 0, 1);
+    
+    min_osc.Minimize();
+    
+  }
+  
+  ///////////////////////////////////////////
+  
+  return flag_minimization;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////// ccc
+
 void TOsc::Set_apply_POT()
 {
   ////////////////////////// hack for POT scale, should know which part is BNB, and which part is NuMI
   
   matrix_default_oldworld_abs_syst_addi_POT = matrix_default_oldworld_abs_syst_addi;
+  matrix_default_newworld_abs_syst_mcstat_POT = matrix_default_newworld_abs_syst_mcstat;
+  matrix_default_newworld_meas_POT = matrix_default_newworld_meas;
+  
+  /////// hack
   
   for(int idx=0; idx<default_oldworld_rows; idx++) {
     matrix_oscillation_effect_result_oldworld(0, idx) *= scaleF_POT_BNB;
     matrix_default_oldworld_abs_syst_addi_POT(idx, idx) *= (scaleF_POT_BNB*scaleF_POT_BNB);
   }
 
-  matrix_default_newworld_abs_syst_mcstat_POT = matrix_default_newworld_abs_syst_mcstat;
+  /////// hack
+    
   for(int idx=0; idx<default_newworld_rows; idx++) {
     matrix_default_newworld_abs_syst_mcstat_POT(idx, idx) *= (scaleF_POT_BNB*scaleF_POT_BNB);
+    matrix_default_newworld_meas_POT(0, idx) *= scaleF_POT_BNB;
   }
+  
+  matrix_default_newworld_pred = matrix_oscillation_effect_result_oldworld * matrix_transform;
   
   //////////////////////////
   
@@ -44,8 +155,6 @@ void TOsc::Set_apply_POT()
   //////////////////////////
 
   TMatrixD matrix_transform_T =  matrix_transform.T();  matrix_transform.T();
-  
-  matrix_default_newworld_pred = matrix_oscillation_effect_result_oldworld * matrix_transform;
   
   /// dirt addi
   matrix_default_newworld_abs_syst_addi = matrix_transform_T * matrix_default_oldworld_abs_syst_addi_POT * matrix_transform;
@@ -73,12 +182,22 @@ void TOsc::Set_apply_POT()
   ///
   if( 0 ) {
     TString roostr = "";
+
+    TF1 *f1_one = new TF1("f1_one", "1", 0, 1e6);
+    f1_one->SetLineColor(kBlack);
+    f1_one->SetLineStyle(7);
     
     roostr = "h1_newworld_pred_test";
     TH1D *h1_newworld_pred_test = new TH1D(roostr, "", default_newworld_rows, 0, default_newworld_rows);
     
     roostr = "h1_newworld_pred_relerr_test";
     TH1D *h1_newworld_pred_relerr_test = new TH1D(roostr, "", default_newworld_rows, 0, default_newworld_rows);
+    
+    roostr = "h1_newworld_meas_test";
+    TH1D *h1_newworld_meas_test = new TH1D(roostr, "", default_newworld_rows, 0, default_newworld_rows);
+    
+    roostr = "h1_newworld_meas2pred_test";
+    TH1D *h1_newworld_meas2pred_test = new TH1D(roostr, "", default_newworld_rows, 0, default_newworld_rows);
     
     for(int ibin=1; ibin<default_newworld_rows; ibin++) {
       double content = matrix_default_newworld_pred(0, ibin-1);
@@ -87,8 +206,21 @@ void TOsc::Set_apply_POT()
       h1_newworld_pred_test->SetBinError(ibin, abs_err);
 
       double relerr = 0;
-      if(content!=0) relerr = abs_err*100./content;
-      h1_newworld_pred_relerr_test->SetBinContent(ibin, relerr);
+      if(content!=0) relerr = abs_err/content;
+      h1_newworld_pred_relerr_test->SetBinError(ibin, relerr);
+      h1_newworld_pred_relerr_test->SetBinContent(ibin, 1);
+
+      double meas = matrix_default_newworld_meas_POT(0, ibin-1);
+      h1_newworld_meas_test->SetBinContent(ibin, meas );
+
+      double ratio_val = 0;
+      double ratio_err = 0;
+      if(content!=0) {
+	ratio_val = meas/content;
+	ratio_err = sqrt(meas)/content;
+      }
+      h1_newworld_meas2pred_test->SetBinContent(ibin, ratio_val);
+      h1_newworld_meas2pred_test->SetBinError(ibin, ratio_err);
     }
 
     roostr = "canv_h1_newworld_pred_test";
@@ -102,6 +234,9 @@ void TOsc::Set_apply_POT()
     h1_newworld_pred_test_err->SetMarkerSize(0);
     h1_newworld_pred_test->Draw("same hist");
     h1_newworld_pred_test->SetLineColor(kBlack);
+    h1_newworld_meas_test->Draw("same e1");
+    h1_newworld_meas_test->SetLineColor(kBlue);
+    h1_newworld_meas_test->SetMarkerColor(kBlue);
     canv_h1_newworld_pred_test->SaveAs("canv_h1_newworld_pred_test.root");
     canv_h1_newworld_pred_test->SaveAs("canv_h1_newworld_pred_test.png");
       
@@ -109,11 +244,18 @@ void TOsc::Set_apply_POT()
     TCanvas *canv_h1_newworld_pred_relerr_test = new TCanvas(roostr, roostr, 1000, 600);
     func_canv_margin(canv_h1_newworld_pred_relerr_test, 0.1, 0.1, 0.1, 0.15);
     h1_newworld_pred_relerr_test->SetMinimum(0);
-    h1_newworld_pred_relerr_test->SetMaximum(150);
+    h1_newworld_pred_relerr_test->SetMaximum(2);
     //h1_newworld_pred_relerr_test->SetFillColor(kRed-9);
     //h1_newworld_pred_relerr_test->SetMarkerSize(0);
-    h1_newworld_pred_relerr_test->Draw("hist");
+    h1_newworld_pred_relerr_test->Draw("e2");
+    h1_newworld_pred_relerr_test->SetFillColor(kRed-9);
     h1_newworld_pred_relerr_test->SetLineColor(kRed);
+    h1_newworld_pred_relerr_test->SetLineStyle(7);
+    h1_newworld_pred_relerr_test->SetMarkerSize(0);
+    h1_newworld_meas2pred_test->Draw("same e1");
+    h1_newworld_meas2pred_test->SetLineColor(kBlue);
+    h1_newworld_meas2pred_test->SetMarkerColor(kBlue);
+    f1_one->Draw("same");
     canv_h1_newworld_pred_relerr_test->SaveAs("canv_h1_newworld_pred_relerr_test.root");
     canv_h1_newworld_pred_relerr_test->SaveAs("canv_h1_newworld_pred_relerr_test.png");
   }
@@ -164,7 +306,7 @@ double TOsc::Prob_oscillaion(double Etrue, double baseline, TString strflag_osc)
 
 void TOsc::Apply_oscillation()
 {
-  cout<<endl<<" ---> Apply_oscillation"<<endl;  
+  //cout<<endl<<" ---> Apply_oscillation"<<endl;  
   
   matrix_oscillation_effect_result_oldworld.Clear(); matrix_oscillation_effect_result_oldworld.ResizeTo(1, default_oldworld_rows);
   matrix_oscillation_effect_result_oldworld = matrix_oscillation_base;
@@ -465,6 +607,8 @@ void TOsc::Set_default_cv_cov(TString default_cv_file, TString default_dirtadd_f
 
     ///////
     matrix_default_newworld_abs_syst_total.Clear();  matrix_default_newworld_abs_syst_total.ResizeTo(default_newworld_rows, default_newworld_rows); 
+
+    matrix_meas2fitdata_newworld.Clear(); matrix_meas2fitdata_newworld.ResizeTo(1, default_newworld_rows);
     
     ///////
     cout<<endl;
@@ -491,8 +635,8 @@ void TOsc::Set_default_cv_cov(TString default_cv_file, TString default_dirtadd_f
     }
 
     if( default_newworld_rows!=(int)(vector_default_newworld_meas.size()) ) { cerr<<" ---> ERROR: default_newworld_rows!=vector_default_newworld_meas"<<endl; exit(1); }
-    matrix_default_newworld_meas.Clear();
-    matrix_default_newworld_meas.ResizeTo(1, default_newworld_rows);
+    matrix_default_newworld_meas.Clear(); matrix_default_newworld_meas.ResizeTo(1, default_newworld_rows);
+    matrix_default_newworld_meas_POT.Clear(); matrix_default_newworld_meas_POT.ResizeTo(1, default_newworld_rows);
     for(int idx=0; idx<(int)(vector_default_newworld_meas.size()); idx++)  matrix_default_newworld_meas(0, idx) = vector_default_newworld_meas.at(idx);
   
     ///////

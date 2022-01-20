@@ -120,10 +120,15 @@ int main(int argc, char** argv)
   double val_sin2_theta_34  = 0;
 
   /// standard order
+  val_dm2_41 = 7.2;
   val_sin2_2theta_14 = 0.26;
   osc_test->Set_oscillation_pars(val_dm2_41, val_sin2_2theta_14, val_sin2_theta_24, val_sin2_theta_34);  
   osc_test->Apply_oscillation();
-  osc_test->Set_apply_POT();
+  osc_test->Set_apply_POT();// meas, CV, COV: all ready
+  osc_test->Set_meas2fitdata();
+
+  ///
+  osc_test->Minimization_OscPars_FullCov(7.2, 0.2, 0, 0, "str_flag_fixpar");
     
   ///////////////////////////////////////////////////////////
 
