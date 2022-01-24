@@ -30,6 +30,9 @@ int main(int argc, char** argv)
   double scaleF_POT_NuMI = 1;
   int display = 0;
 
+  int itheta = 0;
+  int idm2 = 0;
+  
   for(int i=1; i<argc; i++) {
     if( strcmp(argv[i],"-f")==0 ) {
       stringstream convert( argv[i+1] );
@@ -46,7 +49,15 @@ int main(int argc, char** argv)
     if( strcmp(argv[i],"-d")==0 ) {
       stringstream convert( argv[i+1] );
       if(  !( convert>>display ) ) { cerr<<" ---> Error display !"<<endl; exit(1); }
-    }     
+    }
+    if( strcmp(argv[i],"-itheta")==0 ) {
+      stringstream convert( argv[i+1] );
+      if(  !( convert>>itheta ) ) { cerr<<" ---> Error itheta !"<<endl; exit(1); }
+    }
+    if( strcmp(argv[i],"-idm2")==0 ) {
+      stringstream convert( argv[i+1] );
+      if(  !( convert>>idm2 ) ) { cerr<<" ---> Error idm2 !"<<endl; exit(1); }
+    }    
   }
 
   ///////////////////////////////////////////////////////////
@@ -162,89 +173,102 @@ int main(int argc, char** argv)
 
   /////////////////////////////////////////////////////////// exclusion
 
-  cout<<endl;
-  cout<<" ---> Exclusion processing"<<endl;
+  if( 1 ) {
+    
+    cout<<endl;
+    cout<<" ---> Exclusion processing"<<endl;
 
-  osc_test->Set_oscillation_pars(0, 0, 0, 0);
-  osc_test->Apply_oscillation();
-  osc_test->Set_apply_POT();
-  osc_test->Set_asimov2noosc();
+    osc_test->Set_oscillation_pars(0, 0, 0, 0);
+    osc_test->Apply_oscillation();
+    osc_test->Set_apply_POT();
+    osc_test->Set_asimov2noosc();
 
-  ///////
+    ///////
   
-  int bins_theta = 20;
-  int bins_dm2   = 20;
+    int bins_theta = 20;
+    int bins_dm2   = 20;
   
-  /////// X: sin22t14, 1e-2 -> 1   ---> "log10()" ---> -2 -> 0
-  /////// Y: m41^2,    1e-1 -> 20  ---> "log10()" ---> -1 -> 1.30103      
-  TH2D *h2_space = new TH2D("h2_space_whole", "h2_space_whole", bins_theta, -2, 0, bins_dm2, -1, 1.30103);
+    /////// X: sin22t14, 1e-2 -> 1   ---> "log10()" ---> -2 -> 0
+    /////// Y: m41^2,    1e-1 -> 20  ---> "log10()" ---> -1 -> 1.30103      
+    TH2D *h2_space = new TH2D("h2_space_whole", "h2_space_whole", bins_theta, -2, 0, bins_dm2, -1, 1.30103);
 
-  for(int ibin=1; ibin<=bins_theta; ibin++) {      
-    cout<<TString::Format(" ---> processing %4d/%4d", ibin, bins_theta)<<endl;    
-    for(int jbin=1; jbin<=bins_dm2; jbin++) {
-      
-      double xcenter = h2_space->GetXaxis()->GetBinCenter(ibin);
-      double ycenter = h2_space->GetYaxis()->GetBinCenter(jbin);
-      
-      double grid_sin2_2theta_14 = pow( 10, xcenter );
-      double grid_dm2_41         = pow( 10, ycenter );
+    int low_theta = 1;
+    int hgh_theta = bins_theta;
+    int low_dm2   = 1;
+    int hgh_dm2   = bins_dm2;
 
-      double pars_4v[4] = {grid_dm2_41, grid_sin2_2theta_14, 0, 0};
-      double pars_3v[4] = {0};
+    if( itheta!=0 ) {
+      low_theta = itheta; hgh_theta = itheta;
+      low_dm2 = idm2; hgh_dm2 = idm2;
+    }
+    
+    for(int ibin=low_theta; ibin<=hgh_theta; ibin++) {            
+      for(int jbin=low_dm2; jbin<=hgh_dm2; jbin++) {
+	cout<<TString::Format(" ---> processing theta,dm2: %3d %3d", ibin, jbin)<<endl;    
+	
+	double xcenter = h2_space->GetXaxis()->GetBinCenter(ibin);
+	double ycenter = h2_space->GetYaxis()->GetBinCenter(jbin);
       
-      ///////      
-      double chi2_4v_on_4vAsimov = 0; double chi2_3v_on_4vAsimov = 0; double dchi2_4vAsimov = 0;
-      double chi2_4v_on_3vAsimov = 0; double chi2_3v_on_3vAsimov = 0; double dchi2_3vAsimov = 0;
-      double chi2_4v_on_data = 0;     double chi2_3v_on_data = 0;     double dchi2_data = 0;
-      
-      /////// 4v Asimov      
-      osc_test->Set_oscillation_pars(pars_4v[0], pars_4v[1], pars_4v[2], pars_4v[3]);
-      osc_test->Apply_oscillation();
-      osc_test->Set_apply_POT();
-      osc_test->Set_asimov2fitdata();
-      chi2_3v_on_4vAsimov = osc_test->FCN( pars_3v );
+	double grid_sin2_2theta_14 = pow( 10, xcenter );
+	double grid_dm2_41         = pow( 10, ycenter );
 
-      /////// 3v Asimov
-      osc_test->Set_noosc2fitdata();
-      chi2_4v_on_3vAsimov = osc_test->FCN( pars_4v );
-
-      /////// data
-      osc_test->Set_meas2fitdata();
-      chi2_4v_on_data = osc_test->FCN( pars_4v );
-      chi2_3v_on_data = osc_test->FCN( pars_3v );
-
-      ///////
-      dchi2_4vAsimov = chi2_4v_on_4vAsimov - chi2_3v_on_4vAsimov;
-      dchi2_3vAsimov = chi2_4v_on_3vAsimov - chi2_3v_on_3vAsimov;
-      dchi2_data     = chi2_4v_on_data - chi2_3v_on_data;
+	double pars_4v[4] = {grid_dm2_41, grid_sin2_2theta_14, 0, 0};
+	double pars_3v[4] = {0};
       
-      double delta_4v = dchi2_4vAsimov;
-      double delta_3v = dchi2_3vAsimov;
-      double delta_dd = dchi2_data;
+	///////      
+	double chi2_4v_on_4vAsimov = 0; double chi2_3v_on_4vAsimov = 0; double dchi2_4vAsimov = 0;
+	double chi2_4v_on_3vAsimov = 0; double chi2_3v_on_3vAsimov = 0; double dchi2_3vAsimov = 0;
+	double chi2_4v_on_data = 0;     double chi2_3v_on_data = 0;     double dchi2_data = 0;
       
-      double data_CL = 100 - osc_test->func_CLs(delta_4v, delta_3v, delta_dd) * 100.;
-      double pred_CL = 100 - osc_test->func_CLs(delta_4v, delta_3v, delta_3v) * 100.;
-      double pred_CL_1sigma_plus  = 100 - osc_test->func_CLs(delta_4v, delta_3v, delta_3v-(2*sqrt(fabs(delta_3v))) ) * 100.;
-      double pred_CL_1sigma_minus = 100 - osc_test->func_CLs(delta_4v, delta_3v, delta_3v+(2*sqrt(fabs(delta_3v))) ) * 100.;
-      double pred_CL_2sigma_plus  = 100 - osc_test->func_CLs(delta_4v, delta_3v, delta_3v-2*(2*sqrt(fabs(delta_3v))) ) * 100.;
-      double pred_CL_2sigma_minus = 100 - osc_test->func_CLs(delta_4v, delta_3v, delta_3v+2*(2*sqrt(fabs(delta_3v))) ) * 100.;
+	/////// 4v Asimov      
+	osc_test->Set_oscillation_pars(pars_4v[0], pars_4v[1], pars_4v[2], pars_4v[3]);
+	osc_test->Apply_oscillation();
+	osc_test->Set_apply_POT();
+	osc_test->Set_asimov2fitdata();
+	chi2_3v_on_4vAsimov = osc_test->FCN( pars_3v );
 
-      roostr = TString::Format("outfile_theta_%03d_dm2_%03d.txt", ibin, jbin);
-      ofstream outfile(roostr, ios::out|ios::trunc);
-      outfile<<TString::Format("%3d %3d %12.6f %12.6f %12.6f %12.6f %12.6f %12.6f %14.9f %14.9f %14.9f %14.9f %14.9f %14.9f",
-			       ibin, jbin,
-			       chi2_4v_on_4vAsimov, chi2_3v_on_4vAsimov,
-			       chi2_4v_on_3vAsimov, chi2_3v_on_3vAsimov,
-			       chi2_4v_on_data, chi2_3v_on_data,
-			       data_CL, pred_CL,
-			       pred_CL_1sigma_plus, pred_CL_1sigma_minus,
-			       pred_CL_2sigma_plus, pred_CL_2sigma_minus
-			       )<<endl;
-      outfile.close();
+	/////// 3v Asimov
+	osc_test->Set_noosc2fitdata();
+	chi2_4v_on_3vAsimov = osc_test->FCN( pars_4v );
+
+	/////// data
+	osc_test->Set_meas2fitdata();
+	chi2_4v_on_data = osc_test->FCN( pars_4v );
+	chi2_3v_on_data = osc_test->FCN( pars_3v );
+
+	///////
+	dchi2_4vAsimov = chi2_4v_on_4vAsimov - chi2_3v_on_4vAsimov;
+	dchi2_3vAsimov = chi2_4v_on_3vAsimov - chi2_3v_on_3vAsimov;
+	dchi2_data     = chi2_4v_on_data - chi2_3v_on_data;
       
-    }// for(int jbin=1; jbin<=bins_dm2; jbin++)
-  }// for(int ibin=1; ibin<=bins_theta; ibin++)
-  
+	double delta_4v = dchi2_4vAsimov;
+	double delta_3v = dchi2_3vAsimov;
+	double delta_dd = dchi2_data;
+      
+	double data_CL = 100 - osc_test->func_CLs(delta_4v, delta_3v, delta_dd) * 100.;
+	double pred_CL = 100 - osc_test->func_CLs(delta_4v, delta_3v, delta_3v) * 100.;
+	double pred_CL_1sigma_plus  = 100 - osc_test->func_CLs(delta_4v, delta_3v, delta_3v-(2*sqrt(fabs(delta_3v))) ) * 100.;
+	double pred_CL_1sigma_minus = 100 - osc_test->func_CLs(delta_4v, delta_3v, delta_3v+(2*sqrt(fabs(delta_3v))) ) * 100.;
+	double pred_CL_2sigma_plus  = 100 - osc_test->func_CLs(delta_4v, delta_3v, delta_3v-2*(2*sqrt(fabs(delta_3v))) ) * 100.;
+	double pred_CL_2sigma_minus = 100 - osc_test->func_CLs(delta_4v, delta_3v, delta_3v+2*(2*sqrt(fabs(delta_3v))) ) * 100.;
+
+	roostr = TString::Format("outfile_theta_%03d_dm2_%03d.txt", ibin, jbin);
+	ofstream outfile(roostr, ios::out|ios::trunc);
+	outfile<<TString::Format("%3d %3d %12.6f %12.6f %12.6f %12.6f %12.6f %12.6f %14.9f %14.9f %14.9f %14.9f %14.9f %14.9f",
+				 ibin, jbin,
+				 chi2_4v_on_4vAsimov, chi2_3v_on_4vAsimov,
+				 chi2_4v_on_3vAsimov, chi2_3v_on_3vAsimov,
+				 chi2_4v_on_data, chi2_3v_on_data,
+				 data_CL, pred_CL,
+				 pred_CL_1sigma_plus, pred_CL_1sigma_minus,
+				 pred_CL_2sigma_plus, pred_CL_2sigma_minus
+				 )<<endl;
+	outfile.close();
+      
+      }// for(int jbin=1; jbin<=bins_dm2; jbin++)
+    }// for(int ibin=1; ibin<=bins_theta; ibin++)
+
+  }
   
   ///////////////////////////////////////////////////////////
 
@@ -253,8 +277,8 @@ int main(int argc, char** argv)
   cout<<" ------------------------------ check at the final step ------------------------------"<<endl;
 
   cout<<endl;
-  cout<<TString::Format(" ---> display(-d) %d, ifile(-f) %d, scaleF_POT_BNB(-pbnb) %6.4f, scaleF_POT_NuMI(-pnumi) %6.4f",
-			display, ifile, osc_test->scaleF_POT_BNB, osc_test->scaleF_POT_NuMI)<<endl;
+  cout<<TString::Format(" ---> display(-d) %d, ifile(-f) %d, scaleF_POT_BNB(-pbnb) %6.4f, scaleF_POT_NuMI(-pnumi) %6.4f, itheta(-itheta) %d, idm2(-idm2) %d",
+			display, ifile, osc_test->scaleF_POT_BNB, osc_test->scaleF_POT_NuMI, itheta, idm2)<<endl;
   
   cout<<endl;
   cout<<TString::Format(" ---> flag_syst_dirt    %d", osc_test->flag_syst_dirt)<<endl;
