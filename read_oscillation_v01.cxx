@@ -149,17 +149,56 @@ int main(int argc, char** argv)
 
   /// standard order
   val_dm2_41 = 7.2;
-  val_sin2_2theta_14 = 0;
+  val_sin2_2theta_14 = 0.26;
   osc_test->Set_oscillation_pars(val_dm2_41, val_sin2_2theta_14, val_sin2_theta_24, val_sin2_theta_34);  
   osc_test->Apply_oscillation();
   osc_test->Set_apply_POT();// meas, CV, COV: all ready
-  osc_test->Set_meas2fitdata();
+  //osc_test->Set_meas2fitdata();
+  osc_test->Set_asimov2fitdata();
   
   ///////
   //osc_test->Plot_user();
-  
-  ///////
   //osc_test->Minimization_OscPars_FullCov(8.0, 0.4, 0, 0, "str_flag_fixpar");
+
+  /////////////////////////////////////////////////////////// exclusion
+
+  cout<<endl;
+  cout<<" ---> Exclusion processing"<<endl;
+  
+  int bins_theta = 40;
+  int bins_dm2   = 40;
+  
+  ////// X: sin22t14, 1e-2 -> 1   ---> "log10()" ---> -2 -> 0
+  ////// Y: m41^2,    1e-1 -> 20  ---> "log10()" ---> -1 -> 1.30103      
+  TH2D *h2_space = new TH2D("h2_space_whole", "h2_space_whole", bins_theta, -2, 0, bins_dm2, -1, 1.30103);
+
+  for(int ibin=1; ibin<=bins_theta; ibin++) {      
+    cout<<TString::Format(" ---> processing %4d/%4d", ibin, bins_theta)<<endl;    
+    for(int jbin=1; jbin<=bins_dm2; jbin++) {
+      
+      double xcenter = h2_space->GetXaxis()->GetBinCenter(ibin);
+      double ycenter = h2_space->GetYaxis()->GetBinCenter(jbin);
+      
+      double test_sin2_2theta_14 = pow( 10, xcenter );
+      double test_dm2_41         = pow( 10, ycenter );
+
+      ///////
+      
+      double dchi2_4vAsimov  = 0;
+      double dchi2_3vAsimov  = 0;      
+      double chi2_4v_on_data = 0;
+      double chi2_3v_on_data = 0;
+      double dchi2_data      = 0;
+
+      /////// 4v Asimov
+      osc_test->Set_oscillation_pars(test_dm2_41, test_sin2_2theta_14, 0, 0);
+      osc_test->Apply_oscillation();
+      osc_test->Set_apply_POT();
+      osc_test->Set_asimov2fitdata();
+      
+    }// for(int jbin=1; jbin<=bins_dm2; jbin++)
+  }// for(int ibin=1; ibin<=bins_theta; ibin++)
+  
   
   ///////////////////////////////////////////////////////////
 

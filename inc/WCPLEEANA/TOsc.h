@@ -323,7 +323,10 @@ class TOsc {
   
   void Set_meas2fitdata() {
     matrix_meas2fitdata_newworld = matrix_eff_newworld_meas;
-    //matrix_meas2fitdata_newworld = matrix_eff_newworld_pred;
+  }
+
+  void Set_asimov2fitdata() {
+    matrix_meas2fitdata_newworld = matrix_eff_newworld_pred;
   }
 
   void Plot_user();
