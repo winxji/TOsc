@@ -8,7 +8,17 @@ namespace Configure_Osc
   TString default_fluxXs_dir   = "./data_inputs/hist_rootfiles_default_noosc/XsFlux/";
   TString default_detector_dir = "./data_inputs/hist_rootfiles_default_noosc/DetVar/";
 
-  ///////
+  ///////////////////////////
+
+  bool flag_syst_dirt   = 1;
+  bool flag_syst_mcstat = 1;
+  bool flag_syst_flux   = 1;
+  bool flag_syst_geant  = 1;
+  bool flag_syst_Xs     = 1;
+  bool flag_syst_det    = 1;
+  
+  ///////////////////////////
+  
   bool flag_NuMI_nueCC_from_intnue      = 1;
   bool flag_NuMI_nueCC_from_overlaynumu = 0;
   bool flag_NuMI_nueCC_from_appnue      = 0;
@@ -38,6 +48,7 @@ namespace Configure_Osc
   bool flag_NuMI_NCpi0_from_dirtnumu    = 0;// approximation: ignore osc-effect. 
 
   ///////
+  
   bool flag_BNB_nueCC_from_intnue      = 0;
   bool flag_BNB_nueCC_from_overlaynumu = 0;
   bool flag_BNB_nueCC_from_appnue      = 0;
@@ -64,24 +75,8 @@ namespace Configure_Osc
   bool flag_BNB_NCpi0_from_appnue      = 0;
   bool flag_BNB_NCpi0_from_appnumu     = 0;// approximation: ignore osc-effect. flag_BNB_NCpi0_from_overlaynue
   bool flag_BNB_NCpi0_from_dirtnue     = 0;// approximation: ignore osc-effect. LEE PRD paper(BNB case): dirt/data = 188.3/5936.0
-  bool flag_BNB_NCpi0_from_dirtnumu    = 0;// approximation: ignore osc-effect. 
-
-
+  bool flag_BNB_NCpi0_from_dirtnumu    = 0;// approximation: ignore osc-effect.
   
-  ///////
-  
-  bool flag_NuMI_nue2nue   = 1;
-  bool flag_NuMI_numu2numu = 0;
-  bool flag_NuMI_numu2nue  = 0;  
-  bool flag_NuMI_nue2numu  = 0;
-  bool flag_NuMI_NC_1minus_nue2sterile  = 0;
-  bool flag_NuMI_NC_1minus_numu2sterile = 0;
-  
-  bool flag_BNB_nue2nue   = 0;
-  bool flag_BNB_numu2numu = 0;
-  bool flag_BNB_numu2nue  = 0;  
-  bool flag_BNB_nue2numu  = 0;
-  bool flag_BNB_NC_1minus_nue2sterile  = 0;
-  bool flag_BNB_NC_1minus_numu2sterile = 0;
+  ///////////////////////////
   
 }

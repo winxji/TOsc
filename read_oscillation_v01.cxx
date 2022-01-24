@@ -48,9 +48,6 @@ int main(int argc, char** argv)
       if(  !( convert>>display ) ) { cerr<<" ---> Error display !"<<endl; exit(1); }
     }     
   }
-  
-  cout<<endl<<TString::Format(" ---> display(-d) %d, ifile(-f) %d, scaleF_POT_BNB(-pbnb) %6.4f, scaleF_POT_NuMI(-pnumi) %6.4f",
-			      display, ifile, scaleF_POT_BNB, scaleF_POT_NuMI)<<endl<<endl;
 
   ///////////////////////////////////////////////////////////
   
@@ -87,21 +84,52 @@ int main(int argc, char** argv)
 
   osc_test->scaleF_POT_BNB  = scaleF_POT_BNB;
   osc_test->scaleF_POT_NuMI = scaleF_POT_NuMI;
-  
-  osc_test->flag_NuMI_nue2nue   = Configure_Osc::flag_NuMI_nue2nue;
-  osc_test->flag_NuMI_numu2numu = Configure_Osc::flag_NuMI_numu2numu;
-  osc_test->flag_NuMI_numu2nue  = Configure_Osc::flag_NuMI_numu2nue;  
-  osc_test->flag_NuMI_nue2numu  = Configure_Osc::flag_NuMI_nue2numu;
-  osc_test->flag_NuMI_NC_1minus_nue2sterile  = Configure_Osc::flag_NuMI_NC_1minus_nue2sterile;
-  osc_test->flag_NuMI_NC_1minus_numu2sterile = Configure_Osc::flag_NuMI_NC_1minus_numu2sterile;
-  
-  osc_test->flag_BNB_nue2nue   = Configure_Osc::flag_BNB_nue2nue;
-  osc_test->flag_BNB_numu2numu = Configure_Osc::flag_BNB_numu2numu;
-  osc_test->flag_BNB_numu2nue  = Configure_Osc::flag_BNB_numu2nue;  
-  osc_test->flag_BNB_nue2numu  = Configure_Osc::flag_BNB_nue2numu;
-  osc_test->flag_BNB_NC_1minus_nue2sterile  = Configure_Osc::flag_BNB_NC_1minus_nue2sterile;
-  osc_test->flag_BNB_NC_1minus_numu2sterile = Configure_Osc::flag_BNB_NC_1minus_numu2sterile;
+     
+  ///////
 
+  osc_test->flag_syst_dirt   = Configure_Osc::flag_syst_dirt;
+  osc_test->flag_syst_mcstat = Configure_Osc::flag_syst_mcstat;
+  osc_test->flag_syst_flux   = Configure_Osc::flag_syst_flux;
+  osc_test->flag_syst_geant  = Configure_Osc::flag_syst_geant;
+  osc_test->flag_syst_Xs     = Configure_Osc::flag_syst_Xs;
+  osc_test->flag_syst_det    = Configure_Osc::flag_syst_det;
+  
+  ///////
+
+  osc_test->flag_NuMI_nueCC_from_intnue       = Configure_Osc::flag_NuMI_nueCC_from_intnue;
+  osc_test->flag_NuMI_nueCC_from_overlaynumu  = Configure_Osc::flag_NuMI_nueCC_from_overlaynumu;
+  osc_test->flag_NuMI_nueCC_from_appnue       = Configure_Osc::flag_NuMI_nueCC_from_appnue;
+  osc_test->flag_NuMI_nueCC_from_appnumu      = Configure_Osc::flag_NuMI_nueCC_from_appnumu;
+
+  osc_test->flag_NuMI_numuCC_from_overlaynumu = Configure_Osc::flag_NuMI_numuCC_from_overlaynumu;
+  osc_test->flag_NuMI_numuCC_from_overlaynue  = Configure_Osc::flag_NuMI_numuCC_from_overlaynue;
+  osc_test->flag_NuMI_numuCC_from_appnue      = Configure_Osc::flag_NuMI_numuCC_from_appnue;
+  osc_test->flag_NuMI_numuCC_from_appnumu     = Configure_Osc::flag_NuMI_numuCC_from_appnumu;
+
+  osc_test->flag_NuMI_CCpi0_from_overlaynumu  = Configure_Osc::flag_NuMI_CCpi0_from_overlaynumu;
+  osc_test->flag_NuMI_CCpi0_from_appnue       = Configure_Osc::flag_NuMI_CCpi0_from_appnue;
+  
+  osc_test->flag_NuMI_NCpi0_from_overlaynumu  = Configure_Osc::flag_NuMI_NCpi0_from_overlaynumu;
+  osc_test->flag_NuMI_NCpi0_from_appnue       = Configure_Osc::flag_NuMI_NCpi0_from_appnue;
+
+  ///////
+  
+  osc_test->flag_BNB_nueCC_from_intnue       = Configure_Osc::flag_BNB_nueCC_from_intnue;
+  osc_test->flag_BNB_nueCC_from_overlaynumu  = Configure_Osc::flag_BNB_nueCC_from_overlaynumu;
+  osc_test->flag_BNB_nueCC_from_appnue       = Configure_Osc::flag_BNB_nueCC_from_appnue;
+  osc_test->flag_BNB_nueCC_from_appnumu      = Configure_Osc::flag_BNB_nueCC_from_appnumu;
+
+  osc_test->flag_BNB_numuCC_from_overlaynumu = Configure_Osc::flag_BNB_numuCC_from_overlaynumu;
+  osc_test->flag_BNB_numuCC_from_overlaynue  = Configure_Osc::flag_BNB_numuCC_from_overlaynue;
+  osc_test->flag_BNB_numuCC_from_appnue      = Configure_Osc::flag_BNB_numuCC_from_appnue;
+  osc_test->flag_BNB_numuCC_from_appnumu     = Configure_Osc::flag_BNB_numuCC_from_appnumu;
+
+  osc_test->flag_BNB_CCpi0_from_overlaynumu  = Configure_Osc::flag_BNB_CCpi0_from_overlaynumu;
+  osc_test->flag_BNB_CCpi0_from_appnue       = Configure_Osc::flag_BNB_CCpi0_from_appnue;
+  
+  osc_test->flag_BNB_NCpi0_from_overlaynumu  = Configure_Osc::flag_BNB_NCpi0_from_overlaynumu;
+  osc_test->flag_BNB_NCpi0_from_appnue       = Configure_Osc::flag_BNB_NCpi0_from_appnue;
+  
   /////// set only one time
   
   osc_test->Set_default_cv_cov(Configure_Osc::default_cv_file,
@@ -109,7 +137,7 @@ int main(int argc, char** argv)
 			       Configure_Osc::default_mcstat_file,
 			       Configure_Osc::default_fluxXs_dir,
 			       Configure_Osc::default_detector_dir);
-  
+
   osc_test->Set_oscillation_base();
   
   /////// Set_oscillation_pars(double val_dm2_41, double val_sin2_2theta_14, double val_sin2_theta_24, double val_sin2_theta_34)
@@ -121,39 +149,40 @@ int main(int argc, char** argv)
 
   /// standard order
   val_dm2_41 = 7.2;
-  val_sin2_2theta_14 = 0.26;
+  val_sin2_2theta_14 = 0;
   osc_test->Set_oscillation_pars(val_dm2_41, val_sin2_2theta_14, val_sin2_theta_24, val_sin2_theta_34);  
   osc_test->Apply_oscillation();
   osc_test->Set_apply_POT();// meas, CV, COV: all ready
   osc_test->Set_meas2fitdata();
-
-  ///
-  osc_test->Minimization_OscPars_FullCov(8.0, 0.4, 0, 0, "str_flag_fixpar");
-    
+  
+  ///////
+  //osc_test->Plot_user();
+  
+  ///////
+  //osc_test->Minimization_OscPars_FullCov(8.0, 0.4, 0, 0, "str_flag_fixpar");
+  
   ///////////////////////////////////////////////////////////
 
   cout<<endl;
-  cout<<" ----------------------------> check information"<<endl;
-  cout<<endl;
-  cout<<" osc_test->flag_NuMI_nue2nue   " <<osc_test->flag_NuMI_nue2nue<<endl;
-  cout<<" osc_test->flag_NuMI_numu2numu " <<osc_test->flag_NuMI_numu2numu<<endl;
-  cout<<" osc_test->flag_NuMI_numu2nue  " <<osc_test->flag_NuMI_numu2nue<<endl;  
-  cout<<" osc_test->flag_NuMI_nue2numu  " <<osc_test->flag_NuMI_nue2numu<<endl;
-  cout<<" osc_test->flag_NuMI_NC_1minus_nue2sterile  " <<osc_test->flag_NuMI_NC_1minus_nue2sterile<<endl;
-  cout<<" osc_test->flag_NuMI_NC_1minus_numu2sterile " <<osc_test->flag_NuMI_NC_1minus_numu2sterile<<endl;
-  cout<<endl;
-  cout<<" osc_test->flag_BNB_nue2nue   " <<osc_test->flag_BNB_nue2nue<<endl;
-  cout<<" osc_test->flag_BNB_numu2numu " <<osc_test->flag_BNB_numu2numu<<endl;
-  cout<<" osc_test->flag_BNB_numu2nue  " <<osc_test->flag_BNB_numu2nue<<endl;  
-  cout<<" osc_test->flag_BNB_nue2numu  " <<osc_test->flag_BNB_nue2numu<<endl;
-  cout<<" osc_test->flag_BNB_NC_1minus_nue2sterile  " <<osc_test->flag_BNB_NC_1minus_nue2sterile<<endl;
-  cout<<" osc_test->flag_BNB_NC_1minus_numu2sterile " <<osc_test->flag_BNB_NC_1minus_numu2sterile<<endl;
-  cout<<endl;
-  
-  cout<<TString::Format(" ---> display(-d) %d, ifile(-f) %d, scaleF_POT_BNB(-pbnb) %6.4f, scaleF_POT_NuMI(-pnumi) %6.4f",
-			display, ifile, scaleF_POT_BNB, scaleF_POT_NuMI)<<endl;
-  cout<<endl;
+  cout<<" ------------------------------ check at the final step ------------------------------"<<endl;
+  cout<<" ------------------------------ check at the final step ------------------------------"<<endl;
 
+  cout<<endl;
+  cout<<TString::Format(" ---> display(-d) %d, ifile(-f) %d, scaleF_POT_BNB(-pbnb) %6.4f, scaleF_POT_NuMI(-pnumi) %6.4f",
+			display, ifile, osc_test->scaleF_POT_BNB, osc_test->scaleF_POT_NuMI)<<endl;
+  
+  cout<<endl;
+  cout<<TString::Format(" ---> flag_syst_dirt    %d", osc_test->flag_syst_dirt)<<endl;
+  cout<<TString::Format(" ---> flag_syst_mcstat  %d", osc_test->flag_syst_mcstat)<<endl;
+  cout<<TString::Format(" ---> flag_syst_flux    %d", osc_test->flag_syst_flux)<<endl;
+  cout<<TString::Format(" ---> flag_syst_geant   %d", osc_test->flag_syst_geant)<<endl;
+  cout<<TString::Format(" ---> flag_syst_Xs      %d", osc_test->flag_syst_Xs)<<endl;
+  cout<<TString::Format(" ---> flag_syst_det     %d", osc_test->flag_syst_det)<<endl;
+
+  cout<<endl;
+  cout<<" ---> Finished sucessfully"<<endl;
+  
+  cout<<endl;
   if( display ) {
     cout<<" Enter Ctrl+c to end the program"<<endl;
     cout<<" Enter Ctrl+c to end the program"<<endl;

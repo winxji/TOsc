@@ -70,26 +70,11 @@ class TOsc {
   TOsc() {
     cout<<endl<<" ---> Hello TOsc"<<endl<<endl;
 
-    default_oldworld_rows = 0;
-    default_newworld_rows = 0;
-
     scaleF_POT_BNB  = 1;
     scaleF_POT_NuMI = 1;
-    
-    flag_NuMI_nue2nue   = 0;
-    flag_NuMI_numu2numu = 0;
-    flag_NuMI_numu2nue  = 0;  
-    flag_NuMI_nue2numu  = 0;
-    flag_NuMI_NC_1minus_nue2sterile  = 0;
-    flag_NuMI_NC_1minus_numu2sterile = 0;
-  
-    flag_BNB_nue2nue   = 0;
-    flag_BNB_numu2numu = 0;
-    flag_BNB_numu2nue  = 0;  
-    flag_BNB_nue2numu  = 0;
-    flag_BNB_NC_1minus_nue2sterile  = 0;
-    flag_BNB_NC_1minus_numu2sterile = 0;
-    
+   
+    ///////////////////////////
+     
     dm2_41 = 0;
     sin2_2theta_14 = 0;
     sin2_theta_24  = 0;
@@ -105,111 +90,69 @@ class TOsc {
     minimization_sin2_2theta_14_err = -1;
     minimization_sin2_theta_24_err  = -1;
     minimization_sin2_theta_34_err  = -1;
+    
+    ///////////////////////////
+    
+    flag_syst_dirt   = 0;
+    flag_syst_mcstat = 0;
+    flag_syst_flux   = 0;
+    flag_syst_geant  = 0;
+    flag_syst_Xs     = 0;
+    flag_syst_det    = 0;
+  
+    ///////////////////////////
+  
+    flag_NuMI_nueCC_from_intnue       = 0;
+    flag_NuMI_nueCC_from_overlaynumu  = 0;
+    flag_NuMI_nueCC_from_appnue       = 0;
+    flag_NuMI_nueCC_from_appnumu      = 0;
+
+    flag_NuMI_numuCC_from_overlaynumu = 0;
+    flag_NuMI_numuCC_from_overlaynue  = 0;
+    flag_NuMI_numuCC_from_appnue      = 0;
+    flag_NuMI_numuCC_from_appnumu     = 0;
+
+    flag_NuMI_CCpi0_from_overlaynumu  = 0;
+    flag_NuMI_CCpi0_from_appnue       = 0;
+  
+    flag_NuMI_NCpi0_from_overlaynumu  = 0;
+    flag_NuMI_NCpi0_from_appnue       = 0;
+
+    ///////
+  
+    flag_BNB_nueCC_from_intnue       = 0;
+    flag_BNB_nueCC_from_overlaynumu  = 0;
+    flag_BNB_nueCC_from_appnue       = 0;
+    flag_BNB_nueCC_from_appnumu      = 0;
+
+    flag_BNB_numuCC_from_overlaynumu = 0;
+    flag_BNB_numuCC_from_overlaynue  = 0;
+    flag_BNB_numuCC_from_appnue      = 0;
+    flag_BNB_numuCC_from_appnumu     = 0;
+
+    flag_BNB_CCpi0_from_overlaynumu  = 0;
+    flag_BNB_CCpi0_from_appnue       = 0;
+  
+    flag_BNB_NCpi0_from_overlaynumu  = 0;
+    flag_BNB_NCpi0_from_appnue       = 0;
+  
+    ///////////////////////////
+  
+    default_oldworld_rows = 0;
+    default_newworld_rows = 0;
+
   }
 
-  ////////////////////////////////////////////////////// data members
-  
-  TMatrixD matrix_transform;
-  TMatrixD matrix_transform_wiPOT;
+  ////////////////////////////////////////////////////// data members  
 
   double scaleF_POT_BNB;
   double scaleF_POT_NuMI;
-  
-  map<int, TH1D*>map_default_h1d_meas;
-  map<int, int>map_default_h1d_meas_bins;
-  map<int, double>map_default_h1d_meas_xlow;
-  map<int, double>map_default_h1d_meas_xhgh;  
-  vector<double> vector_default_newworld_meas;
-  TMatrixD matrix_default_newworld_meas;
-  TMatrixD matrix_default_newworld_meas_POT;
-
-  map<int, TH1D*>map_default_h1d_pred;
-  map<int, int>map_default_h1d_pred_bins;
-  map<int, double>map_default_h1d_pred_xlow;
-  map<int, double>map_default_h1d_pred_xhgh;  
-  vector<double> vector_default_oldworld_pred;
-  TMatrixD matrix_default_oldworld_pred;
-  TMatrixD matrix_default_newworld_pred;
-
-  TMatrixD matrix_default_oldworld_abs_syst_addi;  // for dirt additional syst, approximation: always use the same absolute cov
-  TMatrixD matrix_default_oldworld_abs_syst_addi_POT;
-  TMatrixD matrix_default_oldworld_abs_syst_mcstat;// only newworld, iteration
-  TMatrixD matrix_default_oldworld_abs_syst_flux;
-  TMatrixD matrix_default_oldworld_abs_syst_geant;
-  TMatrixD matrix_default_oldworld_abs_syst_Xs;
-  TMatrixD matrix_default_oldworld_abs_syst_det;
-  
-  TMatrixD matrix_default_oldworld_rel_syst_addi;  //
-  TMatrixD matrix_default_oldworld_rel_syst_mcstat;//
-  TMatrixD matrix_default_oldworld_rel_syst_flux;  // initialized
-  TMatrixD matrix_default_oldworld_rel_syst_geant; // initialized
-  TMatrixD matrix_default_oldworld_rel_syst_Xs;    // initialized
-  TMatrixD matrix_default_oldworld_rel_syst_det;   // initialized
-  
-  TMatrixD matrix_default_newworld_abs_syst_addi;
-  TMatrixD matrix_default_newworld_abs_syst_mcstat;// only newworld
-  TMatrixD matrix_default_newworld_abs_syst_mcstat_POT;
-  TMatrixD matrix_default_newworld_abs_syst_flux;
-  TMatrixD matrix_default_newworld_abs_syst_geant;
-  TMatrixD matrix_default_newworld_abs_syst_Xs;
-  TMatrixD matrix_default_newworld_abs_syst_det;
-
-  TMatrixD matrix_default_newworld_rel_syst_addi;
-  TMatrixD matrix_default_newworld_rel_syst_mcstat;
-  TMatrixD matrix_default_newworld_rel_syst_flux;
-  TMatrixD matrix_default_newworld_rel_syst_geant;
-  TMatrixD matrix_default_newworld_rel_syst_Xs;
-  TMatrixD matrix_default_newworld_rel_syst_det;
-
-  TMatrixD matrix_default_newworld_abs_syst_total;
-  
-  ///////
-  
-  bool flag_NuMI_nue2nue;
-  bool flag_NuMI_numu2numu;
-  bool flag_NuMI_numu2nue;  
-  bool flag_NuMI_nue2numu;
-  bool flag_NuMI_NC_1minus_nue2sterile;
-  bool flag_NuMI_NC_1minus_numu2sterile;
-  
-  bool flag_BNB_nue2nue;
-  bool flag_BNB_numu2numu;
-  bool flag_BNB_numu2nue;  
-  bool flag_BNB_nue2numu;
-  bool flag_BNB_NC_1minus_nue2sterile;
-  bool flag_BNB_NC_1minus_numu2sterile;
-  
-  ///////
-  TMatrixD matrix_oscillation_base;
-  TMatrixD matrix_oscillation_effect_result_oldworld;
-
-  vector<double>vector_oscillation_base_NuMI_nueCC_scaleFPOT; vector< vector<EventInfo> >vector_vector_oscillation_base_NuMI_nueCC_info;
-  vector<double>vector_oscillation_base_NuMI_numuCC_scaleFPOT;
-  vector<double>vector_oscillation_base_NuMI_nueNC_scaleFPOT;
-  vector<double>vector_oscillation_base_NuMI_numuNC_scaleFPOT;
-  
-  vector<double>vector_oscillation_base_NuMIdirt_nueCC_scaleFPOT;
-  vector<double>vector_oscillation_base_NuMIdirt_numuCC_scaleFPOT;
-  vector<double>vector_oscillation_base_NuMIdirt_nueNC_scaleFPOT;
-  vector<double>vector_oscillation_base_NuMIdirt_numuNC_scaleFPOT;
-  
-  vector<double>vector_oscillation_base_BNB_nueCC_scaleFPOT;
-  vector<double>vector_oscillation_base_BNB_numuCC_scaleFPOT;
-  vector<double>vector_oscillation_base_BNB_nueNC_scaleFPOT;
-  vector<double>vector_oscillation_base_BNB_numuNC_scaleFPOT;
-  
-  vector<double>vector_oscillation_base_BNBdirt_nueCC_scaleFPOT;
-  vector<double>vector_oscillation_base_BNBdirt_numuCC_scaleFPOT;
-  vector<double>vector_oscillation_base_BNBdirt_nueNC_scaleFPOT;
-  vector<double>vector_oscillation_base_BNBdirt_numuNC_scaleFPOT;
   
   double dm2_41;
   double sin2_2theta_14;
   double sin2_theta_24;
   double sin2_theta_34;
 
-  TMatrixD matrix_meas2fitdata_newworld;
-  
   int    minimization_status;
   double minimization_chi2;
   double minimization_dm2_41_val;
@@ -220,15 +163,151 @@ class TOsc {
   double minimization_sin2_2theta_14_err;
   double minimization_sin2_theta_24_err;
   double minimization_sin2_theta_34_err;
-  
-  ////////////////////////////////////////////////////// member functions
 
+  ///////////////////////////
+
+  bool flag_syst_dirt;
+  bool flag_syst_mcstat;
+  bool flag_syst_flux;
+  bool flag_syst_geant;
+  bool flag_syst_Xs;
+  bool flag_syst_det;
+  
+  ///////////////////////////
+  
+  bool flag_NuMI_nueCC_from_intnue;
+  bool flag_NuMI_nueCC_from_overlaynumu;
+  bool flag_NuMI_nueCC_from_appnue;
+  bool flag_NuMI_nueCC_from_appnumu;
+
+  bool flag_NuMI_numuCC_from_overlaynumu;
+  bool flag_NuMI_numuCC_from_overlaynue;
+  bool flag_NuMI_numuCC_from_appnue;
+  bool flag_NuMI_numuCC_from_appnumu;
+
+  bool flag_NuMI_CCpi0_from_overlaynumu;
+  bool flag_NuMI_CCpi0_from_appnue;
+  
+  bool flag_NuMI_NCpi0_from_overlaynumu;
+  bool flag_NuMI_NCpi0_from_appnue;
+
+  ///////
+  
+  bool flag_BNB_nueCC_from_intnue;
+  bool flag_BNB_nueCC_from_overlaynumu;
+  bool flag_BNB_nueCC_from_appnue;
+  bool flag_BNB_nueCC_from_appnumu;
+
+  bool flag_BNB_numuCC_from_overlaynumu;
+  bool flag_BNB_numuCC_from_overlaynue;
+  bool flag_BNB_numuCC_from_appnue;
+  bool flag_BNB_numuCC_from_appnumu;
+
+  bool flag_BNB_CCpi0_from_overlaynumu;
+  bool flag_BNB_CCpi0_from_appnue;
+  
+  bool flag_BNB_NCpi0_from_overlaynumu;
+  bool flag_BNB_NCpi0_from_appnue;
+  
+  ///////////////////////////
+  
+  TMatrixD matrix_transform;
+  
+  map<int, TH1D*>map_default_h1d_meas;
+  map<int, int>map_default_h1d_meas_bins;
+  map<int, double>map_default_h1d_meas_xlow;
+  map<int, double>map_default_h1d_meas_xhgh;
+  map<int, int>map_default_newworld_meas_bins;
+  vector<double> vector_default_newworld_meas;
+  TMatrixD matrix_default_newworld_meas;// assignment only once
+
+  map<int, TH1D*>map_default_h1d_pred;
+  map<int, int>map_default_h1d_pred_bins;
+  map<int, double>map_default_h1d_pred_xlow;
+  map<int, double>map_default_h1d_pred_xhgh;
+  map<int, int>map_default_oldworld_pred_bins;
+  vector<double> vector_default_oldworld_pred;
+  TMatrixD matrix_default_oldworld_pred;// assignment only once
+  
+  TMatrixD matrix_oscillation_base_oldworld_pred;// = matrix_default_oldworld_pred - oscillation components
+  TMatrixD matrix_oscillation_oldworld_pred;
+  
+  ///////////////////////////
+
+  TMatrixD matrix_default_oldworld_abs_syst_addi;  // initialized, for dirt additional syst, approximation: always use the same absolute cov
+
+  TMatrixD matrix_default_oldworld_rel_syst_flux;  // initialized
+  TMatrixD matrix_default_oldworld_rel_syst_geant; // initialized
+  TMatrixD matrix_default_oldworld_rel_syst_Xs;    // initialized
+  TMatrixD matrix_default_oldworld_rel_syst_det;   // initialized  
+
+  TMatrixD matrix_default_newworld_abs_syst_mcstat;// initialized, only newworld
+  
+  ///////////////////////////
+  
+  TMatrixD matrix_eff_newworld_abs_syst_addi;
+  TMatrixD matrix_eff_newworld_abs_syst_mcstat;
+  TMatrixD matrix_eff_newworld_abs_syst_flux;
+  TMatrixD matrix_eff_newworld_abs_syst_geant;
+  TMatrixD matrix_eff_newworld_abs_syst_Xs;
+  TMatrixD matrix_eff_newworld_abs_syst_det;
+  TMatrixD matrix_eff_newworld_abs_syst_total;
+  
+  TMatrixD matrix_eff_newworld_meas;
+  TMatrixD matrix_eff_newworld_pred;
+
+  TMatrixD matrix_meas2fitdata_newworld;
+  
+  ///////////////////////////
+
+  vector<double>vector_NuMI_nueCC_from_intnue_scaleFPOT;       vector< vector<EventInfo> >vector_vector_NuMI_nueCC_from_intnue_eventinfo;
+  vector<double>vector_NuMI_nueCC_from_overlaynumu_scaleFPOT;  vector< vector<EventInfo> >vector_vector_NuMI_nueCC_from_overlaynumu_eventinfo;
+  vector<double>vector_NuMI_nueCC_from_appnue_scaleFPOT;       vector< vector<EventInfo> >vector_vector_NuMI_nueCC_from_appnue_eventinfo;
+  vector<double>vector_NuMI_nueCC_from_appnumu_scaleFPOT;      vector< vector<EventInfo> >vector_vector_NuMI_nueCC_from_appnumu_eventinfo;
+
+  vector<double>vector_NuMI_numuCC_from_overlaynumu_scaleFPOT; vector< vector<EventInfo> >vector_vector_NuMI_numuCC_from_overlaynumu_eventinfo;
+  vector<double>vector_NuMI_numuCC_from_overlaynue_scaleFPOT;  vector< vector<EventInfo> >vector_vector_NuMI_numuCC_from_overlaynue_eventinfo;
+  vector<double>vector_NuMI_numuCC_from_appnue_scaleFPOT;      vector< vector<EventInfo> >vector_vector_NuMI_numuCC_from_appnue_eventinfo;
+  vector<double>vector_NuMI_numuCC_from_appnumu_scaleFPOT;     vector< vector<EventInfo> >vector_vector_NuMI_numuCC_from_appnumu_eventinfo;
+
+  vector<double>vector_NuMI_CCpi0_from_overlaynumu_scaleFPOT;  vector< vector<EventInfo> >vector_vector_NuMI_CCpi0_from_overlaynumu_eventinfo;
+  vector<double>vector_NuMI_CCpi0_from_appnue_scaleFPOT;       vector< vector<EventInfo> >vector_vector_NuMI_CCpi0_from_appnue_eventinfo;
+
+  vector<double>vector_NuMI_NCpi0_from_overlaynumu_scaleFPOT;  vector< vector<EventInfo> >vector_vector_NuMI_NCpi0_from_overlaynumu_eventinfo;
+  vector<double>vector_NuMI_NCpi0_from_appnue_scaleFPOT;       vector< vector<EventInfo> >vector_vector_NuMI_NCpi0_from_appnue_eventinfo;
+
+  ///////
+
+  vector<double>vector_BNB_nueCC_from_intnue_scaleFPOT;       vector< vector<EventInfo> >vector_vector_BNB_nueCC_from_intnue_eventinfo;
+  vector<double>vector_BNB_nueCC_from_overlaynumu_scaleFPOT;  vector< vector<EventInfo> >vector_vector_BNB_nueCC_from_overlaynumu_eventinfo;
+  vector<double>vector_BNB_nueCC_from_appnue_scaleFPOT;       vector< vector<EventInfo> >vector_vector_BNB_nueCC_from_appnue_eventinfo;
+  vector<double>vector_BNB_nueCC_from_appnumu_scaleFPOT;      vector< vector<EventInfo> >vector_vector_BNB_nueCC_from_appnumu_eventinfo;
+
+  vector<double>vector_BNB_numuCC_from_overlaynumu_scaleFPOT; vector< vector<EventInfo> >vector_vector_BNB_numuCC_from_overlaynumu_eventinfo;
+  vector<double>vector_BNB_numuCC_from_overlaynue_scaleFPOT;  vector< vector<EventInfo> >vector_vector_BNB_numuCC_from_overlaynue_eventinfo;
+  vector<double>vector_BNB_numuCC_from_appnue_scaleFPOT;      vector< vector<EventInfo> >vector_vector_BNB_numuCC_from_appnue_eventinfo;
+  vector<double>vector_BNB_numuCC_from_appnumu_scaleFPOT;     vector< vector<EventInfo> >vector_vector_BNB_numuCC_from_appnumu_eventinfo;
+
+  vector<double>vector_BNB_CCpi0_from_overlaynumu_scaleFPOT;  vector< vector<EventInfo> >vector_vector_BNB_CCpi0_from_overlaynumu_eventinfo;
+  vector<double>vector_BNB_CCpi0_from_appnue_scaleFPOT;       vector< vector<EventInfo> >vector_vector_BNB_CCpi0_from_appnue_eventinfo;
+
+  vector<double>vector_BNB_NCpi0_from_overlaynumu_scaleFPOT;  vector< vector<EventInfo> >vector_vector_BNB_NCpi0_from_overlaynumu_eventinfo;
+  vector<double>vector_BNB_NCpi0_from_appnue_scaleFPOT;       vector< vector<EventInfo> >vector_vector_BNB_NCpi0_from_appnue_eventinfo;
+  
+  ///////////////////////////
+
+  ///////////////////////////
+
+  ///////////////////////////
+
+  ////////////////////////////////////////////////////// member functions
+  
   void Set_default_cv_cov(TString default_cv_file, TString default_dirtadd_file, TString default_mcstat_file, TString default_fluxXs_dir, TString default_detector_dir);
- 
+
   void Set_oscillation_base();
   void Set_oscillation_base_subfunc(TString strfile_mcPOT, TString strfile_dataPOT, vector<double> *vec_ratioPOT, TString strfile_mc_e2e, vector< vector<EventInfo> > *vec_vec_eventinfo);
-
-  /// matrix_oscillation_effect_result_oldworld = matrix_oscillation_base + matrix_oscillation_effect;
+  
+  /// matrix oscillation effect result oldworld = matrix oscillation base + matrix oscillation_ ffect;
 
   void Set_oscillation_pars(double val_dm2_41, double val_sin2_2theta_14, double val_sin2_theta_24, double val_sin2_theta_34) {
     dm2_41 = val_dm2_41;
@@ -238,17 +317,19 @@ class TOsc {
   }
   
   void Apply_oscillation();
-
   double Prob_oscillaion(double Etrue, double baseline, TString strflag_osc);
-  
-  void Set_apply_POT();
 
+  void Set_apply_POT();
+  
   void Set_meas2fitdata() {
-    //matrix_meas2fitdata_newworld = matrix_default_newworld_meas_POT;
-    matrix_meas2fitdata_newworld = matrix_default_newworld_pred;
+    matrix_meas2fitdata_newworld = matrix_eff_newworld_meas;
+    //matrix_meas2fitdata_newworld = matrix_eff_newworld_pred;
   }
 
-  int Minimization_OscPars_FullCov(double init_dm2_41, double init_sin2_2theta_14, double init_sin2_theta_24, double init_sin2_theta_34, TString roostr_flag_fixpar);
+  void Plot_user();
+  
+  void Minimization_OscPars_FullCov(double init_dm2_41, double init_sin2_2theta_14, double init_sin2_theta_24, double init_sin2_theta_34, TString roostr_flag_fixpar);
+  double FCN(const double *par);
   
   ////////////////////////////////////////////////////// data members
 
