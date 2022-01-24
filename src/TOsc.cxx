@@ -545,8 +545,9 @@ void TOsc::Set_default_cv_cov(TString default_cv_file, TString default_dirtadd_f
     matrix_eff_newworld_abs_syst_det.Clear();    matrix_eff_newworld_abs_syst_det.ResizeTo(default_newworld_rows, default_newworld_rows);
     matrix_eff_newworld_abs_syst_total.Clear();  matrix_eff_newworld_abs_syst_total.ResizeTo(default_newworld_rows, default_newworld_rows);
 	  
-    matrix_eff_newworld_meas.Clear(); matrix_eff_newworld_meas.ResizeTo(1, default_newworld_rows);
-    matrix_eff_newworld_pred.Clear(); matrix_eff_newworld_pred.ResizeTo(1, default_newworld_rows);
+    matrix_eff_newworld_meas.Clear();  matrix_eff_newworld_meas.ResizeTo(1, default_newworld_rows);
+    matrix_eff_newworld_pred.Clear();  matrix_eff_newworld_pred.ResizeTo(1, default_newworld_rows);
+    matrix_eff_newworld_noosc.Clear(); matrix_eff_newworld_noosc.ResizeTo(1, default_newworld_rows);
 
     matrix_meas2fitdata_newworld.Clear(); matrix_meas2fitdata_newworld.ResizeTo(1, default_newworld_rows);
     

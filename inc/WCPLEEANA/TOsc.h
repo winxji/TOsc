@@ -255,7 +255,8 @@ class TOsc {
   
   TMatrixD matrix_eff_newworld_meas;
   TMatrixD matrix_eff_newworld_pred;
-
+  TMatrixD matrix_eff_newworld_noosc;
+    
   TMatrixD matrix_meas2fitdata_newworld;
   
   ///////////////////////////
@@ -321,18 +322,21 @@ class TOsc {
 
   void Set_apply_POT();
   
-  void Set_meas2fitdata() {
-    matrix_meas2fitdata_newworld = matrix_eff_newworld_meas;
-  }
-
-  void Set_asimov2fitdata() {
-    matrix_meas2fitdata_newworld = matrix_eff_newworld_pred;
-  }
+  void Set_meas2fitdata()   { matrix_meas2fitdata_newworld = matrix_eff_newworld_meas; }
+  void Set_asimov2fitdata() { matrix_meas2fitdata_newworld = matrix_eff_newworld_pred; }
+  void Set_noosc2fitdata()  { matrix_meas2fitdata_newworld = matrix_eff_newworld_noosc; }
+  void Set_asimov2noosc()   { matrix_eff_newworld_noosc = matrix_eff_newworld_pred; }
 
   void Plot_user();
   
   void Minimization_OscPars_FullCov(double init_dm2_41, double init_sin2_2theta_14, double init_sin2_theta_24, double init_sin2_theta_34, TString roostr_flag_fixpar);
   double FCN(const double *par);
+
+  double func_CLs(double eff_d4v, double eff_d3v, double eff_dd) {
+    double result = ( 1+TMath::Erf( (eff_d4v-eff_dd)/sqrt(8*fabs(eff_d4v)) ) )
+      / ( 1+TMath::Erf( (eff_d3v-eff_dd)/sqrt(8*fabs(eff_d3v)) ) );
+    return result;
+  }
   
   ////////////////////////////////////////////////////// data members
 
