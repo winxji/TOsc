@@ -143,7 +143,7 @@ double TOsc::FCN(const double *par)
 void TOsc::Minimization_OscPars_FullCov(double init_dm2_41, double init_sin2_2theta_14, double init_sin2_theta_24, double init_sin2_theta_34, TString roostr_flag_fixpar)
 {
   ROOT::Minuit2::Minuit2Minimizer min_osc( ROOT::Minuit2::kMigrad );
-  min_osc.SetPrintLevel(0);
+  min_osc.SetPrintLevel(2);
   min_osc.SetStrategy(1); //0- cursory, 1- default, 2- thorough yet no more successful
   min_osc.SetMaxFunctionCalls(50000);
   min_osc.SetMaxIterations(50000);

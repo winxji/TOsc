@@ -8,6 +8,9 @@ namespace Configure_Osc
   TString default_fluxXs_dir   = "./data_inputs/hist_rootfiles_default_noosc/XsFlux/";
   TString default_detector_dir = "./data_inputs/hist_rootfiles_default_noosc/DetVar/";
 
+  //TString default_fluxXs_dir   = "./data_inputs/zz_NuMI_n4_inputs/XsFlux/";
+  //TString default_detector_dir = "./data_inputs/zz_NuMI_n4_inputs/DetVar/";
+  
   ///////////////////////////
 
   bool flag_syst_dirt   = 1;

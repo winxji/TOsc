@@ -165,7 +165,7 @@ int main(int argc, char** argv)
   osc_test->Apply_oscillation();
   osc_test->Set_apply_POT();// meas, CV, COV: all ready
   //osc_test->Set_meas2fitdata();
-  osc_test->Set_asimov2fitdata();
+  //osc_test->Set_asimov2fitdata();
   
   ///////
   //osc_test->Plot_user();
@@ -211,6 +211,9 @@ int main(int argc, char** argv)
       
 	double grid_sin2_2theta_14 = pow( 10, xcenter );
 	double grid_dm2_41         = pow( 10, ycenter );
+
+	//grid_sin2_2theta_14 = 0.26;
+	//grid_dm2_41         = 7.2;
 
 	double pars_4v[4] = {grid_dm2_41, grid_sin2_2theta_14, 0, 0};
 	double pars_3v[4] = {0};
