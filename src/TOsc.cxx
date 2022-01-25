@@ -119,13 +119,17 @@ double TOsc::FCN(const double *par)
       if( val_pred!=0 ) val_stat_cov = 3./( 1./val_data + 2./val_pred );
       else val_stat_cov = val_data;
     }
-	
-    matrix_cov_stat_total(idx, idx) += val_stat_cov;
+
+    if( val_stat_cov==0 ) val_stat_cov = 1e-6;
     if( matrix_cov_syst_total(idx, idx)==0 ) matrix_cov_syst_total(idx, idx) = 1e-6;
+    
+    matrix_cov_stat_total(idx, idx) = val_stat_cov;    
   }
-
+  
   matrix_cov_total = matrix_cov_syst_total + matrix_cov_stat_total;
-
+  //matrix_cov_total = matrix_cov_syst_total;
+  //matrix_cov_total = matrix_cov_stat_total;    
+  
   ///////
 	
   TMatrixD matrix_cov_total_inv = matrix_cov_total; matrix_cov_total_inv.Invert();

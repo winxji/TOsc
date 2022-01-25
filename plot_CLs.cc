@@ -153,7 +153,7 @@ void plot_CLs()
   
   ////////////////////////////////////////////////////////////////////////////////////////
   
-  TString file_roostr = "zz_NuMI_20by20.dat";
+  TString file_roostr = "zz_NuMI_20by20_all.dat";
   
   int bins_theta = 20;
   int bins_dm2   = 20;
