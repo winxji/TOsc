@@ -153,10 +153,10 @@ void plot_CLs()
   
   ////////////////////////////////////////////////////////////////////////////////////////
   
-  TString file_roostr = "zz_NuMI_20by20_all.dat";
+  TString file_roostr = "zz_BNBNuMI_nuedisapp_40by40.dat";
   
-  int bins_theta = 20;
-  int bins_dm2   = 20;
+  int bins_theta = 40;
+  int bins_dm2   = 40;
   
   ////// X: sin22t14, 1e-2 -> 1   ---> "log10()" ---> -2 -> 0
   ////// Y: m41^2,    1e-1 -> 20  ---> "log10()" ---> -1 -> 1.30103
@@ -179,6 +179,21 @@ void plot_CLs()
   roostr = "h2_space_pred_2sigma_minus";
   TH2D *h2_space_pred_2sigma_minus = new TH2D(roostr, roostr, bins_theta, -2, 0, bins_dm2, -1, 1.30103);
 
+
+  //////////////////////////////////////////////
+
+  roostr = "h2_wilk_chi2_data";
+  TH2D *h2_wilk_chi2_data = new TH2D(roostr, roostr, bins_theta, -2, 0, bins_dm2, -1, 1.30103);
+  roostr = "h2_wilk_chi2_pred";
+  TH2D *h2_wilk_chi2_pred = new TH2D(roostr, roostr, bins_theta, -2, 0, bins_dm2, -1, 1.30103);
+  
+  roostr = "h2_wilk_CL_data";
+  TH2D *h2_wilk_CL_data = new TH2D(roostr, roostr, bins_theta, -2, 0, bins_dm2, -1, 1.30103);
+  roostr = "h2_wilk_CL_pred";
+  TH2D *h2_wilk_CL_pred = new TH2D(roostr, roostr, bins_theta, -2, 0, bins_dm2, -1, 1.30103);
+  
+  //////////////////////////////////////////////
+  
   ifstream InputFile(file_roostr, ios::in);
   if(!InputFile) { cerr<<" No input-list"<<endl; exit(1); }
 
@@ -212,6 +227,12 @@ void plot_CLs()
     h2_space_pred_1sigma_minus->SetBinContent( theta, dm2, CL_pred_1sigma_minus );
     h2_space_pred_2sigma_plus->SetBinContent( theta, dm2, CL_pred_2sigma_plus );
     h2_space_pred_2sigma_minus->SetBinContent( theta, dm2, CL_pred_2sigma_minus );
+
+    h2_wilk_chi2_pred->SetBinContent(theta, dm2, chi2_3v_4vAsimov);
+    //double pvalue = TMath::Prob(chi2_3v_4vAsimov, 2); // wrong
+    double pvalue = TMath::Prob(chi2_4v_3vAsimov, 2);// right
+    double CL = 1 - pvalue;
+    h2_wilk_CL_pred->SetBinContent(theta, dm2, CL);
   }
 
   ////////////////////////////////////////////////////////////
@@ -331,6 +352,21 @@ void plot_CLs()
       gh_contour_2sigma[idx]->SetPoint( gh_contour_2sigma[idx]->GetN(), xx, yy );
     }// ip          
   }// idx
+
+  //////////////////////////////////////////////////////////// Wilk
+
+  cout<<endl<<" ---> Wilk "<<endl<<endl;
+  
+  index++;
+  TGraph *gh_wilk_CL_pred[Ncontour];
+  for(int idx=0; idx<Ncontour; idx++) {
+    roostr = TString::Format("gh_wilk_CL_pred_%d", idx);
+    gh_wilk_CL_pred[idx] = new TGraph();
+    gh_wilk_CL_pred[idx]->SetName(roostr);
+    gh_wilk_CL_pred[idx]->SetLineColor( colors[idx] );
+  }
+  func_get_contours( h2_wilk_CL_pred, gh_wilk_CL_pred, index);
+
   
   //////////////////////////////////////////////////////////// plotting  
   //////////////////////////////////////////////////////////// plotting
@@ -358,7 +394,7 @@ void plot_CLs()
   gh_n4new->SetPoint(0, 0.36, 7.3);
   gh_n4new->SetMarkerStyle(22);
   gh_n4new->SetMarkerSize(1.8);
-  gh_n4new->SetMarkerColor(kBlue);
+  gh_n4new->SetMarkerColor(kRed);
 
   
   roostr = "h2_basic_CLs_data";
@@ -396,11 +432,19 @@ void plot_CLs()
   
   gh_CLs_data[index_95]->Draw("same l");
   gh_CLs_data[index_95]->SetLineColor(kBlack);
+  gh_CLs_data[index_95]->SetLineWidth(3);
     
   gh_CLs_pred[index_95]->Draw("same l");
   gh_CLs_pred[index_95]->SetLineStyle(7);
-  
-  gh_n4->Draw("same p");
+  gh_CLs_pred[index_95]->SetLineColor(kBlack);
+  gh_CLs_pred[index_95]->SetLineWidth(3);
+
+  gh_wilk_CL_pred[index_95]->Draw("same");
+  gh_wilk_CL_pred[index_95]->SetLineStyle(9);
+  gh_wilk_CL_pred[index_95]->SetLineColor(kBlue);  
+  gh_wilk_CL_pred[index_95]->SetLineWidth(3);
+     
+  //gh_n4->Draw("same p");
   gh_n4new->Draw("same p");
  
   /////////////////////////////////////////////////////// 99
@@ -431,12 +475,39 @@ void plot_CLs()
   gh_contour_1sigma[index_99]->Draw("same f");
   
   gh_CLs_data[index_99]->Draw("same l");
-  gh_CLs_data[index_99]->SetLineColor(kBlack);
+  gh_CLs_data[index_99]->SetLineColor(kRed);
+  gh_CLs_data[index_99]->SetLineWidth(3);
     
   gh_CLs_pred[index_99]->Draw("same l");
   gh_CLs_pred[index_99]->SetLineStyle(7);
+  gh_CLs_pred[index_99]->SetLineColor(kRed);
+  gh_CLs_pred[index_99]->SetLineWidth(3);
   
-  gh_n4->Draw("same p");
+  gh_wilk_CL_pred[index_99]->Draw("same");
+  gh_wilk_CL_pred[index_99]->SetLineStyle(9);
+  gh_wilk_CL_pred[index_99]->SetLineColor(kBlue);  
+  gh_wilk_CL_pred[index_99]->SetLineWidth(3);
+     
+  //gh_n4->Draw("same p");
   gh_n4new->Draw("same p");
- 
+
+  //////////////////////////////////////////////////////
+
+  TFile *roofile = new TFile("za_roofile_CL.root", "recreate");
+
+  h2_basic_CLs_data->Write();
+  
+  gh_CLs_data[index_95]->Write();
+  gh_CLs_pred[index_95]->Write();
+  gh_contour_1sigma[index_95]->Write();
+  gh_contour_2sigma[index_95]->Write();  
+  gh_wilk_CL_pred[index_95]->Write();  
+    
+  gh_CLs_data[index_99]->Write();
+  gh_CLs_pred[index_99]->Write();
+  gh_contour_1sigma[index_99]->Write();
+  gh_contour_2sigma[index_99]->Write();  
+  gh_wilk_CL_pred[index_99]->Write();  
+
+  roofile->Close();
 }

@@ -257,7 +257,7 @@ class TOsc {
   TMatrixD matrix_eff_newworld_pred;
   TMatrixD matrix_eff_newworld_noosc;
     
-  TMatrixD matrix_meas2fitdata_newworld;
+  TMatrixD matrix_fitdata_newworld;
   
   ///////////////////////////
 
@@ -322,9 +322,9 @@ class TOsc {
 
   void Set_apply_POT();
   
-  void Set_meas2fitdata()   { matrix_meas2fitdata_newworld = matrix_eff_newworld_meas; }
-  void Set_asimov2fitdata() { matrix_meas2fitdata_newworld = matrix_eff_newworld_pred; }
-  void Set_noosc2fitdata()  { matrix_meas2fitdata_newworld = matrix_eff_newworld_noosc; }
+  void Set_meas2fitdata()   { matrix_fitdata_newworld = matrix_eff_newworld_meas; }
+  void Set_asimov2fitdata() { matrix_fitdata_newworld = matrix_eff_newworld_pred; }
+  void Set_noosc2fitdata()  { matrix_fitdata_newworld = matrix_eff_newworld_noosc; }
   void Set_asimov2noosc()   { matrix_eff_newworld_noosc = matrix_eff_newworld_pred; }
 
   void Plot_user();

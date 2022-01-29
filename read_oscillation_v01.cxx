@@ -148,19 +148,19 @@ int main(int argc, char** argv)
 			       Configure_Osc::default_mcstat_file,
 			       Configure_Osc::default_fluxXs_dir,
 			       Configure_Osc::default_detector_dir);
-
+  
   osc_test->Set_oscillation_base();
   
   /////// Set_oscillation_pars(double val_dm2_41, double val_sin2_2theta_14, double val_sin2_theta_24, double val_sin2_theta_34)
   
-  double val_dm2_41 = 7.2;
-  double val_sin2_2theta_14 = 0.26;
+  double val_dm2_41         = 7.3;
+  double val_sin2_2theta_14 = 0.36;
   double val_sin2_theta_24  = 0;
   double val_sin2_theta_34  = 0;
 
   /// standard order
-  val_dm2_41 = 7.2;
-  val_sin2_2theta_14 = 0.26;
+  val_dm2_41         = 7.3;
+  val_sin2_2theta_14 = 0.36;
   osc_test->Set_oscillation_pars(val_dm2_41, val_sin2_2theta_14, val_sin2_theta_24, val_sin2_theta_34);  
   osc_test->Apply_oscillation();
   osc_test->Set_apply_POT();// meas, CV, COV: all ready
@@ -169,11 +169,11 @@ int main(int argc, char** argv)
   
   ///////
   //osc_test->Plot_user();
-  //osc_test->Minimization_OscPars_FullCov(8.0, 0.4, 0, 0, "str_flag_fixpar");
-
+  //osc_test->Minimization_OscPars_FullCov(6.0, 0.2, 0, 0, "str_flag_fixpar");
+  
   /////////////////////////////////////////////////////////// exclusion
 
-  if( 1 ) {
+  if( 0 ) {
     
     cout<<endl;
     cout<<" ---> Exclusion processing"<<endl;
@@ -215,13 +215,12 @@ int main(int argc, char** argv)
 	//grid_sin2_2theta_14 = 0.26;
 	//grid_dm2_41         = 7.2;
 
+	double chi2_4v_on_4vAsimov(0), chi2_3v_on_4vAsimov(0);
+	double chi2_4v_on_3vAsimov(0), chi2_3v_on_3vAsimov(0);
+	double chi2_4v_on_data(0), chi2_3v_on_data(0);
+
 	double pars_4v[4] = {grid_dm2_41, grid_sin2_2theta_14, 0, 0};
 	double pars_3v[4] = {0};
-      
-	///////      
-	double chi2_4v_on_4vAsimov = 0; double chi2_3v_on_4vAsimov = 0; double dchi2_4vAsimov = 0;
-	double chi2_4v_on_3vAsimov = 0; double chi2_3v_on_3vAsimov = 0; double dchi2_3vAsimov = 0;
-	double chi2_4v_on_data = 0;     double chi2_3v_on_data = 0;     double dchi2_data = 0;
       
 	/////// 4v Asimov      
 	osc_test->Set_oscillation_pars(pars_4v[0], pars_4v[1], pars_4v[2], pars_4v[3]);
@@ -240,9 +239,9 @@ int main(int argc, char** argv)
 	chi2_3v_on_data = osc_test->FCN( pars_3v );
 
 	///////
-	dchi2_4vAsimov = chi2_4v_on_4vAsimov - chi2_3v_on_4vAsimov;
-	dchi2_3vAsimov = chi2_4v_on_3vAsimov - chi2_3v_on_3vAsimov;
-	dchi2_data     = chi2_4v_on_data - chi2_3v_on_data;
+	double dchi2_4vAsimov = chi2_4v_on_4vAsimov - chi2_3v_on_4vAsimov;
+	double dchi2_3vAsimov = chi2_4v_on_3vAsimov - chi2_3v_on_3vAsimov;
+	double dchi2_data     = chi2_4v_on_data - chi2_3v_on_data;
       
 	double delta_4v = dchi2_4vAsimov;
 	double delta_3v = dchi2_3vAsimov;
@@ -257,7 +256,7 @@ int main(int argc, char** argv)
 
 	roostr = TString::Format("outfile_theta_%03d_dm2_%03d.txt", ibin, jbin);
 	ofstream outfile(roostr, ios::out|ios::trunc);
-	outfile<<TString::Format("%3d %3d %12.6f %12.6f %12.6f %12.6f %12.6f %12.6f %14.9f %14.9f %14.9f %14.9f %14.9f %14.9f",
+	outfile<<TString::Format("%3d %3d %16.9f %16.9f %16.9f %16.9f %16.9f %16.9f %14.9f %14.9f %14.9f %14.9f %14.9f %14.9f",
 				 ibin, jbin,
 				 chi2_4v_on_4vAsimov, chi2_3v_on_4vAsimov,
 				 chi2_4v_on_3vAsimov, chi2_3v_on_3vAsimov,
@@ -272,7 +271,8 @@ int main(int argc, char** argv)
     }// for(int ibin=1; ibin<=bins_theta; ibin++)
 
   }
-  
+
+
   ///////////////////////////////////////////////////////////
 
   cout<<endl;
