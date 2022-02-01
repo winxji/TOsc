@@ -341,16 +341,33 @@ void TOsc::Set_apply_POT()
   TMatrixD matrix_temp_oscillation_oldworld_pred = matrix_oscillation_oldworld_pred;
   TMatrixD matrix_temp_oldworld_abs_syst_addi = matrix_default_oldworld_abs_syst_addi;
 
+  // for(int idx=0; idx<default_oldworld_rows; idx++) {
+  //   matrix_temp_oscillation_oldworld_pred(0, idx) *= scaleF_POT_NuMI;
+  //   matrix_temp_oldworld_abs_syst_addi(idx, idx) *= (scaleF_POT_NuMI*scaleF_POT_NuMI);
+  // }
+
   for(int idx=0; idx<default_oldworld_rows; idx++) {
-    matrix_temp_oscillation_oldworld_pred(0, idx) *= scaleF_POT_NuMI;
-    matrix_temp_oldworld_abs_syst_addi(idx, idx) *= (scaleF_POT_NuMI*scaleF_POT_NuMI);
+    if( idx<26*14 ) {
+      matrix_temp_oscillation_oldworld_pred(0, idx) *= scaleF_POT_BNB;
+      matrix_temp_oldworld_abs_syst_addi(idx, idx)  *= (scaleF_POT_BNB*scaleF_POT_BNB);
+    }
+    else {
+      matrix_temp_oscillation_oldworld_pred(0, idx) *= scaleF_POT_NuMI;
+      matrix_temp_oldworld_abs_syst_addi(idx, idx)  *= (scaleF_POT_NuMI*scaleF_POT_NuMI);
+    }
   }
 
   /////// hack, newworld
   TMatrixD matrix_temp_newworld_abs_syst_mcstat = matrix_default_newworld_abs_syst_mcstat;
   for(int idx=0; idx<default_newworld_rows; idx++) {
-    matrix_eff_newworld_meas(0, idx) *= scaleF_POT_NuMI;
-    matrix_temp_newworld_abs_syst_mcstat(idx, idx) *= (scaleF_POT_NuMI*scaleF_POT_NuMI);
+    if( idx<26*7 ) {
+      matrix_eff_newworld_meas(0, idx) *= scaleF_POT_BNB;
+      matrix_temp_newworld_abs_syst_mcstat(idx, idx) *= (scaleF_POT_BNB*scaleF_POT_BNB);
+    }
+    else {
+      matrix_eff_newworld_meas(0, idx) *= scaleF_POT_NuMI;
+      matrix_temp_newworld_abs_syst_mcstat(idx, idx) *= (scaleF_POT_NuMI*scaleF_POT_NuMI);
+    }
   }
 
   matrix_eff_newworld_pred = matrix_temp_oscillation_oldworld_pred * matrix_transform;

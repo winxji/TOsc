@@ -173,7 +173,7 @@ int main(int argc, char** argv)
   
   /////////////////////////////////////////////////////////// exclusion
 
-  if( 0 ) {
+  if( 1 ) {
     
     cout<<endl;
     cout<<" ---> Exclusion processing"<<endl;
@@ -266,7 +266,32 @@ int main(int argc, char** argv)
 				 pred_CL_2sigma_plus, pred_CL_2sigma_minus
 				 )<<endl;
 	outfile.close();
-      
+
+	if( 0 ) {
+	  roostr = TString::Format("sub_CL_%03d_%03d.root", ibin, jbin);
+	  TFile *subroofile = new TFile(roostr, "recreate");
+	  TTree *tree = new TTree("tree", "tree");
+	  tree->Branch( "ibin", &ibin, "ibin/I" );
+	  tree->Branch( "jbin", &jbin, "jbin/I" );
+	  tree->Branch( "chi2_4v_on_4vAsimov", &chi2_4v_on_4vAsimov, "chi2_4v_on_4vAsimov/D" );
+	  tree->Branch( "chi2_3v_on_4vAsimov", &chi2_3v_on_4vAsimov, "chi2_3v_on_4vAsimov/D" );
+	  tree->Branch( "chi2_4v_on_3vAsimov", &chi2_4v_on_3vAsimov, "chi2_4v_on_3vAsimov/D" );
+	  tree->Branch( "chi2_3v_on_3vAsimov", &chi2_3v_on_3vAsimov, "chi2_3v_on_3vAsimov/D" );
+	  tree->Branch( "chi2_4v_on_data", &chi2_4v_on_data, "chi2_4v_on_data/D" );
+	  tree->Branch( "chi2_3v_on_data", &chi2_3v_on_data, "chi2_3v_on_data/D" );
+	  tree->Branch( "data_CL", &data_CL, "data_CL/D" );
+	  tree->Branch( "pred_CL", &pred_CL, "pred_CL/D" );
+	  tree->Branch( "pred_CL_1sigma_plus", &pred_CL_1sigma_plus, "pred_CL_1sigma_plus/D" );
+	  tree->Branch( "pred_CL_1sigma_minus", &pred_CL_1sigma_minus, "pred_CL_1sigma_minus/D" );
+	  tree->Branch( "pred_CL_2sigma_plus", &pred_CL_2sigma_plus, "pred_CL_2sigma_plus/D" );
+	  tree->Branch( "pred_CL_2sigma_minus", &pred_CL_2sigma_minus, "pred_CL_2sigma_minus/D" );
+
+	  tree->Fill();
+	  
+	  tree->Write();
+	  subroofile->Close();
+	}
+	
       }// for(int jbin=1; jbin<=bins_dm2; jbin++)
     }// for(int ibin=1; ibin<=bins_theta; ibin++)
 
