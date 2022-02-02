@@ -79,7 +79,7 @@ void draw_CLs_edit()
        
   ////////////////////////////////////////////////////////////////////////////////////////
 
-  TFile *roofile_BNBNuMI_both = new TFile("za_roofile_CL_BNBNuMI_nuedisapp_both_right.root", "read");
+  TFile *roofile_BNBNuMI_both = new TFile("./zb_nuedisapp_NuMIBNB/za_roofile_CL_both.root", "read");
   TH2D *h2_basic_pars = (TH2D*)roofile_BNBNuMI_both->Get("h2_basic_CLs_data");
   TGraph *gh_CLs_data_1c_both = (TGraph*)roofile_BNBNuMI_both->Get("gh_CLs_data_1");
   TGraph *gh_CLs_pred_1c_both = (TGraph*)roofile_BNBNuMI_both->Get("gh_CLs_pred_1");
@@ -96,7 +96,7 @@ void draw_CLs_edit()
   gh_wilk_CL_pred_1c_both->SetLineStyle(1);
   gh_wilk_CL_pred_2c_both->SetLineStyle(1);  
   
-  TFile *roofile_BNBNuMI_BNBonly = new TFile("za_roofile_CL_BNBNuMI_nuedisapp_BNBonly_right.root", "read");
+  TFile *roofile_BNBNuMI_BNBonly = new TFile("./zb_nuedisapp_NuMIBNB/za_roofile_CL_BNBonly.root", "read");
   //TH2D *h2_basic_pars = (TH2D*)roofile_BNBNuMI_BNBonly->Get("h2_basic_CLs_data");
   TGraph *gh_CLs_data_1c_BNBonly = (TGraph*)roofile_BNBNuMI_BNBonly->Get("gh_CLs_data_1");
   TGraph *gh_CLs_pred_1c_BNBonly = (TGraph*)roofile_BNBNuMI_BNBonly->Get("gh_CLs_pred_1");
@@ -113,7 +113,7 @@ void draw_CLs_edit()
   gh_wilk_CL_pred_1c_BNBonly->SetLineStyle(1);
   gh_wilk_CL_pred_2c_BNBonly->SetLineStyle(1);  
   
-  TFile *roofile_BNBNuMI_NuMIonly = new TFile("za_roofile_CL_BNBNuMI_nuedisapp_NuMIonly_right.root", "read");
+  TFile *roofile_BNBNuMI_NuMIonly = new TFile("./zb_nuedisapp_NuMIBNB/za_roofile_CL_NuMIonly.root", "read");
   //TH2D *h2_basic_pars = (TH2D*)roofile_BNBNuMI_NuMIonly->Get("h2_basic_CLs_data");
   TGraph *gh_CLs_data_1c_NuMIonly = (TGraph*)roofile_BNBNuMI_NuMIonly->Get("gh_CLs_data_1");
   TGraph *gh_CLs_pred_1c_NuMIonly = (TGraph*)roofile_BNBNuMI_NuMIonly->Get("gh_CLs_pred_1");
@@ -152,7 +152,7 @@ void draw_CLs_edit()
     gh_wilk_CL_pred_1c_NuMIonly->Draw("same l");
   }
 
-  if( 1 ) {
+  if( 0 ) {
     //gh_CLs_pred_2sigma_1c_BNBonly->Draw("same f");
     //gh_CLs_pred_1sigma_1c_BNBonly->Draw("same f");
     gh_CLs_pred_1c_BNBonly->Draw("same l");
@@ -181,10 +181,10 @@ void draw_CLs_edit()
     //gh_CLs_data_2c_both->Draw("same l");    
   }
 
-  if( 0 ) {
-    gh_CLs_pred_2c_BNBonly->Draw("same l");
-    gh_CLs_pred_2c_NuMIonly->Draw("same l");
-    gh_CLs_pred_2c_both->Draw("same l");
+  if( 1 ) {
+    gh_CLs_pred_1c_BNBonly->Draw("same l");
+    gh_CLs_pred_1c_NuMIonly->Draw("same l");
+    gh_CLs_pred_1c_both->Draw("same l");
   }
   
   //////////////
@@ -192,21 +192,21 @@ void draw_CLs_edit()
   //gh_n4new->Draw("same p");
 
   TLegend *lg_AA = new TLegend(0.18, 0.2, 0.5, 0.5);
-  lg_AA->SetBorderSize(0); lg_AA->SetFillStyle(0); lg_AA->SetTextSize(0.05);
-  lg_AA->AddEntry(gh_CLs_pred_1c_BNBonly, "CLs Sensitivity, 95% CL", "l");
-  lg_AA->AddEntry(gh_CLs_pred_1sigma_1c_BNBonly, "1sigma", "f");
-  lg_AA->AddEntry(gh_CLs_pred_2sigma_1c_BNBonly, "2sigma", "f");
-  lg_AA->AddEntry(gh_wilk_CL_pred_1c_BNBonly, "Wilks Sensitivity, 95% CL", "l");
+  //lg_AA->SetBorderSize(0); lg_AA->SetFillStyle(0); lg_AA->SetTextSize(0.05);
+  //lg_AA->AddEntry(gh_CLs_pred_1c_BNBonly, "CLs Sensitivity, 95% CL", "l");
+  //lg_AA->AddEntry(gh_CLs_pred_1sigma_1c_BNBonly, "1sigma", "f");
+  //lg_AA->AddEntry(gh_CLs_pred_2sigma_1c_BNBonly, "2sigma", "f");
+  //lg_AA->AddEntry(gh_wilk_CL_pred_1c_BNBonly, "Wilks Sensitivity, 95% CL", "l");
   //lg_AA->AddEntry(gh_CLs_data_1c_BNBonly, "CLs Exclusion, 95% CL", "l");
   
-  //lg_AA->AddEntry("", "CLs Sensitivity, 99.75% CL", "");
-  //lg_AA->AddEntry(gh_CLs_pred_1c_BNBonly, "BNB only", "l");     gh_CLs_pred_1c_BNBonly->SetLineColor(kGreen+1);
-  //lg_AA->AddEntry(gh_CLs_pred_1c_NuMIonly, "NuMI only", "l");gh_CLs_pred_1c_NuMIonly->SetLineColor(kBlue);
-  //lg_AA->AddEntry(gh_CLs_pred_1c_BNBonly, "BNBonly", "l");         gh_CLs_pred_1c_BNBonly->SetLineColor(kRed);
+  lg_AA->AddEntry("", "CLs Sensitivity, 95% CL", "");
+  lg_AA->AddEntry(gh_CLs_pred_1c_BNBonly, "BNB only", "l");     gh_CLs_pred_1c_BNBonly->SetLineColor(kGreen+1);
+  lg_AA->AddEntry(gh_CLs_pred_1c_NuMIonly, "NuMI only", "l");   gh_CLs_pred_1c_NuMIonly->SetLineColor(kBlue);
+  lg_AA->AddEntry(gh_CLs_pred_1c_both, "Both", "l");            gh_CLs_pred_1c_both->SetLineColor(kRed);
   
-  //lg_AA->Draw();
+  lg_AA->Draw();
   
-  canv_h2_basic_CLs_AA->SaveAs("canv_CL_BNBonly_wilk.png");
+  //canv_h2_basic_CLs_AA->SaveAs("canv_CL_BNBonly_wilk.png");
 
 
  

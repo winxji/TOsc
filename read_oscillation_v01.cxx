@@ -15,6 +15,13 @@ using namespace std;
 
 #include "TApplication.h"
 
+//#include <chrono> // timer
+//auto time_start = chrono::high_resolution_clock::now();
+//auto time_stop = chrono::high_resolution_clock::now();
+//auto time_duration = chrono::duration_cast<chrono::seconds>(time_stop - time_start);
+//cout<<endl<<" ---> check time duration "<<time_duration.count()<<endl<<endl;
+// milliseconds, minutes
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////// MAIN //////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -165,15 +172,78 @@ int main(int argc, char** argv)
   osc_test->Apply_oscillation();
   osc_test->Set_apply_POT();// meas, CV, COV: all ready
   //osc_test->Set_meas2fitdata();
-  //osc_test->Set_asimov2fitdata();
+  osc_test->Set_asimov2fitdata();
   
   ///////
   //osc_test->Plot_user();
   //osc_test->Minimization_OscPars_FullCov(6.0, 0.2, 0, 0, "str_flag_fixpar");
+
+  ///////  
+  if( 0 ) {
+    val_dm2_41         = 7.3;
+    val_sin2_2theta_14 = 0.36;
+    osc_test->Set_oscillation_pars(val_dm2_41, val_sin2_2theta_14, val_sin2_theta_24, val_sin2_theta_34);  
+    osc_test->Apply_oscillation();
+    osc_test->Set_apply_POT();// meas, CV, COV: all ready
+    
+    roostr = TString::Format("sub_fit_%06d.root", ifile);
+    TFile *subroofile = new TFile(roostr, "recreate");
+    TTree *tree = new TTree("tree", "tree");
+    int    min_status             = 10;
+    double min_chi2               = 0;
+    double min_dm2_41_val         = 0;
+    double min_sin2_2theta_14_val = 0;
+    double min_sin2_theta_24_val  = 0;
+    double min_sin2_theta_34_val  = 0;
+    double min_dm2_41_err         = 0;
+    double min_sin2_2theta_14_err = 0;
+    double min_sin2_theta_24_err  = 0;
+    double min_sin2_theta_34_err  = 0;
+    double chi2_3v                = 0;
+
+    tree->Branch( "min_status",             &min_status,             "min_status/I" );
+    tree->Branch( "min_chi2",               &min_chi2,               "min_chi2/D" );
+    tree->Branch( "min_dm2_41_val",         &min_dm2_41_val,         "min_dm2_41_val/D" );
+    tree->Branch( "min_sin2_2theta_14_val", &min_sin2_2theta_14_val, "min_sin2_2theta_14_val/D" );
+    tree->Branch( "min_sin2_theta_24_val",  &min_sin2_theta_24_val,  "min_sin2_theta_24_val/D" );
+    tree->Branch( "min_sin2_theta_34_val",  &min_sin2_theta_34_val,  "min_sin2_theta_34_val/D" );
+    tree->Branch( "min_dm2_41_err",         &min_dm2_41_err,         "min_dm2_41_err/D" );
+    tree->Branch( "min_sin2_2theta_14_err", &min_sin2_2theta_14_err, "min_sin2_2theta_14_err/D" );
+    tree->Branch( "min_sin2_theta_24_err",  &min_sin2_theta_24_err,  "min_sin2_theta_24_err/D" );
+    tree->Branch( "min_sin2_theta_34_err",  &min_sin2_theta_34_err,  "min_sin2_theta_34_err/D" );
+    tree->Branch( "chi2_3v",                &chi2_3v,                "chi2_3v/D" );
+
+    int ntoys = 10;
+    osc_test->Set_toy_variations(ntoys);
+    for(int idx=1; idx<=ntoys; idx++) {      
+      osc_test->Set_toy2fitdata(idx);
+      osc_test->Minimization_OscPars_FullCov(6.0, 0.2, 0, 0, "str_flag_fixpar");
+      
+      min_status            = osc_test->minimization_status;
+      min_chi2              = osc_test->minimization_chi2;
+      min_dm2_41_val        = osc_test->minimization_dm2_41_val;
+      min_sin2_2theta_14_val= osc_test->minimization_sin2_2theta_14_val;
+      min_sin2_theta_24_val = osc_test->minimization_sin2_theta_24_val;
+      min_sin2_theta_34_val = osc_test->minimization_sin2_theta_34_val;
+      min_dm2_41_err        = osc_test->minimization_dm2_41_err;
+      min_sin2_2theta_14_err= osc_test->minimization_sin2_2theta_14_err;
+      min_sin2_theta_24_err = osc_test->minimization_sin2_theta_24_err;
+      min_sin2_theta_34_err = osc_test->minimization_sin2_theta_34_err;
+
+      double pars_3v[4] = {0};
+      chi2_3v = osc_test->FCN( pars_3v );
+      
+      tree->Fill();
+    }
+ 
+    tree->Write();
+    subroofile->Close();
+  }
+    
   
   /////////////////////////////////////////////////////////// exclusion
 
-  if( 1 ) {
+  if( 0 ) {
     
     cout<<endl;
     cout<<" ---> Exclusion processing"<<endl;
@@ -212,8 +282,8 @@ int main(int argc, char** argv)
 	double grid_sin2_2theta_14 = pow( 10, xcenter );
 	double grid_dm2_41         = pow( 10, ycenter );
 
-	//grid_sin2_2theta_14 = 0.26;
-	//grid_dm2_41         = 7.2;
+	//grid_sin2_2theta_14 = 0.36;
+	//grid_dm2_41         = 7.3;
 
 	double chi2_4v_on_4vAsimov(0), chi2_3v_on_4vAsimov(0);
 	double chi2_4v_on_3vAsimov(0), chi2_3v_on_3vAsimov(0);
@@ -266,6 +336,8 @@ int main(int argc, char** argv)
 				 pred_CL_2sigma_plus, pred_CL_2sigma_minus
 				 )<<endl;
 	outfile.close();
+
+	cout<<TString::Format(" ---> pred p-value %10.8f", (100-pred_CL)/100)<<endl;
 
 	if( 0 ) {
 	  roostr = TString::Format("sub_CL_%03d_%03d.root", ibin, jbin);

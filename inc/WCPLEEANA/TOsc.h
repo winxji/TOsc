@@ -70,6 +70,8 @@ class TOsc {
   TOsc() {
     cout<<endl<<" ---> Hello TOsc"<<endl<<endl;
 
+    rand = new TRandom3(0);
+    
     scaleF_POT_BNB  = 1;
     scaleF_POT_NuMI = 1;
    
@@ -137,6 +139,10 @@ class TOsc {
     flag_BNB_NCpi0_from_appnue       = 0;
   
     ///////////////////////////
+
+    NUM_TOYS = 0;
+    
+    ///////////////////////////
   
     default_oldworld_rows = 0;
     default_newworld_rows = 0;
@@ -145,6 +151,8 @@ class TOsc {
 
   ////////////////////////////////////////////////////// data members  
 
+  TRandom3 *rand;
+  
   double scaleF_POT_BNB;
   double scaleF_POT_NuMI;
   
@@ -258,6 +266,11 @@ class TOsc {
   TMatrixD matrix_eff_newworld_noosc;
     
   TMatrixD matrix_fitdata_newworld;
+
+  ///////////////////////////
+
+  int NUM_TOYS;
+  map<int, TMatrixD>map_matrix_toy_pred;
   
   ///////////////////////////
 
@@ -321,10 +334,16 @@ class TOsc {
   double Prob_oscillaion(double Etrue, double baseline, TString strflag_osc);
 
   void Set_apply_POT();
+
+  void Set_toy_variations(int num_toys);
+  void Set_toy2fitdata(int itoy) {
+    if( itoy > NUM_TOYS ) { cerr<<" ERROR: itoy > NUM_TOYS"<<endl; exit(1); }
+    matrix_fitdata_newworld = map_matrix_toy_pred[itoy];
+  }
   
-  void Set_meas2fitdata()   { matrix_fitdata_newworld = matrix_eff_newworld_meas; }
-  void Set_asimov2fitdata() { matrix_fitdata_newworld = matrix_eff_newworld_pred; }
-  void Set_noosc2fitdata()  { matrix_fitdata_newworld = matrix_eff_newworld_noosc; }
+  void Set_meas2fitdata()   { matrix_fitdata_newworld   = matrix_eff_newworld_meas; }
+  void Set_asimov2fitdata() { matrix_fitdata_newworld   = matrix_eff_newworld_pred; }
+  void Set_noosc2fitdata()  { matrix_fitdata_newworld   = matrix_eff_newworld_noosc;}
   void Set_asimov2noosc()   { matrix_eff_newworld_noosc = matrix_eff_newworld_pred; }
 
   void Plot_user();

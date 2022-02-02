@@ -207,7 +207,7 @@ void TOsc::Plot_user()
 //////////////////////////////////////////////////////////////////////////////////////////////////// ccc
 
 double TOsc::FCN(const double *par)
-{       
+{
   double chi2_final = 0;
   double fit_dm2_41         = par[0];
   double fit_sin2_2theta_14 = par[1];
@@ -225,17 +225,18 @@ double TOsc::FCN(const double *par)
   int rows = matrix_cov_syst_total.GetNrows();
   
   /////// modify
-  
-  // TMatrixD matrix_data_total = matrix_fitdata_newworld.GetSub(0,0, 0, 26*7-1);
-  // TMatrixD matrix_pred_total = matrix_eff_newworld_pred.GetSub(0,0, 0, 26*7-1);
-  // TMatrixD matrix_cov_syst_total = matrix_eff_newworld_abs_syst_total.GetSub(0, 26*7-1, 0, 26*7-1);
-  // int rows = matrix_cov_syst_total.GetNrows();
-  
-  // TMatrixD matrix_data_total = matrix_fitdata_newworld.GetSub(0,0, 26*7, 26*14-1);
-  // TMatrixD matrix_pred_total = matrix_eff_newworld_pred.GetSub(0,0, 26*7, 26*14-1);
-  // TMatrixD matrix_cov_syst_total = matrix_eff_newworld_abs_syst_total.GetSub(26*7, 26*14-1, 26*7, 26*14-1);
-  // int rows = matrix_cov_syst_total.GetNrows();
-    
+  /*
+  TMatrixD matrix_data_total = matrix_fitdata_newworld.GetSub(0,0, 0, 26*7-1);
+  TMatrixD matrix_pred_total = matrix_eff_newworld_pred.GetSub(0,0, 0, 26*7-1);
+  TMatrixD matrix_cov_syst_total = matrix_eff_newworld_abs_syst_total.GetSub(0, 26*7-1, 0, 26*7-1);
+  int rows = matrix_cov_syst_total.GetNrows();
+  */
+  /*
+  TMatrixD matrix_data_total = matrix_fitdata_newworld.GetSub(0,0, 26*7, 26*14-1);
+  TMatrixD matrix_pred_total = matrix_eff_newworld_pred.GetSub(0,0, 26*7, 26*14-1);
+  TMatrixD matrix_cov_syst_total = matrix_eff_newworld_abs_syst_total.GetSub(26*7, 26*14-1, 26*7, 26*14-1);
+  int rows = matrix_cov_syst_total.GetNrows();
+  */
   ///////  
 
   TMatrixD matrix_cov_stat_total(rows, rows);
@@ -259,8 +260,6 @@ double TOsc::FCN(const double *par)
   }
   
   matrix_cov_total = matrix_cov_syst_total + matrix_cov_stat_total;
-  //matrix_cov_total = matrix_cov_syst_total;
-  //matrix_cov_total = matrix_cov_stat_total;    
   
   ///////
 	
@@ -270,7 +269,7 @@ double TOsc::FCN(const double *par)
    
   TMatrixD matrix_chi2 = matrix_delta * matrix_cov_total_inv *matrix_delta_T;
   chi2_final = matrix_chi2(0,0);           
-    
+
   return chi2_final;
 }
 
@@ -325,6 +324,101 @@ void TOsc::Minimization_OscPars_FullCov(double init_dm2_41, double init_sin2_2th
 			  )<<endl;
   }
    
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////// ccc
+
+void TOsc::Set_toy_variations(int num_toys)
+{
+  //cout<<endl<<" ---> Set_toy_variations "<<endl;
+
+  map_matrix_toy_pred.clear();
+  NUM_TOYS = num_toys;
+
+  ///////
+  TMatrixDSym DSmatrix_cov(default_newworld_rows);
+  for(int idx=0; idx<default_newworld_rows; idx++) {
+    for(int jdx=0; jdx<default_newworld_rows; jdx++) {
+      DSmatrix_cov(idx, jdx) = matrix_eff_newworld_abs_syst_total(idx, jdx);
+    }
+  }
+  TMatrixDSymEigen DSmatrix_eigen( DSmatrix_cov );
+  TMatrixD matrix_eigenvector = DSmatrix_eigen.GetEigenVectors();
+  TVectorD matrix_eigenvalue = DSmatrix_eigen.GetEigenValues();
+
+  ///////
+  for(int itoy=1; itoy<=num_toys; itoy++) {
+    TMatrixD matrix_gaus_rand(default_newworld_rows, 1);
+    int eff_count = 0;
+
+  RANDOM_AGAIN:
+    eff_count++;
+    for(int idx=0; idx<default_newworld_rows; idx++) {
+      if( matrix_eigenvalue(idx)>=0 ) {
+	matrix_gaus_rand(idx, 0) = rand->Gaus( 0, sqrt(matrix_eigenvalue(idx)) );// systematics
+      }
+      else {
+	matrix_gaus_rand(idx, 0) = 0;
+      }
+    }// for(int idx=0; idx<default_newworld_rows; idx++)
+
+    TMatrixD matrix_variation = (matrix_eigenvector*matrix_gaus_rand).T();
+
+    bool flag_negative = 0;
+
+    for(int idx=0; idx<default_newworld_rows; idx++) {
+      double val_with_syst = matrix_variation(0, idx) + matrix_eff_newworld_pred(0, idx);// key point
+      if(val_with_syst<0) {
+	if( matrix_eff_newworld_pred(0, idx)<0.8 ) {// hack for very low statistics
+	  matrix_variation(0, idx) *= (-1);
+	}
+	else {
+	  flag_negative = 1;
+	  break;
+	}
+      }
+    }// for(int idx=0; idx<default_newworld_rows; idx++)
+
+    if( flag_negative ) goto RANDOM_AGAIN;
+
+    TMatrixD matrix_temp_pred(1, default_newworld_rows);
+    for(int idx=0; idx<default_newworld_rows; idx++) {
+      double val_with_syst = matrix_variation(0, idx) + matrix_eff_newworld_pred(0, idx);// key point
+      val_with_syst = rand->PoissonD(val_with_syst);// statistics
+      matrix_temp_pred(0, idx) = val_with_syst;
+    }// for(int idx=0; idx<default_newworld_rows; idx++)
+    map_matrix_toy_pred[itoy].Clear(); map_matrix_toy_pred[itoy].ResizeTo(1, default_newworld_rows);
+    map_matrix_toy_pred[itoy] = matrix_temp_pred;
+    
+  }// for(int itoy=1; itoy<=num_toys; itoy++)
+
+  ///////
+  
+  if( 0 ) {// validation
+    TPrincipal principal_cov(default_newworld_rows, "ND");
+    double *array_pseudo_expt = new double[default_newworld_rows];
+    for(int itoy=1; itoy<=num_toys; itoy++) {
+      if(itoy%1000==0) cout<<TString::Format(" ---> Processing %6d", itoy)<<endl;
+      for(int idx=0; idx<default_newworld_rows; idx++) {
+	array_pseudo_expt[idx] = map_matrix_toy_pred[itoy](0, idx);
+      }
+      principal_cov.AddRow( array_pseudo_expt );
+    }
+
+    TMatrixD *matrix_principal_cov = (TMatrixD*)principal_cov.GetCovarianceMatrix();
+    for(int idx=0; idx<default_newworld_rows; idx++) {
+      for(int jdx=0; jdx<idx; jdx++) {
+	(*matrix_principal_cov)(jdx,idx) = (*matrix_principal_cov)(idx,jdx);
+      }      
+    }
+
+    for(int idx=0; idx<default_newworld_rows; idx++) {
+      cout<<TString::Format("%3d cv %f, old,new: %f %f", idx+1, matrix_eff_newworld_pred(0, idx),
+			    sqrt(matrix_eff_newworld_abs_syst_total(idx, idx)),
+			    sqrt((*matrix_principal_cov)(idx,idx)))<<endl;
+    }
+  }// if( 0 ) {// validation
+  
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////// ccc

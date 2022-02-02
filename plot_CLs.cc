@@ -153,7 +153,7 @@ void plot_CLs()
   
   ////////////////////////////////////////////////////////////////////////////////////////
   
-  TString file_roostr = "zz_BNBNuMI_nuedisapp_40by40.dat";
+  TString file_roostr = "./zb_nuedisapp_NuMIBNB/sum_NuMIBNB_NuMIonly.dat";
   
   int bins_theta = 40;
   int bins_dm2   = 40;
