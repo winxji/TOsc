@@ -96,6 +96,23 @@ void draw_CLs_edit()
   gh_wilk_CL_pred_1c_both->SetLineStyle(1);
   gh_wilk_CL_pred_2c_both->SetLineStyle(1);  
   
+  TFile *roofile_BNBNuMI_both_run123 = new TFile("./zb_nuedisapp_NuMIBNB/za_roofile_CL_both_NuMIrun123_BNBrun123.root", "read");
+  //TH2D *h2_basic_pars = (TH2D*)roofile_BNBNuMI_both_run123->Get("h2_basic_CLs_data");
+  TGraph *gh_CLs_data_1c_both_run123 = (TGraph*)roofile_BNBNuMI_both_run123->Get("gh_CLs_data_1");
+  TGraph *gh_CLs_pred_1c_both_run123 = (TGraph*)roofile_BNBNuMI_both_run123->Get("gh_CLs_pred_1");
+  TGraph *gh_CLs_pred_1sigma_1c_both_run123 = (TGraph*)roofile_BNBNuMI_both_run123->Get("gh_contour_1sigma_1");
+  TGraph *gh_CLs_pred_2sigma_1c_both_run123 = (TGraph*)roofile_BNBNuMI_both_run123->Get("gh_contour_2sigma_1");
+  TGraph *gh_wilk_CL_pred_1c_both_run123 = (TGraph*)roofile_BNBNuMI_both_run123->Get("gh_wilk_CL_pred_1");
+  TGraph *gh_CLs_data_2c_both_run123 = (TGraph*)roofile_BNBNuMI_both_run123->Get("gh_CLs_data_2");
+  TGraph *gh_CLs_pred_2c_both_run123 = (TGraph*)roofile_BNBNuMI_both_run123->Get("gh_CLs_pred_2");
+  TGraph *gh_CLs_pred_1sigma_2c_both_run123 = (TGraph*)roofile_BNBNuMI_both_run123->Get("gh_contour_1sigma_2");
+  TGraph *gh_CLs_pred_2sigma_2c_both_run123 = (TGraph*)roofile_BNBNuMI_both_run123->Get("gh_contour_2sigma_2");
+  TGraph *gh_wilk_CL_pred_2c_both_run123 = (TGraph*)roofile_BNBNuMI_both_run123->Get("gh_wilk_CL_pred_2");
+  gh_CLs_pred_1c_both_run123->SetLineStyle(1);
+  gh_CLs_pred_2c_both_run123->SetLineStyle(1);
+  gh_wilk_CL_pred_1c_both_run123->SetLineStyle(1);
+  gh_wilk_CL_pred_2c_both_run123->SetLineStyle(1);  
+  
   TFile *roofile_BNBNuMI_BNBonly = new TFile("./zb_nuedisapp_NuMIBNB/za_roofile_CL_BNBonly.root", "read");
   //TH2D *h2_basic_pars = (TH2D*)roofile_BNBNuMI_BNBonly->Get("h2_basic_CLs_data");
   TGraph *gh_CLs_data_1c_BNBonly = (TGraph*)roofile_BNBNuMI_BNBonly->Get("gh_CLs_data_1");
@@ -181,36 +198,55 @@ void draw_CLs_edit()
     //gh_CLs_data_2c_both->Draw("same l");    
   }
 
-  if( 1 ) {
+  if( 0 ) {
     gh_CLs_pred_1c_BNBonly->Draw("same l");
     gh_CLs_pred_1c_NuMIonly->Draw("same l");
     gh_CLs_pred_1c_both->Draw("same l");
   }
+
+  if( 1 ) {
+    gh_CLs_pred_1c_both->Draw("same l");          gh_CLs_pred_1c_both->SetLineColor(kBlue);
+    gh_CLs_pred_1c_both_run123->Draw("same l");   gh_CLs_pred_1c_both_run123->SetLineColor(kRed);
+    //gh_CLs_pred_1c_both_runwhole->Draw("same l"); gh_CLs_pred_1c_both_runwhole->SetLineColor(kGreen+1);
+
+    //gh_wilk_CL_pred_1c_both->Draw("same l");        gh_wilk_CL_pred_1c_both->SetLineColor(kBlue);       gh_wilk_CL_pred_1c_both->SetLineStyle(7);
+    //gh_wilk_CL_pred_1c_both_run123->Draw("same l"); gh_wilk_CL_pred_1c_both_run123->SetLineColor(kRed); gh_wilk_CL_pred_1c_both_run123->SetLineStyle(7);    
+  }
   
   //////////////
   
-  //gh_n4new->Draw("same p");
+  gh_n4new->Draw("same p");
 
   TLegend *lg_AA = new TLegend(0.18, 0.2, 0.5, 0.5);
-  //lg_AA->SetBorderSize(0); lg_AA->SetFillStyle(0); lg_AA->SetTextSize(0.05);
+  lg_AA->SetBorderSize(0); lg_AA->SetFillStyle(0); lg_AA->SetTextSize(0.05);
+  
   //lg_AA->AddEntry(gh_CLs_pred_1c_BNBonly, "CLs Sensitivity, 95% CL", "l");
   //lg_AA->AddEntry(gh_CLs_pred_1sigma_1c_BNBonly, "1sigma", "f");
   //lg_AA->AddEntry(gh_CLs_pred_2sigma_1c_BNBonly, "2sigma", "f");
   //lg_AA->AddEntry(gh_wilk_CL_pred_1c_BNBonly, "Wilks Sensitivity, 95% CL", "l");
   //lg_AA->AddEntry(gh_CLs_data_1c_BNBonly, "CLs Exclusion, 95% CL", "l");
   
-  lg_AA->AddEntry("", "CLs Sensitivity, 95% CL", "");
-  lg_AA->AddEntry(gh_CLs_pred_1c_BNBonly, "BNB only", "l");     gh_CLs_pred_1c_BNBonly->SetLineColor(kGreen+1);
-  lg_AA->AddEntry(gh_CLs_pred_1c_NuMIonly, "NuMI only", "l");   gh_CLs_pred_1c_NuMIonly->SetLineColor(kBlue);
-  lg_AA->AddEntry(gh_CLs_pred_1c_both, "Both", "l");            gh_CLs_pred_1c_both->SetLineColor(kRed);
+  //lg_AA->AddEntry("", "CLs Sensitivity, 95% CL", "");
+  //lg_AA->AddEntry(gh_CLs_pred_1c_BNBonly, "BNB only", "l");     gh_CLs_pred_1c_BNBonly->SetLineColor(kGreen+1);
+  //lg_AA->AddEntry(gh_CLs_pred_1c_NuMIonly, "NuMI only", "l");   gh_CLs_pred_1c_NuMIonly->SetLineColor(kBlue);
+  //lg_AA->AddEntry(gh_CLs_pred_1c_both, "Both", "l");            gh_CLs_pred_1c_both->SetLineColor(kRed);
+
+  lg_AA->AddEntry("", "CLs Sensitivity, 99.75% CL", "");
+  lg_AA->AddEntry(gh_CLs_pred_1c_both, "NuMI run1(FHC) + BNB run1/2/3", "l");
+  lg_AA->AddEntry(gh_CLs_pred_1c_both_run123, "NuMI (FHC/RHC) and BNB run1/2/3", "l");
   
   lg_AA->Draw();
   
-  //canv_h2_basic_CLs_AA->SaveAs("canv_CL_BNBonly_wilk.png");
+  //canv_h2_basic_CLs_AA->SaveAs("canv_testA.png");
 
 
- 
-
+  
+  /*
+  TFile *outfile = new TFile("outfile_gg.root", "recreate");
+  gh_CLs_pred_1c_both->SetName("gh_CLs_pred_1c_both"); gh_CLs_pred_1c_both->Write();
+  gh_CLs_pred_1c_both_run123->SetName("gh_CLs_pred_1c_both_run123"); gh_CLs_pred_1c_both_run123->Write();
+  outfile->Close();
+  */
 
   
 }

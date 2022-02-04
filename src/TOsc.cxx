@@ -514,6 +514,8 @@ double TOsc::Prob_oscillaion(double Etrue, double baseline, TString strflag_osc)
   else if( strflag_osc=="numu2numu" ) flag_osc = 2;
   else if( strflag_osc=="numu2nue" )  flag_osc = 3;
   else if( strflag_osc=="nue2numu" )  flag_osc = 4;
+  else if( strflag_osc=="nueNC")      flag_osc = 5;
+  else if( strflag_osc=="numuNC")     flag_osc = 6;
   else flag_osc = -1;
 
   if( flag_osc==-1 ) {
@@ -525,6 +527,8 @@ double TOsc::Prob_oscillaion(double Etrue, double baseline, TString strflag_osc)
   const int numu2numu = 2;
   const int numu2nue  = 3;
   const int nue2numu  = 4;
+  const int nueNC     = 5;
+  const int numuNC    = 6;
 
   /// dm2*L/4E = 1.267 * dm2(eV2) * L(m) / E(MeV)
     
@@ -537,6 +541,10 @@ double TOsc::Prob_oscillaion(double Etrue, double baseline, TString strflag_osc)
   case numu2nue:
     break;
   case nue2numu:
+    break;
+  case nueNC:
+    break;
+  case numuNC:
     break;
   default:
     cerr<<"ERROR: NAN flag_osc"<<endl; exit(1);

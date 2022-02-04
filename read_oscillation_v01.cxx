@@ -118,35 +118,49 @@ int main(int argc, char** argv)
   osc_test->flag_NuMI_nueCC_from_overlaynumu  = Configure_Osc::flag_NuMI_nueCC_from_overlaynumu;
   osc_test->flag_NuMI_nueCC_from_appnue       = Configure_Osc::flag_NuMI_nueCC_from_appnue;
   osc_test->flag_NuMI_nueCC_from_appnumu      = Configure_Osc::flag_NuMI_nueCC_from_appnumu;
-
-  osc_test->flag_NuMI_numuCC_from_overlaynumu = Configure_Osc::flag_NuMI_numuCC_from_overlaynumu;
-  osc_test->flag_NuMI_numuCC_from_overlaynue  = Configure_Osc::flag_NuMI_numuCC_from_overlaynue;
-  osc_test->flag_NuMI_numuCC_from_appnue      = Configure_Osc::flag_NuMI_numuCC_from_appnue;
-  osc_test->flag_NuMI_numuCC_from_appnumu     = Configure_Osc::flag_NuMI_numuCC_from_appnumu;
-
+  osc_test->flag_NuMI_nueCC_from_overlaynueNC = Configure_Osc::flag_NuMI_nueCC_from_overlaynueNC;
+  osc_test->flag_NuMI_nueCC_from_overlaynumuNC= Configure_Osc::flag_NuMI_nueCC_from_overlaynumuNC;
+  
+  osc_test->flag_NuMI_numuCC_from_overlaynumu   = Configure_Osc::flag_NuMI_numuCC_from_overlaynumu;
+  osc_test->flag_NuMI_numuCC_from_overlaynue    = Configure_Osc::flag_NuMI_numuCC_from_overlaynue;
+  osc_test->flag_NuMI_numuCC_from_appnue        = Configure_Osc::flag_NuMI_numuCC_from_appnue;
+  osc_test->flag_NuMI_numuCC_from_appnumu       = Configure_Osc::flag_NuMI_numuCC_from_appnumu;
+  osc_test->flag_NuMI_numuCC_from_overlaynumuNC = Configure_Osc::flag_NuMI_numuCC_from_overlaynumuNC;
+  osc_test->flag_NuMI_numuCC_from_overlaynueNC  = Configure_Osc::flag_NuMI_numuCC_from_overlaynueNC;  
+  
   osc_test->flag_NuMI_CCpi0_from_overlaynumu  = Configure_Osc::flag_NuMI_CCpi0_from_overlaynumu;
   osc_test->flag_NuMI_CCpi0_from_appnue       = Configure_Osc::flag_NuMI_CCpi0_from_appnue;
+  osc_test->flag_NuMI_CCpi0_from_overlaynumuNC= Configure_Osc::flag_NuMI_CCpi0_from_overlaynumuNC;
+  osc_test->flag_NuMI_CCpi0_from_overlaynueNC = Configure_Osc::flag_NuMI_CCpi0_from_overlaynueNC;
   
   osc_test->flag_NuMI_NCpi0_from_overlaynumu  = Configure_Osc::flag_NuMI_NCpi0_from_overlaynumu;
   osc_test->flag_NuMI_NCpi0_from_appnue       = Configure_Osc::flag_NuMI_NCpi0_from_appnue;
-
+  osc_test->flag_NuMI_NCpi0_from_overlaynumuNC= Configure_Osc::flag_NuMI_NCpi0_from_overlaynumuNC;
+  
   ///////
   
   osc_test->flag_BNB_nueCC_from_intnue       = Configure_Osc::flag_BNB_nueCC_from_intnue;
   osc_test->flag_BNB_nueCC_from_overlaynumu  = Configure_Osc::flag_BNB_nueCC_from_overlaynumu;
   osc_test->flag_BNB_nueCC_from_appnue       = Configure_Osc::flag_BNB_nueCC_from_appnue;
   osc_test->flag_BNB_nueCC_from_appnumu      = Configure_Osc::flag_BNB_nueCC_from_appnumu;
-
-  osc_test->flag_BNB_numuCC_from_overlaynumu = Configure_Osc::flag_BNB_numuCC_from_overlaynumu;
-  osc_test->flag_BNB_numuCC_from_overlaynue  = Configure_Osc::flag_BNB_numuCC_from_overlaynue;
-  osc_test->flag_BNB_numuCC_from_appnue      = Configure_Osc::flag_BNB_numuCC_from_appnue;
-  osc_test->flag_BNB_numuCC_from_appnumu     = Configure_Osc::flag_BNB_numuCC_from_appnumu;
-
+  osc_test->flag_BNB_nueCC_from_overlaynueNC = Configure_Osc::flag_BNB_nueCC_from_overlaynueNC;
+  osc_test->flag_BNB_nueCC_from_overlaynumuNC= Configure_Osc::flag_BNB_nueCC_from_overlaynumuNC;
+  
+  osc_test->flag_BNB_numuCC_from_overlaynumu   = Configure_Osc::flag_BNB_numuCC_from_overlaynumu;
+  osc_test->flag_BNB_numuCC_from_overlaynue    = Configure_Osc::flag_BNB_numuCC_from_overlaynue;
+  osc_test->flag_BNB_numuCC_from_appnue        = Configure_Osc::flag_BNB_numuCC_from_appnue;
+  osc_test->flag_BNB_numuCC_from_appnumu       = Configure_Osc::flag_BNB_numuCC_from_appnumu;
+  osc_test->flag_BNB_numuCC_from_overlaynumuNC = Configure_Osc::flag_BNB_numuCC_from_overlaynumuNC;
+  osc_test->flag_BNB_numuCC_from_overlaynueNC  = Configure_Osc::flag_BNB_numuCC_from_overlaynueNC;  
+  
   osc_test->flag_BNB_CCpi0_from_overlaynumu  = Configure_Osc::flag_BNB_CCpi0_from_overlaynumu;
   osc_test->flag_BNB_CCpi0_from_appnue       = Configure_Osc::flag_BNB_CCpi0_from_appnue;
+  osc_test->flag_BNB_CCpi0_from_overlaynumuNC= Configure_Osc::flag_BNB_CCpi0_from_overlaynumuNC;
+  osc_test->flag_BNB_CCpi0_from_overlaynueNC = Configure_Osc::flag_BNB_CCpi0_from_overlaynueNC;
   
   osc_test->flag_BNB_NCpi0_from_overlaynumu  = Configure_Osc::flag_BNB_NCpi0_from_overlaynumu;
   osc_test->flag_BNB_NCpi0_from_appnue       = Configure_Osc::flag_BNB_NCpi0_from_appnue;
+  osc_test->flag_BNB_NCpi0_from_overlaynumuNC= Configure_Osc::flag_BNB_NCpi0_from_overlaynumuNC;
   
   /////// set only one time
   
@@ -178,6 +192,22 @@ int main(int argc, char** argv)
   //osc_test->Plot_user();
   //osc_test->Minimization_OscPars_FullCov(6.0, 0.2, 0, 0, "str_flag_fixpar");
 
+  ///////
+  
+  if( 0 ) {
+    val_dm2_41         = 7.3;
+    val_sin2_2theta_14 = 0;
+    osc_test->Set_oscillation_pars(val_dm2_41, val_sin2_2theta_14, val_sin2_theta_24, val_sin2_theta_34);  
+    osc_test->Apply_oscillation();
+    osc_test->Set_apply_POT();// meas, CV, COV: all ready
+    //osc_test->Set_meas2fitdata();
+    osc_test->Set_asimov2fitdata();
+
+    double pars_4v[4] = {7.3, 0.26, 0, 0};
+    double chi2_4v = osc_test->FCN( pars_4v );
+    cout<<endl<<" sensitivity ---> "<<chi2_4v<<endl<<endl;
+  }
+  
   ///////  
   if( 0 ) {
     val_dm2_41         = 7.3;
@@ -200,6 +230,7 @@ int main(int argc, char** argv)
     double min_sin2_theta_24_err  = 0;
     double min_sin2_theta_34_err  = 0;
     double chi2_3v                = 0;
+    double chi2_4v                = 0;
 
     tree->Branch( "min_status",             &min_status,             "min_status/I" );
     tree->Branch( "min_chi2",               &min_chi2,               "min_chi2/D" );
@@ -212,8 +243,9 @@ int main(int argc, char** argv)
     tree->Branch( "min_sin2_theta_24_err",  &min_sin2_theta_24_err,  "min_sin2_theta_24_err/D" );
     tree->Branch( "min_sin2_theta_34_err",  &min_sin2_theta_34_err,  "min_sin2_theta_34_err/D" );
     tree->Branch( "chi2_3v",                &chi2_3v,                "chi2_3v/D" );
+    tree->Branch( "chi2_4v",                &chi2_4v,                "chi2_4v/D" );
 
-    int ntoys = 10;
+    int ntoys = 5;
     osc_test->Set_toy_variations(ntoys);
     for(int idx=1; idx<=ntoys; idx++) {      
       osc_test->Set_toy2fitdata(idx);
@@ -232,6 +264,9 @@ int main(int argc, char** argv)
 
       double pars_3v[4] = {0};
       chi2_3v = osc_test->FCN( pars_3v );
+      
+      double pars_4v[4] = {val_dm2_41, val_sin2_2theta_14, 0, 0};
+      chi2_4v = osc_test->FCN( pars_4v );
       
       tree->Fill();
     }
@@ -255,8 +290,8 @@ int main(int argc, char** argv)
 
     ///////
   
-    int bins_theta = 20;
-    int bins_dm2   = 20;
+    int bins_theta = 40;
+    int bins_dm2   = 40;
   
     /////// X: sin22t14, 1e-2 -> 1   ---> "log10()" ---> -2 -> 0
     /////// Y: m41^2,    1e-1 -> 20  ---> "log10()" ---> -1 -> 1.30103      
@@ -282,8 +317,8 @@ int main(int argc, char** argv)
 	double grid_sin2_2theta_14 = pow( 10, xcenter );
 	double grid_dm2_41         = pow( 10, ycenter );
 
-	//grid_sin2_2theta_14 = 0.36;
-	//grid_dm2_41         = 7.3;
+	grid_sin2_2theta_14 = 0.36;
+	grid_dm2_41         = 7.3;
 
 	double chi2_4v_on_4vAsimov(0), chi2_3v_on_4vAsimov(0);
 	double chi2_4v_on_3vAsimov(0), chi2_3v_on_3vAsimov(0);

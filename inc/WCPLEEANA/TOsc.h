@@ -181,42 +181,61 @@ class TOsc {
   bool flag_syst_Xs;
   bool flag_syst_det;
   
-  ///////////////////////////
+  /////////////////////////// no specify is "CC"
+  /////////////////////////// all the following true events are selected as in active volume: (cuts.h) flag_truth_inside
+  /////////////////////////// flag_NuMI_nueCC_from_overlaynumu: tagged nueCC from overlay true numuCC events
+  /////////////////////////// flag_NuMI_nueCC_from_overlaynueNC: tagged nueCC from overlay true nueNC events
   
   bool flag_NuMI_nueCC_from_intnue;
   bool flag_NuMI_nueCC_from_overlaynumu;
   bool flag_NuMI_nueCC_from_appnue;
   bool flag_NuMI_nueCC_from_appnumu;
-
+  bool flag_NuMI_nueCC_from_overlaynueNC;
+  bool flag_NuMI_nueCC_from_overlaynumuNC;
+  
   bool flag_NuMI_numuCC_from_overlaynumu;
   bool flag_NuMI_numuCC_from_overlaynue;
   bool flag_NuMI_numuCC_from_appnue;
   bool flag_NuMI_numuCC_from_appnumu;
-
+  bool flag_NuMI_numuCC_from_overlaynumuNC;
+  bool flag_NuMI_numuCC_from_overlaynueNC;
+ 
   bool flag_NuMI_CCpi0_from_overlaynumu;
   bool flag_NuMI_CCpi0_from_appnue;
+  bool flag_NuMI_CCpi0_from_overlaynumuNC;
+  bool flag_NuMI_CCpi0_from_overlaynueNC;
   
   bool flag_NuMI_NCpi0_from_overlaynumu;
   bool flag_NuMI_NCpi0_from_appnue;
-
+  bool flag_NuMI_NCpi0_from_overlaynumuNC;
+  bool flag_NuMI_NCpi0_from_overlaynueNC;
+  
   ///////
   
   bool flag_BNB_nueCC_from_intnue;
   bool flag_BNB_nueCC_from_overlaynumu;
   bool flag_BNB_nueCC_from_appnue;
   bool flag_BNB_nueCC_from_appnumu;
+  bool flag_BNB_nueCC_from_overlaynueNC;
+  bool flag_BNB_nueCC_from_overlaynumuNC;
 
   bool flag_BNB_numuCC_from_overlaynumu;
   bool flag_BNB_numuCC_from_overlaynue;
   bool flag_BNB_numuCC_from_appnue;
   bool flag_BNB_numuCC_from_appnumu;
-
+  bool flag_BNB_numuCC_from_overlaynumuNC;
+  bool flag_BNB_numuCC_from_overlaynueNC;
+ 
   bool flag_BNB_CCpi0_from_overlaynumu;
   bool flag_BNB_CCpi0_from_appnue;
+  bool flag_BNB_CCpi0_from_overlaynumuNC;
+  bool flag_BNB_CCpi0_from_overlaynueNC;
   
   bool flag_BNB_NCpi0_from_overlaynumu;
   bool flag_BNB_NCpi0_from_appnue;
-  
+  bool flag_BNB_NCpi0_from_overlaynumuNC;
+  bool flag_BNB_NCpi0_from_overlaynueNC;
+ 
   ///////////////////////////
   
   TMatrixD matrix_transform;

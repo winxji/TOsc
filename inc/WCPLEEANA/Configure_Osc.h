@@ -35,8 +35,8 @@ namespace Configure_Osc
   bool flag_NuMI_nueCC_from_appnumu     = 0;
   bool flag_NuMI_nueCC_from_dirtnue     = 0;// approximation: ignore osc-effect. LEE PRD paper(BNB case): dirt/data = 1/557
   bool flag_NuMI_nueCC_from_dirtnumu    = 0;// approximation: ignore osc-effect. 
-  //bool flag_NuMI_nueCC_from_overlaynueNC  = 0;
-  //bool flag_NuMI_nueCC_from_overlaynumuNC = 0;
+  bool flag_NuMI_nueCC_from_overlaynueNC  = 0;
+  bool flag_NuMI_nueCC_from_overlaynumuNC = 0;
   
   bool flag_NuMI_numuCC_from_overlaynumu = 0;
   bool flag_NuMI_numuCC_from_overlaynue  = 0; 
@@ -44,8 +44,8 @@ namespace Configure_Osc
   bool flag_NuMI_numuCC_from_appnumu     = 0;
   bool flag_NuMI_numuCC_from_dirtnue     = 0;// approximation: ignore osc-effect. LEE PRD paper(BNB case): dirt/data = 693.4/129661
   bool flag_NuMI_numuCC_from_dirtnumu    = 0;// approximation: ignore osc-effect.
-  //bool flag_NuMI_numuCC_from_overlaynumuNC = 0;
-  //bool flag_NuMI_numuCC_from_overlaynueNC  = 0;
+  bool flag_NuMI_numuCC_from_overlaynumuNC = 0;
+  bool flag_NuMI_numuCC_from_overlaynueNC  = 0;
   
   bool flag_NuMI_CCpi0_from_overlaynumu = 0;
   bool flag_NuMI_CCpi0_from_overlaynue  = 0;// approximation: ignore osc-effect. DocDB-36268 (NuMI, pi0-KE): nueCC/data = 4.5/255
@@ -53,8 +53,8 @@ namespace Configure_Osc
   bool flag_NuMI_CCpi0_from_appnumu     = 0;// approximation: ignore osc-effect. See flag_NuMI_CCpi0_from_overlaynue
   bool flag_NuMI_CCpi0_from_dirtnue     = 0;// approximation: ignore osc-effect. LEE PRD paper(BNB case): dirt/data = 10.4/7953
   bool flag_NuMI_CCpi0_from_dirtnumu    = 0;// approximation: ignore osc-effect.
-  //bool flag_NuMI_CCpi0_from_overlaynumuNC = 0;
-  //bool flag_NuMI_CCpi0_from_overlaynueNC  = 0;
+  bool flag_NuMI_CCpi0_from_overlaynumuNC = 0;
+  bool flag_NuMI_CCpi0_from_overlaynueNC  = 0;
   
   bool flag_NuMI_NCpi0_from_overlaynumu = 0;
   bool flag_NuMI_NCpi0_from_overlaynue  = 0;// approximation: ignore osc-effect. DocDB-36268 (NuMI, pi0-KE): nueCC/data = 34.8/874
@@ -62,8 +62,8 @@ namespace Configure_Osc
   bool flag_NuMI_NCpi0_from_appnumu     = 0;// approximation: ignore osc-effect. See flag_NuMI_NCpi0_from_overlaynue
   bool flag_NuMI_NCpi0_from_dirtnue     = 0;// approximation: ignore osc-effect. LEE PRD paper(BNB case): dirt/data = 188.3/5936.0
   bool flag_NuMI_NCpi0_from_dirtnumu    = 0;// approximation: ignore osc-effect. 
-  //bool flag_NuMI_NCpi0_from_overlaynumuNC = 0;
-  //bool flag_NuMI_NCpi0_from_overlaynueNC  = 0;
+  bool flag_NuMI_NCpi0_from_overlaynumuNC = 0;
+  bool flag_NuMI_NCpi0_from_overlaynueNC  = 0;
   
   ///////
   
@@ -73,6 +73,8 @@ namespace Configure_Osc
   bool flag_BNB_nueCC_from_appnumu     = 0;
   bool flag_BNB_nueCC_from_dirtnue     = 0;// approximation: ignore osc-effect. LEE PRD paper(BNB case): dirt/data = 1/557
   bool flag_BNB_nueCC_from_dirtnumu    = 0;// approximation: ignore osc-effect.
+  bool flag_BNB_nueCC_from_overlaynueNC  = 0;
+  bool flag_BNB_nueCC_from_overlaynumuNC = 0;
 
   bool flag_BNB_numuCC_from_overlaynumu = 0;
   bool flag_BNB_numuCC_from_overlaynue  = 0; 
@@ -80,21 +82,27 @@ namespace Configure_Osc
   bool flag_BNB_numuCC_from_appnumu     = 0;
   bool flag_BNB_numuCC_from_dirtnue     = 0;// approximation: ignore osc-effect. LEE PRD paper(BNB case): dirt/data = 693.4/129661
   bool flag_BNB_numuCC_from_dirtnumu    = 0;// approximation: ignore osc-effect.
-
+  bool flag_BNB_numuCC_from_overlaynumuNC = 0;
+  bool flag_BNB_numuCC_from_overlaynueNC  = 0;
+ 
   bool flag_BNB_CCpi0_from_overlaynumu = 0;
   bool flag_BNB_CCpi0_from_overlaynue  = 0;// approximation: ignore osc-effect. LEE PRD paper(pi0-KE): nueCC/data =  18.0/7953
   bool flag_BNB_CCpi0_from_appnue      = 0;
   bool flag_BNB_CCpi0_from_appnumu     = 0;// approximation: ignore osc-effect. flag_BNB_CCpi0_from_overlaynue
   bool flag_BNB_CCpi0_from_dirtnue     = 0;// approximation: ignore osc-effect. LEE PRD paper(BNB case): dirt/data = 10.4/7953
   bool flag_BNB_CCpi0_from_dirtnumu    = 0;// approximation: ignore osc-effect.
-
+  bool flag_BNB_CCpi0_from_overlaynumuNC = 0;
+  bool flag_BNB_CCpi0_from_overlaynueNC  = 0;
+  
   bool flag_BNB_NCpi0_from_overlaynumu = 0;
   bool flag_BNB_NCpi0_from_overlaynue  = 0;// approximation: ignore osc-effect. LEE PRD paper(pi0-KE): nueCC/data = 42.2/5936
   bool flag_BNB_NCpi0_from_appnue      = 0;
   bool flag_BNB_NCpi0_from_appnumu     = 0;// approximation: ignore osc-effect. flag_BNB_NCpi0_from_overlaynue
   bool flag_BNB_NCpi0_from_dirtnue     = 0;// approximation: ignore osc-effect. LEE PRD paper(BNB case): dirt/data = 188.3/5936.0
   bool flag_BNB_NCpi0_from_dirtnumu    = 0;// approximation: ignore osc-effect.
-  
+  bool flag_BNB_NCpi0_from_overlaynumuNC = 0;
+  bool flag_BNB_NCpi0_from_overlaynueNC  = 0;
+ 
   ///////////////////////////
   
 }
