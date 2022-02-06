@@ -293,55 +293,55 @@ class TOsc {
   
   ///////////////////////////
 
-  vector<double>vector_NuMI_nueCC_from_intnue_scaleFPOT;       vector< vector<EventInfo> >vector_vector_NuMI_nueCC_from_intnue_eventinfo;
-  vector<double>vector_NuMI_nueCC_from_overlaynumu_scaleFPOT;  vector< vector<EventInfo> >vector_vector_NuMI_nueCC_from_overlaynumu_eventinfo;
-  vector<double>vector_NuMI_nueCC_from_appnue_scaleFPOT;       vector< vector<EventInfo> >vector_vector_NuMI_nueCC_from_appnue_eventinfo;
-  vector<double>vector_NuMI_nueCC_from_appnumu_scaleFPOT;      vector< vector<EventInfo> >vector_vector_NuMI_nueCC_from_appnumu_eventinfo;
-  vector<double>vector_NuMI_nueCC_from_overlaynueNC_scaleFPOT; vector< vector<EventInfo> >vector_vector_NuMI_nueCC_from_overlaynueNC_eventinfo;
-  vector<double>vector_NuMI_nueCC_from_overlaynumuNC_scaleFPOT;vector< vector<EventInfo> >vector_vector_NuMI_nueCC_from_overlaynumuNC_eventinfo;
+  vector<double>vector_NuMI_nueCC_from_intnue_scaleFPOT;        vector< vector<EventInfo> >vector_vector_NuMI_nueCC_from_intnue_FC_eventinfo;        vector< vector<EventInfo> >vector_vector_NuMI_nueCC_from_intnue_PC_eventinfo;
+  vector<double>vector_NuMI_nueCC_from_overlaynumu_scaleFPOT;   vector< vector<EventInfo> >vector_vector_NuMI_nueCC_from_overlaynumu_FC_eventinfo;   vector< vector<EventInfo> >vector_vector_NuMI_nueCC_from_overlaynumu_PC_eventinfo;
+  vector<double>vector_NuMI_nueCC_from_appnue_scaleFPOT;        vector< vector<EventInfo> >vector_vector_NuMI_nueCC_from_appnue_FC_eventinfo;        vector< vector<EventInfo> >vector_vector_NuMI_nueCC_from_appnue_PC_eventinfo;
+  vector<double>vector_NuMI_nueCC_from_appnumu_scaleFPOT;       vector< vector<EventInfo> >vector_vector_NuMI_nueCC_from_appnumu_FC_eventinfo;       vector< vector<EventInfo> >vector_vector_NuMI_nueCC_from_appnumu_PC_eventinfo;
+  vector<double>vector_NuMI_nueCC_from_overlaynueNC_scaleFPOT;  vector< vector<EventInfo> >vector_vector_NuMI_nueCC_from_overlaynueNC_FC_eventinfo;  vector< vector<EventInfo> >vector_vector_NuMI_nueCC_from_overlaynueNC_PC_eventinfo;
+  vector<double>vector_NuMI_nueCC_from_overlaynumuNC_scaleFPOT; vector< vector<EventInfo> >vector_vector_NuMI_nueCC_from_overlaynumuNC_FC_eventinfo; vector< vector<EventInfo> >vector_vector_NuMI_nueCC_from_overlaynumuNC_PC_eventinfo;
   
-  vector<double>vector_NuMI_numuCC_from_overlaynumu_scaleFPOT;  vector< vector<EventInfo> >vector_vector_NuMI_numuCC_from_overlaynumu_eventinfo;
-  vector<double>vector_NuMI_numuCC_from_overlaynue_scaleFPOT;   vector< vector<EventInfo> >vector_vector_NuMI_numuCC_from_overlaynue_eventinfo;
-  vector<double>vector_NuMI_numuCC_from_appnue_scaleFPOT;       vector< vector<EventInfo> >vector_vector_NuMI_numuCC_from_appnue_eventinfo;
-  vector<double>vector_NuMI_numuCC_from_appnumu_scaleFPOT;      vector< vector<EventInfo> >vector_vector_NuMI_numuCC_from_appnumu_eventinfo;
-  vector<double>vector_NuMI_numuCC_from_overlaynumuNC_scaleFPOT;vector< vector<EventInfo> >vector_vector_NuMI_numuCC_from_overlaynumuNC_eventinfo;
-  vector<double>vector_NuMI_numuCC_from_overlaynueNC_scaleFPOT; vector< vector<EventInfo> >vector_vector_NuMI_numuCC_from_overlaynueNC_eventinfo;
+  vector<double>vector_NuMI_numuCC_from_overlaynumu_scaleFPOT;  vector< vector<EventInfo> >vector_vector_NuMI_numuCC_from_overlaynumu_FC_eventinfo;  vector< vector<EventInfo> >vector_vector_NuMI_numuCC_from_overlaynumu_PC_eventinfo;
+  vector<double>vector_NuMI_numuCC_from_overlaynue_scaleFPOT;   vector< vector<EventInfo> >vector_vector_NuMI_numuCC_from_overlaynue_FC_eventinfo;   vector< vector<EventInfo> >vector_vector_NuMI_numuCC_from_overlaynue_PC_eventinfo;
+  vector<double>vector_NuMI_numuCC_from_appnue_scaleFPOT;       vector< vector<EventInfo> >vector_vector_NuMI_numuCC_from_appnue_FC_eventinfo;       vector< vector<EventInfo> >vector_vector_NuMI_numuCC_from_appnue_PC_eventinfo;
+  vector<double>vector_NuMI_numuCC_from_appnumu_scaleFPOT;      vector< vector<EventInfo> >vector_vector_NuMI_numuCC_from_appnumu_FC_eventinfo;      vector< vector<EventInfo> >vector_vector_NuMI_numuCC_from_appnumu_PC_eventinfo;
+  vector<double>vector_NuMI_numuCC_from_overlaynumuNC_scaleFPOT;vector< vector<EventInfo> >vector_vector_NuMI_numuCC_from_overlaynumuNC_FC_eventinfo;vector< vector<EventInfo> >vector_vector_NuMI_numuCC_from_overlaynumuNC_PC_eventinfo;
+  vector<double>vector_NuMI_numuCC_from_overlaynueNC_scaleFPOT; vector< vector<EventInfo> >vector_vector_NuMI_numuCC_from_overlaynueNC_FC_eventinfo; vector< vector<EventInfo> >vector_vector_NuMI_numuCC_from_overlaynueNC_PC_eventinfo;
   
-  vector<double>vector_NuMI_CCpi0_from_overlaynumu_scaleFPOT;  vector< vector<EventInfo> >vector_vector_NuMI_CCpi0_from_overlaynumu_eventinfo;
-  vector<double>vector_NuMI_CCpi0_from_appnue_scaleFPOT;       vector< vector<EventInfo> >vector_vector_NuMI_CCpi0_from_appnue_eventinfo;
-  vector<double>vector_NuMI_CCpi0_from_overlaynumuNC_scaleFPOT;vector< vector<EventInfo> >vector_vector_NuMI_CCpi0_from_overlaynumuNC_eventinfo;
-  vector<double>vector_NuMI_CCpi0_from_overlaynueNC_scaleFPOT; vector< vector<EventInfo> >vector_vector_NuMI_CCpi0_from_overlaynueNC_eventinfo;
+  vector<double>vector_NuMI_CCpi0_from_overlaynumu_scaleFPOT;   vector< vector<EventInfo> >vector_vector_NuMI_CCpi0_from_overlaynumu_FC_eventinfo;   vector< vector<EventInfo> >vector_vector_NuMI_CCpi0_from_overlaynumu_PC_eventinfo;
+  vector<double>vector_NuMI_CCpi0_from_appnue_scaleFPOT;        vector< vector<EventInfo> >vector_vector_NuMI_CCpi0_from_appnue_FC_eventinfo;        vector< vector<EventInfo> >vector_vector_NuMI_CCpi0_from_appnue_PC_eventinfo;
+  vector<double>vector_NuMI_CCpi0_from_overlaynumuNC_scaleFPOT; vector< vector<EventInfo> >vector_vector_NuMI_CCpi0_from_overlaynumuNC_FC_eventinfo; vector< vector<EventInfo> >vector_vector_NuMI_CCpi0_from_overlaynumuNC_PC_eventinfo;
+  vector<double>vector_NuMI_CCpi0_from_overlaynueNC_scaleFPOT;  vector< vector<EventInfo> >vector_vector_NuMI_CCpi0_from_overlaynueNC_FC_eventinfo;  vector< vector<EventInfo> >vector_vector_NuMI_CCpi0_from_overlaynueNC_PC_eventinfo;
   
-  vector<double>vector_NuMI_NCpi0_from_overlaynumu_scaleFPOT;  vector< vector<EventInfo> >vector_vector_NuMI_NCpi0_from_overlaynumu_eventinfo;
-  vector<double>vector_NuMI_NCpi0_from_appnue_scaleFPOT;       vector< vector<EventInfo> >vector_vector_NuMI_NCpi0_from_appnue_eventinfo;
-  vector<double>vector_NuMI_NCpi0_from_overlaynumuNC_scaleFPOT;vector< vector<EventInfo> >vector_vector_NuMI_NCpi0_from_overlaynumuNC_eventinfo;
-  vector<double>vector_NuMI_NCpi0_from_overlaynueNC_scaleFPOT; vector< vector<EventInfo> >vector_vector_NuMI_NCpi0_from_overlaynueNC_eventinfo;
+  vector<double>vector_NuMI_NCpi0_from_overlaynumu_scaleFPOT;   vector< vector<EventInfo> >vector_vector_NuMI_NCpi0_from_overlaynumu_eventinfo; 
+  vector<double>vector_NuMI_NCpi0_from_appnue_scaleFPOT;        vector< vector<EventInfo> >vector_vector_NuMI_NCpi0_from_appnue_eventinfo;
+  vector<double>vector_NuMI_NCpi0_from_overlaynumuNC_scaleFPOT; vector< vector<EventInfo> >vector_vector_NuMI_NCpi0_from_overlaynumuNC_eventinfo;
+  vector<double>vector_NuMI_NCpi0_from_overlaynueNC_scaleFPOT;  vector< vector<EventInfo> >vector_vector_NuMI_NCpi0_from_overlaynueNC_eventinfo;
   
   ///////
 
-  vector<double>vector_BNB_nueCC_from_intnue_scaleFPOT;       vector< vector<EventInfo> >vector_vector_BNB_nueCC_from_intnue_eventinfo;
-  vector<double>vector_BNB_nueCC_from_overlaynumu_scaleFPOT;  vector< vector<EventInfo> >vector_vector_BNB_nueCC_from_overlaynumu_eventinfo;
-  vector<double>vector_BNB_nueCC_from_appnue_scaleFPOT;       vector< vector<EventInfo> >vector_vector_BNB_nueCC_from_appnue_eventinfo;
-  vector<double>vector_BNB_nueCC_from_appnumu_scaleFPOT;      vector< vector<EventInfo> >vector_vector_BNB_nueCC_from_appnumu_eventinfo;
-  vector<double>vector_BNB_nueCC_from_overlaynueNC_scaleFPOT; vector< vector<EventInfo> >vector_vector_BNB_nueCC_from_overlaynueNC_eventinfo;
-  vector<double>vector_BNB_nueCC_from_overlaynumuNC_scaleFPOT;vector< vector<EventInfo> >vector_vector_BNB_nueCC_from_overlaynumuNC_eventinfo;
+  vector<double>vector_BNB_nueCC_from_intnue_scaleFPOT;        vector< vector<EventInfo> >vector_vector_BNB_nueCC_from_intnue_FC_eventinfo;        vector< vector<EventInfo> >vector_vector_BNB_nueCC_from_intnue_PC_eventinfo;
+  vector<double>vector_BNB_nueCC_from_overlaynumu_scaleFPOT;   vector< vector<EventInfo> >vector_vector_BNB_nueCC_from_overlaynumu_FC_eventinfo;   vector< vector<EventInfo> >vector_vector_BNB_nueCC_from_overlaynumu_PC_eventinfo;
+  vector<double>vector_BNB_nueCC_from_appnue_scaleFPOT;        vector< vector<EventInfo> >vector_vector_BNB_nueCC_from_appnue_FC_eventinfo;        vector< vector<EventInfo> >vector_vector_BNB_nueCC_from_appnue_PC_eventinfo;
+  vector<double>vector_BNB_nueCC_from_appnumu_scaleFPOT;       vector< vector<EventInfo> >vector_vector_BNB_nueCC_from_appnumu_FC_eventinfo;       vector< vector<EventInfo> >vector_vector_BNB_nueCC_from_appnumu_PC_eventinfo;
+  vector<double>vector_BNB_nueCC_from_overlaynueNC_scaleFPOT;  vector< vector<EventInfo> >vector_vector_BNB_nueCC_from_overlaynueNC_FC_eventinfo;  vector< vector<EventInfo> >vector_vector_BNB_nueCC_from_overlaynueNC_PC_eventinfo;
+  vector<double>vector_BNB_nueCC_from_overlaynumuNC_scaleFPOT; vector< vector<EventInfo> >vector_vector_BNB_nueCC_from_overlaynumuNC_FC_eventinfo; vector< vector<EventInfo> >vector_vector_BNB_nueCC_from_overlaynumuNC_PC_eventinfo;
   
-  vector<double>vector_BNB_numuCC_from_overlaynumu_scaleFPOT;  vector< vector<EventInfo> >vector_vector_BNB_numuCC_from_overlaynumu_eventinfo;
-  vector<double>vector_BNB_numuCC_from_overlaynue_scaleFPOT;   vector< vector<EventInfo> >vector_vector_BNB_numuCC_from_overlaynue_eventinfo;
-  vector<double>vector_BNB_numuCC_from_appnue_scaleFPOT;       vector< vector<EventInfo> >vector_vector_BNB_numuCC_from_appnue_eventinfo;
-  vector<double>vector_BNB_numuCC_from_appnumu_scaleFPOT;      vector< vector<EventInfo> >vector_vector_BNB_numuCC_from_appnumu_eventinfo;
-  vector<double>vector_BNB_numuCC_from_overlaynumuNC_scaleFPOT;vector< vector<EventInfo> >vector_vector_BNB_numuCC_from_overlaynumuNC_eventinfo;
-  vector<double>vector_BNB_numuCC_from_overlaynueNC_scaleFPOT; vector< vector<EventInfo> >vector_vector_BNB_numuCC_from_overlaynueNC_eventinfo;
+  vector<double>vector_BNB_numuCC_from_overlaynumu_scaleFPOT;  vector< vector<EventInfo> >vector_vector_BNB_numuCC_from_overlaynumu_FC_eventinfo;  vector< vector<EventInfo> >vector_vector_BNB_numuCC_from_overlaynumu_PC_eventinfo;
+  vector<double>vector_BNB_numuCC_from_overlaynue_scaleFPOT;   vector< vector<EventInfo> >vector_vector_BNB_numuCC_from_overlaynue_FC_eventinfo;   vector< vector<EventInfo> >vector_vector_BNB_numuCC_from_overlaynue_PC_eventinfo;
+  vector<double>vector_BNB_numuCC_from_appnue_scaleFPOT;       vector< vector<EventInfo> >vector_vector_BNB_numuCC_from_appnue_FC_eventinfo;       vector< vector<EventInfo> >vector_vector_BNB_numuCC_from_appnue_PC_eventinfo;
+  vector<double>vector_BNB_numuCC_from_appnumu_scaleFPOT;      vector< vector<EventInfo> >vector_vector_BNB_numuCC_from_appnumu_FC_eventinfo;      vector< vector<EventInfo> >vector_vector_BNB_numuCC_from_appnumu_PC_eventinfo;
+  vector<double>vector_BNB_numuCC_from_overlaynumuNC_scaleFPOT;vector< vector<EventInfo> >vector_vector_BNB_numuCC_from_overlaynumuNC_FC_eventinfo;vector< vector<EventInfo> >vector_vector_BNB_numuCC_from_overlaynumuNC_PC_eventinfo;
+  vector<double>vector_BNB_numuCC_from_overlaynueNC_scaleFPOT; vector< vector<EventInfo> >vector_vector_BNB_numuCC_from_overlaynueNC_FC_eventinfo; vector< vector<EventInfo> >vector_vector_BNB_numuCC_from_overlaynueNC_PC_eventinfo;
   
-  vector<double>vector_BNB_CCpi0_from_overlaynumu_scaleFPOT;  vector< vector<EventInfo> >vector_vector_BNB_CCpi0_from_overlaynumu_eventinfo;
-  vector<double>vector_BNB_CCpi0_from_appnue_scaleFPOT;       vector< vector<EventInfo> >vector_vector_BNB_CCpi0_from_appnue_eventinfo;
-  vector<double>vector_BNB_CCpi0_from_overlaynumuNC_scaleFPOT;vector< vector<EventInfo> >vector_vector_BNB_CCpi0_from_overlaynumuNC_eventinfo;
-  vector<double>vector_BNB_CCpi0_from_overlaynueNC_scaleFPOT; vector< vector<EventInfo> >vector_vector_BNB_CCpi0_from_overlaynueNC_eventinfo;
+  vector<double>vector_BNB_CCpi0_from_overlaynumu_scaleFPOT;   vector< vector<EventInfo> >vector_vector_BNB_CCpi0_from_overlaynumu_FC_eventinfo;   vector< vector<EventInfo> >vector_vector_BNB_CCpi0_from_overlaynumu_PC_eventinfo;
+  vector<double>vector_BNB_CCpi0_from_appnue_scaleFPOT;        vector< vector<EventInfo> >vector_vector_BNB_CCpi0_from_appnue_FC_eventinfo;        vector< vector<EventInfo> >vector_vector_BNB_CCpi0_from_appnue_PC_eventinfo;
+  vector<double>vector_BNB_CCpi0_from_overlaynumuNC_scaleFPOT; vector< vector<EventInfo> >vector_vector_BNB_CCpi0_from_overlaynumuNC_FC_eventinfo; vector< vector<EventInfo> >vector_vector_BNB_CCpi0_from_overlaynumuNC_PC_eventinfo;
+  vector<double>vector_BNB_CCpi0_from_overlaynueNC_scaleFPOT;  vector< vector<EventInfo> >vector_vector_BNB_CCpi0_from_overlaynueNC_FC_eventinfo;  vector< vector<EventInfo> >vector_vector_BNB_CCpi0_from_overlaynueNC_PC_eventinfo;
   
-  vector<double>vector_BNB_NCpi0_from_overlaynumu_scaleFPOT;  vector< vector<EventInfo> >vector_vector_BNB_NCpi0_from_overlaynumu_eventinfo;
-  vector<double>vector_BNB_NCpi0_from_appnue_scaleFPOT;       vector< vector<EventInfo> >vector_vector_BNB_NCpi0_from_appnue_eventinfo;
-  vector<double>vector_BNB_NCpi0_from_overlaynumuNC_scaleFPOT;vector< vector<EventInfo> >vector_vector_BNB_NCpi0_from_overlaynumuNC_eventinfo;
-  vector<double>vector_BNB_NCpi0_from_overlaynueNC_scaleFPOT; vector< vector<EventInfo> >vector_vector_BNB_NCpi0_from_overlaynueNC_eventinfo;
+  vector<double>vector_BNB_NCpi0_from_overlaynumu_scaleFPOT;   vector< vector<EventInfo> >vector_vector_BNB_NCpi0_from_overlaynumu_eventinfo; 
+  vector<double>vector_BNB_NCpi0_from_appnue_scaleFPOT;        vector< vector<EventInfo> >vector_vector_BNB_NCpi0_from_appnue_eventinfo;
+  vector<double>vector_BNB_NCpi0_from_overlaynumuNC_scaleFPOT; vector< vector<EventInfo> >vector_vector_BNB_NCpi0_from_overlaynumuNC_eventinfo;
+  vector<double>vector_BNB_NCpi0_from_overlaynueNC_scaleFPOT;  vector< vector<EventInfo> >vector_vector_BNB_NCpi0_from_overlaynueNC_eventinfo;
   
   ///////////////////////////
 
@@ -354,9 +354,11 @@ class TOsc {
   void Set_default_cv_cov(TString default_cv_file, TString default_dirtadd_file, TString default_mcstat_file, TString default_fluxXs_dir, TString default_detector_dir);
 
   void Set_oscillation_base();
-  void Set_oscillation_base_subfunc(TString strfile_mcPOT, TString strfile_dataPOT, vector<double> *vec_ratioPOT, TString strfile_mc_e2e, vector< vector<EventInfo> > *vec_vec_eventinfo);
-  
+  void Set_oscillation_base_subfunc(TString strfile_mcPOT, TString strfile_dataPOT, vector<double> *vec_ratioPOT, TString strfile_mc_e2e, TString str_treename, vector< vector<EventInfo> > *vec_vec_eventinfo);  
   /// matrix oscillation effect result oldworld = matrix oscillation base + matrix oscillation_ ffect;
+
+  void Set_oscillation_base_minus(vector<double> *vec_ratioPOT, vector< vector<EventInfo> > *vec_vec_eventinfo, int pred_channel_index, TString str_osc_mode);
+  void Set_oscillation_base_added(vector<double> *vec_ratioPOT, vector< vector<EventInfo> > *vec_vec_eventinfo, int pred_channel_index, TString str_osc_mode);
 
   void Set_oscillation_pars(double val_dm2_41, double val_sin2_2theta_14, double val_sin2_theta_24, double val_sin2_theta_34) {
     dm2_41 = val_dm2_41;

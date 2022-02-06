@@ -554,6 +554,57 @@ double TOsc::Prob_oscillaion(double Etrue, double baseline, TString strflag_osc)
 }
 
 ///////////////////
+
+void TOsc::Set_oscillation_base_minus(vector<double> *vec_ratioPOT, vector< vector<EventInfo> > *vec_vec_eventinfo, int pred_channel_index, TString str_osc_mode)
+{
+  int total_pred_chs = map_default_h1d_pred.size();
+  if( pred_channel_index > total_pred_chs ) { cerr<<TString::Format(" ERROR: pred_channel_index(%d) > total_pred_chs(%d)", pred_channel_index, total_pred_chs)<<endl; exit(1); }  
+  
+  for(int isize=0; isize<(int)vec_vec_eventinfo->size(); isize++ ) {
+    TH1D *h1d_temp = (TH1D*)map_default_h1d_pred[pred_channel_index]->Clone("h1d_temp"); h1d_temp->Reset();// define and clear
+    
+    for(int ievent=0; ievent<(int)vec_vec_eventinfo->at(isize).size(); ievent++) {
+      EventInfo info = vec_vec_eventinfo->at(isize).at(ievent);
+      h1d_temp->Fill(info.e2e_Ereco, info.e2e_weight_xs);
+    }
+
+    h1d_temp->Scale( vec_ratioPOT->at(isize) );
+
+    ///////    
+    TMatrixD matrix_temp(1, default_oldworld_rows);        
+    int bin_index_base = 0;
+    if( pred_channel_index > 1 ) { for(int ich=1; ich<pred_channel_index; ich++) bin_index_base += ( map_default_h1d_pred[ich]->GetNbinsX()+1 ); }
+    for(int ibin=1; ibin<=h1d_temp->GetNbinsX()+1; ibin++) { matrix_temp(0, bin_index_base + ibin -1) = h1d_temp->GetBinContent(ibin); }
+    matrix_oscillation_base_oldworld_pred -= matrix_temp;    
+  }// for(int isize=0; isize<(int)vec_vec_eventinfo->size(); isize++ )  
+}
+
+void TOsc::Set_oscillation_base_added(vector<double> *vec_ratioPOT, vector< vector<EventInfo> > *vec_vec_eventinfo, int pred_channel_index, TString str_osc_mode)
+{
+  int total_pred_chs = map_default_h1d_pred.size();
+  if( pred_channel_index > total_pred_chs ) { cerr<<TString::Format(" ERROR: pred_channel_index(%d) > total_pred_chs(%d)", pred_channel_index, total_pred_chs)<<endl; exit(1); }  
+  
+  for(int isize=0; isize<(int)vec_vec_eventinfo->size(); isize++ ) {
+    TH1D *h1d_temp = (TH1D*)map_default_h1d_pred[pred_channel_index]->Clone("h1d_temp"); h1d_temp->Reset();// define and clear
+    
+    for(int ievent=0; ievent<(int)vec_vec_eventinfo->at(isize).size(); ievent++) {
+      EventInfo info = vec_vec_eventinfo->at(isize).at(ievent);
+      double prob = Prob_oscillaion(info.e2e_Etrue, info.e2e_baseline, str_osc_mode);
+      h1d_temp->Fill(info.e2e_Ereco, prob * info.e2e_weight_xs);
+    }
+
+    h1d_temp->Scale( vec_ratioPOT->at(isize) );
+
+    ///////    
+    TMatrixD matrix_temp(1, default_oldworld_rows);        
+    int bin_index_base = 0;
+    if( pred_channel_index > 1 ) { for(int ich=1; ich<pred_channel_index; ich++) bin_index_base += ( map_default_h1d_pred[ich]->GetNbinsX()+1 ); }
+    for(int ibin=1; ibin<=h1d_temp->GetNbinsX()+1; ibin++) { matrix_temp(0, bin_index_base + ibin -1) = h1d_temp->GetBinContent(ibin); }
+    matrix_oscillation_oldworld_pred += matrix_temp;    
+  }// for(int isize=0; isize<(int)vec_vec_eventinfo->size(); isize++ )  
+}
+
+///////////////////
   
 void TOsc::Apply_oscillation()
 {
@@ -561,87 +612,36 @@ void TOsc::Apply_oscillation()
 
   matrix_oscillation_oldworld_pred = matrix_oscillation_base_oldworld_pred;
 
-  ///////////////////
+  /////////////////// same as the ones in void TOsc::Set_oscillation_base(), but use "added" instead of "minus"
 
-  if( flag_NuMI_nueCC_from_intnue ) {
-    for(int isize=0; isize<(int)vector_vector_NuMI_nueCC_from_intnue_eventinfo.size(); isize++ ) {
-      TMatrixD matrix_oscillation_base_oldworld_pred_subtract(1, default_oldworld_rows);
-      
-      TH1D *h1_FC = (TH1D*)map_default_h1d_pred[1]->Clone("h1_FC"); h1_FC->Reset();// define and clear
-      TH1D *h1_PC = (TH1D*)map_default_h1d_pred[2]->Clone("h1_PC"); h1_PC->Reset();// define and clear
-
-      for(int ievent=0; ievent<(int)vector_vector_NuMI_nueCC_from_intnue_eventinfo.at(isize).size(); ievent++) {
-	EventInfo info = vector_vector_NuMI_nueCC_from_intnue_eventinfo.at(isize).at(ievent);
-
-	double prob = Prob_oscillaion(info.e2e_Etrue, info.e2e_baseline, "nue2nue");
-	
-	if( info.e2e_flag_FC ) h1_FC->Fill(info.e2e_Ereco, prob * info.e2e_weight_xs);
-	else h1_PC->Fill(info.e2e_Ereco, prob * info.e2e_weight_xs);
-      }
-
-      double scaleFPOT = vector_NuMI_nueCC_from_intnue_scaleFPOT.at(isize);
-      h1_FC->Scale( scaleFPOT );
-      h1_PC->Scale( scaleFPOT );
-
-      for(int ibin=1; ibin<=26; ibin++) matrix_oscillation_base_oldworld_pred_subtract(0, 26*14 + ibin-1) = h1_FC->GetBinContent(ibin);// hack
-      for(int ibin=1; ibin<=26; ibin++) matrix_oscillation_base_oldworld_pred_subtract(0, 26*15 + ibin-1) = h1_PC->GetBinContent(ibin);// hack
-
-      matrix_oscillation_oldworld_pred += matrix_oscillation_base_oldworld_pred_subtract;
-      
-      delete h1_PC;
-      delete h1_FC;
-    }// for(int isize=0; isize<(int)vector_vector_NuMI_nueCC_from_intnue_eventinfo.size(); isize++ )
-  }// if( flag_NuMI_nueCC_from_intnue )
-
-  ///////////////////
+  if( flag_NuMI_nueCC_from_intnue ) {    
+    Set_oscillation_base_added(&vector_NuMI_nueCC_from_intnue_scaleFPOT, &vector_vector_NuMI_nueCC_from_intnue_FC_eventinfo, 15, "nue2nue");
+    Set_oscillation_base_added(&vector_NuMI_nueCC_from_intnue_scaleFPOT, &vector_vector_NuMI_nueCC_from_intnue_PC_eventinfo, 16, "nue2nue");
+  }
 
   if( flag_BNB_nueCC_from_intnue ) {
-    for(int isize=0; isize<(int)vector_vector_BNB_nueCC_from_intnue_eventinfo.size(); isize++ ) {
-      TMatrixD matrix_oscillation_base_oldworld_pred_subtract(1, default_oldworld_rows);
-      
-      TH1D *h1_FC = (TH1D*)map_default_h1d_pred[1]->Clone("h1_FC"); h1_FC->Reset();// define and clear
-      TH1D *h1_PC = (TH1D*)map_default_h1d_pred[2]->Clone("h1_PC"); h1_PC->Reset();// define and clear
-
-      for(int ievent=0; ievent<(int)vector_vector_BNB_nueCC_from_intnue_eventinfo.at(isize).size(); ievent++) {
-	EventInfo info = vector_vector_BNB_nueCC_from_intnue_eventinfo.at(isize).at(ievent);
-
-	double prob = Prob_oscillaion(info.e2e_Etrue, info.e2e_baseline, "nue2nue");
-	
-	if( info.e2e_flag_FC ) h1_FC->Fill(info.e2e_Ereco, prob * info.e2e_weight_xs);
-	else h1_PC->Fill(info.e2e_Ereco, prob * info.e2e_weight_xs);
-      }
-
-      double scaleFPOT = vector_BNB_nueCC_from_intnue_scaleFPOT.at(isize);
-      h1_FC->Scale( scaleFPOT );
-      h1_PC->Scale( scaleFPOT );
-
-      for(int ibin=1; ibin<=26; ibin++) matrix_oscillation_base_oldworld_pred_subtract(0, ibin-1) = h1_FC->GetBinContent(ibin);// hack
-      for(int ibin=1; ibin<=26; ibin++) matrix_oscillation_base_oldworld_pred_subtract(0, 26 + ibin-1) = h1_PC->GetBinContent(ibin);// hack
-
-      matrix_oscillation_oldworld_pred += matrix_oscillation_base_oldworld_pred_subtract;
-      
-      delete h1_PC;
-      delete h1_FC;
-    }// for(int isize=0; isize<(int)vector_vector_BNB_nueCC_from_intnue_eventinfo.size(); isize++ )
-  }// if( flag_BNB_nueCC_from_intnue )
+    Set_oscillation_base_added(&vector_BNB_nueCC_from_intnue_scaleFPOT, &vector_vector_BNB_nueCC_from_intnue_FC_eventinfo, 1, "nue2nue");
+    Set_oscillation_base_added(&vector_BNB_nueCC_from_intnue_scaleFPOT, &vector_vector_BNB_nueCC_from_intnue_PC_eventinfo, 2, "nue2nue");
+  }
 
   /////// check with results from framework
   // for(int idx=1; idx<=26; idx++) {
-  //   cout<<TString::Format("%3d   %10.6f  %10.6f  %10.6f  %10.6f", idx,
-  // 			  matrix_oscillation_oldworld_pred(0, idx-1), matrix_oscillation_oldworld_pred(0, 26 + idx-1),
-  // 			  matrix_oscillation_oldworld_pred(0, 14*26 + idx-1), matrix_oscillation_oldworld_pred(0, 15*26 + idx-1)
-  // 			  )<<endl;
+  //   cout<<TString::Format("%3d   %10.6f  %10.6f  %10.6f  %10.6f    %14.6f", idx,
+  //  			  matrix_oscillation_oldworld_pred(0, idx-1), matrix_oscillation_oldworld_pred(0, 26 + idx-1),
+  //  			  matrix_oscillation_oldworld_pred(0, 14*26 + idx-1), matrix_oscillation_oldworld_pred(0, 15*26 + idx-1),
+  // 			  matrix_oscillation_oldworld_pred(0, 26*2 + idx-1)
+  //  			  )<<endl;
   // }
   
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////// ccc
 
-void TOsc::Set_oscillation_base_subfunc(TString strfile_mcPOT, TString strfile_dataPOT, vector<double> *vec_ratioPOT, TString strfile_mc_e2e, vector< vector<EventInfo> > *vec_vec_eventinfo)
+void TOsc::Set_oscillation_base_subfunc(TString strfile_mcPOT, TString strfile_dataPOT, vector<double> *vec_ratioPOT, TString strfile_mc_e2e, TString str_treename, vector< vector<EventInfo> > *vec_vec_eventinfo)
 {
   // Declaration of leaf types
   Int_t           e2e_pdg;
-  Int_t           e2e_flag_FC;
+  //Int_t           e2e_flag_FC;
   Double_t        e2e_Etrue;
   Double_t        e2e_Ereco;
   Double_t        e2e_weight_xs;
@@ -649,18 +649,19 @@ void TOsc::Set_oscillation_base_subfunc(TString strfile_mcPOT, TString strfile_d
 
   // List of branches
   TBranch        *b_e2e_pdg;   //!
-  TBranch        *b_e2e_flag_FC;   //!
+  //TBranch        *b_e2e_flag_FC;   //!
   TBranch        *b_e2e_Etrue;   //!
   TBranch        *b_e2e_Ereco;   //!
   TBranch        *b_e2e_weight_xs;   //!
   TBranch        *b_e2e_baseline;   //!
   
   TFile *roofile_obj = new TFile(strfile_mc_e2e, "read");
-  TTree *tree_obj = (TTree*)roofile_obj->Get("tree_obj");
+  TTree *tree_obj = (TTree*)roofile_obj->Get(str_treename);
+  if(!tree_obj) { cerr<<" ERROR: Set_oscillation_base_subfunc, no treename: "<<str_treename<<endl; exit(1); }
   
   // Set branch addresses and branch pointers
   tree_obj->SetBranchAddress("e2e_pdg", &e2e_pdg, &b_e2e_pdg);
-  tree_obj->SetBranchAddress("e2e_flag_FC", &e2e_flag_FC, &b_e2e_flag_FC);
+  //tree_obj->SetBranchAddress("e2e_flag_FC", &e2e_flag_FC, &b_e2e_flag_FC);
   tree_obj->SetBranchAddress("e2e_Etrue", &e2e_Etrue, &b_e2e_Etrue);
   tree_obj->SetBranchAddress("e2e_Ereco", &e2e_Ereco, &b_e2e_Ereco);
   tree_obj->SetBranchAddress("e2e_weight_xs", &e2e_weight_xs, &b_e2e_weight_xs);
@@ -669,7 +670,7 @@ void TOsc::Set_oscillation_base_subfunc(TString strfile_mcPOT, TString strfile_d
   int entries = tree_obj->GetEntries();
 
   cout<<endl;
-  cout<<TString::Format("      ---> entries %10d   %10s", entries, strfile_mc_e2e.Data())<<endl;
+  cout<<TString::Format("            ---> entries %10d     %50s   --> %20s", entries, strfile_mc_e2e.Data(), str_treename.Data())<<endl;
 
   vector<EventInfo>vector_eventinfo;
   
@@ -677,7 +678,7 @@ void TOsc::Set_oscillation_base_subfunc(TString strfile_mcPOT, TString strfile_d
     tree_obj->GetEntry(ientry);
     EventInfo eventinfo;
     eventinfo.e2e_pdg = e2e_pdg;
-    eventinfo.e2e_flag_FC = e2e_flag_FC;
+    //eventinfo.e2e_flag_FC = e2e_flag_FC;
     eventinfo.e2e_Etrue = e2e_Etrue;
     eventinfo.e2e_Ereco = e2e_Ereco;
     eventinfo.e2e_weight_xs = e2e_weight_xs;
@@ -687,31 +688,33 @@ void TOsc::Set_oscillation_base_subfunc(TString strfile_mcPOT, TString strfile_d
     
   delete tree_obj;
   delete roofile_obj;
-
-  //
-  Double_t        pot;
-  TBranch        *b_pot;   //!  
-  double mc_pot = 1; double data_pot = 0;
-
-  TFile *roofile_mc = new TFile(strfile_mcPOT, "read");
-  TTree *tree_mc = (TTree*)roofile_mc->Get("T");
-  tree_mc->SetBranchAddress("pot", &pot, &b_pot);
-  tree_mc->GetEntry(0); mc_pot = pot;
-  delete tree_mc;
-  delete roofile_mc;
-      
-  TFile *roofile_data = new TFile(strfile_dataPOT, "read");
-  TTree *tree_data = (TTree*)roofile_data->Get("T");
-  tree_data->SetBranchAddress("pot", &pot, &b_pot);
-  tree_data->GetEntry(0); data_pot = pot;
-  delete tree_data;
-  delete roofile_data;
-
-  cout<<"      ---> MC POT "<<mc_pot<<"\t"<<strfile_mcPOT<<endl;
-  cout<<"      ---> DD POT "<<data_pot<<"\t"<<strfile_dataPOT<<endl;
   
-  vec_ratioPOT->push_back( data_pot/mc_pot );// from the output of ./convert_histo.pl
   vec_vec_eventinfo->push_back( vector_eventinfo );
+
+  if( vec_ratioPOT!=NULL ) {
+    Double_t        pot;
+    TBranch        *b_pot;   //!  
+    double mc_pot = 1; double data_pot = 0;
+
+    TFile *roofile_mc = new TFile(strfile_mcPOT, "read");
+    TTree *tree_mc = (TTree*)roofile_mc->Get("T");
+    tree_mc->SetBranchAddress("pot", &pot, &b_pot);
+    tree_mc->GetEntry(0); mc_pot = pot;
+    delete tree_mc;
+    delete roofile_mc;
+      
+    TFile *roofile_data = new TFile(strfile_dataPOT, "read");
+    TTree *tree_data = (TTree*)roofile_data->Get("T");
+    tree_data->SetBranchAddress("pot", &pot, &b_pot);
+    tree_data->GetEntry(0); data_pot = pot;
+    delete tree_data;
+    delete roofile_data;
+    
+    vec_ratioPOT->push_back( data_pot/mc_pot );// from the output of ./convert_histo.pl
+    
+    cout<<"            ---> MC POT "<<mc_pot<<"\t"<<strfile_mcPOT<<endl;
+    cout<<"            ---> DD POT "<<data_pot<<"\t"<<strfile_dataPOT<<endl;      
+  }// if( vec_ratioPOT!=NULL )
   
 }
 
@@ -726,105 +729,66 @@ void TOsc::Set_oscillation_base()
   cout<<" ---> Set_oscillation_base"<<endl;
 
   matrix_oscillation_base_oldworld_pred = matrix_default_oldworld_pred;
+
+  TString str_dirbase = "./data_inputs/newdir_BNBNuMI_cv_cov_list/";
   
   ///////////////////
   
   if( flag_NuMI_nueCC_from_intnue ) {
-    cout<<endl;
-    cout<<"      ---> flag_NuMI_nueCC_from_intnue"<<endl;
-
-    TString str_dirbase = "./data_inputs/nuedisapp_BNBNuMI_config_order/";
-    
-    {// FHC run1
+    cout<<endl<<"      ---> flag_NuMI_nueCC_from_intnue"<<endl;        
+    {// run1 FHC
       TString strfile_mcPOT   = str_dirbase + "checkout_prodgenie_numi_intrinsic_nue_overlay_run1.root";
       TString strfile_dataPOT = str_dirbase + "run1_data_numi.root";
-      TString strfile_mc_e2e  = str_dirbase + "roofile_obj_NuMI_run1_nue_from_int.root";
-      Set_oscillation_base_subfunc(strfile_mcPOT, strfile_dataPOT, &vector_NuMI_nueCC_from_intnue_scaleFPOT, strfile_mc_e2e, &vector_vector_NuMI_nueCC_from_intnue_eventinfo);
+      TString strfile_mc_e2e  = str_dirbase + "roofile_obj_NuMI_run1_FHC_intrinsic.root";
+      TString str_treename = "";      
+      str_treename = "tree_nueCC_from_intnue_FC";
+      Set_oscillation_base_subfunc(strfile_mcPOT, strfile_dataPOT, &vector_NuMI_nueCC_from_intnue_scaleFPOT, strfile_mc_e2e, str_treename, &vector_vector_NuMI_nueCC_from_intnue_FC_eventinfo);
+      str_treename = "tree_nueCC_from_intnue_PC";
+      Set_oscillation_base_subfunc(strfile_mcPOT, strfile_dataPOT, NULL,                                     strfile_mc_e2e, str_treename, &vector_vector_NuMI_nueCC_from_intnue_PC_eventinfo);
     }
 
-    /////// hack
-    
-    for(int isize=0; isize<(int)vector_vector_NuMI_nueCC_from_intnue_eventinfo.size(); isize++ ) {
-      TMatrixD matrix_oscillation_base_oldworld_pred_subtract(1, default_oldworld_rows);
-      
-      TH1D *h1_FC = (TH1D*)map_default_h1d_pred[1]->Clone("h1_FC"); h1_FC->Reset();// define and clear
-      TH1D *h1_PC = (TH1D*)map_default_h1d_pred[2]->Clone("h1_PC"); h1_PC->Reset();// define and clear
-
-      for(int ievent=0; ievent<(int)vector_vector_NuMI_nueCC_from_intnue_eventinfo.at(isize).size(); ievent++) {
-	EventInfo info = vector_vector_NuMI_nueCC_from_intnue_eventinfo.at(isize).at(ievent);
-	if( info.e2e_flag_FC ) h1_FC->Fill(info.e2e_Ereco, info.e2e_weight_xs);
-	else h1_PC->Fill(info.e2e_Ereco, info.e2e_weight_xs);
-      }
-
-      double scaleFPOT = vector_NuMI_nueCC_from_intnue_scaleFPOT.at(isize);
-      h1_FC->Scale( scaleFPOT );
-      h1_PC->Scale( scaleFPOT );
-
-      for(int ibin=1; ibin<=26; ibin++) matrix_oscillation_base_oldworld_pred_subtract(0, 26*14 + ibin-1) = h1_FC->GetBinContent(ibin);// hack
-      for(int ibin=1; ibin<=26; ibin++) matrix_oscillation_base_oldworld_pred_subtract(0, 26*15 + ibin-1) = h1_PC->GetBinContent(ibin);// hack
-
-      matrix_oscillation_base_oldworld_pred -= matrix_oscillation_base_oldworld_pred_subtract;
-      
-      delete h1_PC;
-      delete h1_FC;
-    }// for(int isize=0; isize<(int)vector_vector_NuMI_nueCC_from_intnue_eventinfo.size(); isize++ )
-    
+    Set_oscillation_base_minus(&vector_NuMI_nueCC_from_intnue_scaleFPOT, &vector_vector_NuMI_nueCC_from_intnue_FC_eventinfo, 15, "nue2nue");// hack
+    Set_oscillation_base_minus(&vector_NuMI_nueCC_from_intnue_scaleFPOT, &vector_vector_NuMI_nueCC_from_intnue_PC_eventinfo, 16, "nue2nue");// hack
+  
   }// if( flag_NuMI_nueCC_from_intnue )
 
+  ///////////////////  
 
   if( flag_BNB_nueCC_from_intnue ) {
-    cout<<endl;
-    cout<<"      ---> flag_BNB_nueCC_from_intnue"<<endl;
-
-    TString str_dirbase = "./data_inputs/nuedisapp_BNBNuMI_config_order/";
-    
+    cout<<endl<<"      ---> flag_BNB_nueCC_from_intnue"<<endl;    
     {// run1
       TString strfile_mcPOT   = str_dirbase + "checkout_prodgenie_bnb_intrinsic_nue_overlay_run1.root";
       TString strfile_dataPOT = str_dirbase + "run1_data_bnb.root";
-      TString strfile_mc_e2e  = str_dirbase + "roofile_obj_BNB_run1_nue_from_int.root";
-      Set_oscillation_base_subfunc(strfile_mcPOT, strfile_dataPOT, &vector_BNB_nueCC_from_intnue_scaleFPOT, strfile_mc_e2e, &vector_vector_BNB_nueCC_from_intnue_eventinfo);
+      TString strfile_mc_e2e  = str_dirbase + "roofile_obj_BNB_run1_intrinsic.root";
+      TString str_treename = "";      
+      str_treename = "tree_nueCC_from_intnue_FC";
+      Set_oscillation_base_subfunc(strfile_mcPOT, strfile_dataPOT, &vector_BNB_nueCC_from_intnue_scaleFPOT, strfile_mc_e2e, str_treename, &vector_vector_BNB_nueCC_from_intnue_FC_eventinfo);
+      str_treename = "tree_nueCC_from_intnue_PC";
+      Set_oscillation_base_subfunc(strfile_mcPOT, strfile_dataPOT, NULL,                                    strfile_mc_e2e, str_treename, &vector_vector_BNB_nueCC_from_intnue_PC_eventinfo);
     }
-   
     {// run2
       TString strfile_mcPOT   = str_dirbase + "checkout_prodgenie_bnb_intrinsic_nue_overlay_run2.root";
       TString strfile_dataPOT = str_dirbase + "run2_data_bnb.root";
-      TString strfile_mc_e2e  = str_dirbase + "roofile_obj_BNB_run2_nue_from_int.root";
-      Set_oscillation_base_subfunc(strfile_mcPOT, strfile_dataPOT, &vector_BNB_nueCC_from_intnue_scaleFPOT, strfile_mc_e2e, &vector_vector_BNB_nueCC_from_intnue_eventinfo);
+      TString strfile_mc_e2e  = str_dirbase + "roofile_obj_BNB_run2_intrinsic.root";
+      TString str_treename = "";      
+      str_treename = "tree_nueCC_from_intnue_FC";
+      Set_oscillation_base_subfunc(strfile_mcPOT, strfile_dataPOT, &vector_BNB_nueCC_from_intnue_scaleFPOT, strfile_mc_e2e, str_treename, &vector_vector_BNB_nueCC_from_intnue_FC_eventinfo);
+      str_treename = "tree_nueCC_from_intnue_PC";
+      Set_oscillation_base_subfunc(strfile_mcPOT, strfile_dataPOT, NULL,                                    strfile_mc_e2e, str_treename, &vector_vector_BNB_nueCC_from_intnue_PC_eventinfo);
     }
- 
     {// run3
       TString strfile_mcPOT   = str_dirbase + "checkout_prodgenie_bnb_intrinsic_nue_overlay_run3.root";
       TString strfile_dataPOT = str_dirbase + "run3_data_bnb.root";
-      TString strfile_mc_e2e  = str_dirbase + "roofile_obj_BNB_run3_nue_from_int.root";
-      Set_oscillation_base_subfunc(strfile_mcPOT, strfile_dataPOT, &vector_BNB_nueCC_from_intnue_scaleFPOT, strfile_mc_e2e, &vector_vector_BNB_nueCC_from_intnue_eventinfo);
+      TString strfile_mc_e2e  = str_dirbase + "roofile_obj_BNB_run3_intrinsic.root";
+      TString str_treename = "";      
+      str_treename = "tree_nueCC_from_intnue_FC";
+      Set_oscillation_base_subfunc(strfile_mcPOT, strfile_dataPOT, &vector_BNB_nueCC_from_intnue_scaleFPOT, strfile_mc_e2e, str_treename, &vector_vector_BNB_nueCC_from_intnue_FC_eventinfo);
+      str_treename = "tree_nueCC_from_intnue_PC";
+      Set_oscillation_base_subfunc(strfile_mcPOT, strfile_dataPOT, NULL,                                    strfile_mc_e2e, str_treename, &vector_vector_BNB_nueCC_from_intnue_PC_eventinfo);
     }
 
-    /////// hack
-    
-    for(int isize=0; isize<(int)vector_vector_BNB_nueCC_from_intnue_eventinfo.size(); isize++ ) {
-      TMatrixD matrix_oscillation_base_oldworld_pred_subtract(1, default_oldworld_rows);
-      
-      TH1D *h1_FC = (TH1D*)map_default_h1d_pred[1]->Clone("h1_FC"); h1_FC->Reset();// define and clear
-      TH1D *h1_PC = (TH1D*)map_default_h1d_pred[2]->Clone("h1_PC"); h1_PC->Reset();// define and clear
-
-      for(int ievent=0; ievent<(int)vector_vector_BNB_nueCC_from_intnue_eventinfo.at(isize).size(); ievent++) {
-	EventInfo info = vector_vector_BNB_nueCC_from_intnue_eventinfo.at(isize).at(ievent);
-	if( info.e2e_flag_FC ) h1_FC->Fill(info.e2e_Ereco, info.e2e_weight_xs);
-	else h1_PC->Fill(info.e2e_Ereco, info.e2e_weight_xs);
-      }
-
-      double scaleFPOT = vector_BNB_nueCC_from_intnue_scaleFPOT.at(isize);
-      h1_FC->Scale( scaleFPOT );
-      h1_PC->Scale( scaleFPOT );
-
-      for(int ibin=1; ibin<=26; ibin++) matrix_oscillation_base_oldworld_pred_subtract(0, ibin-1) = h1_FC->GetBinContent(ibin);// hack
-      for(int ibin=1; ibin<=26; ibin++) matrix_oscillation_base_oldworld_pred_subtract(0, 26 + ibin-1) = h1_PC->GetBinContent(ibin);// hack
-
-      matrix_oscillation_base_oldworld_pred -= matrix_oscillation_base_oldworld_pred_subtract;
-      
-      delete h1_PC;
-      delete h1_FC;
-    }// for(int isize=0; isize<(int)vector_vector_BNB_nueCC_from_intnue_eventinfo.size(); isize++ )
+    Set_oscillation_base_minus(&vector_BNB_nueCC_from_intnue_scaleFPOT, &vector_vector_BNB_nueCC_from_intnue_FC_eventinfo, 1, "nue2nue");// hack
+    Set_oscillation_base_minus(&vector_BNB_nueCC_from_intnue_scaleFPOT, &vector_vector_BNB_nueCC_from_intnue_PC_eventinfo, 2, "nue2nue");// hack
     
   }// if( flag_BNB_nueCC_from_intnue )
   

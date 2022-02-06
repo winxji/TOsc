@@ -11,11 +11,11 @@ namespace Configure_Osc
   //TString default_fluxXs_dir   = "./data_inputs/zz_NuMI_n4_inputs/XsFlux/";
   //TString default_detector_dir = "./data_inputs/zz_NuMI_n4_inputs/DetVar/";
   
-  TString default_cv_file      = "./data_inputs/nuedisapp_BNBNuMI_config_order/merge.root";
-  TString default_dirtadd_file = "./data_inputs/nuedisapp_BNBNuMI_config_order/merge.root";
-  TString default_mcstat_file  = "./data_inputs/nuedisapp_BNBNuMI_config_order/mc_stat/0.log";    
-  TString default_fluxXs_dir   = "./data_inputs/nuedisapp_BNBNuMI_config_order/XsFlux_edit/";// hack flux for NuMI
-  TString default_detector_dir = "./data_inputs/nuedisapp_BNBNuMI_config_order/DetVar/";
+  TString default_cv_file      = "./data_inputs/newdir_BNBNuMI_cv_cov_list/merge.root";
+  TString default_dirtadd_file = "./data_inputs/newdir_BNBNuMI_cv_cov_list/merge.root";
+  TString default_mcstat_file  = "./data_inputs/newdir_BNBNuMI_cv_cov_list/mc_stat/0.log";    
+  TString default_fluxXs_dir   = "./data_inputs/newdir_BNBNuMI_cv_cov_list/XsFlux_edit/";// hack flux for NuMI
+  TString default_detector_dir = "./data_inputs/newdir_BNBNuMI_cv_cov_list/DetVar/";
 
   ///////////////////////////
 
