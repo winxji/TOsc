@@ -793,7 +793,8 @@ void TOsc::Set_oscillation_base()
     Set_oscillation_base_minus(&vector_BNB_nueCC_from_intnue_scaleFPOT, &vector_vector_BNB_nueCC_from_intnue_PC_eventinfo, 2, "nue2nue");// hack
     
   }// if( flag_BNB_nueCC_from_intnue )
-  
+
+  cout<<endl;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////// ccc

@@ -191,7 +191,6 @@ int main(int argc, char** argv)
   ///////
   //osc_test->Plot_user();
   //osc_test->Minimization_OscPars_FullCov(6.0, 0.2, 0, 0, "str_flag_fixpar");
-  // aa
   
   ///////
   
