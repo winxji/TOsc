@@ -104,22 +104,30 @@ class TOsc {
   
     ///////////////////////////
   
-    flag_NuMI_nueCC_from_intnue       = 0;
-    flag_NuMI_nueCC_from_overlaynumu  = 0;
-    flag_NuMI_nueCC_from_appnue       = 0;
-    flag_NuMI_nueCC_from_appnumu      = 0;
-
-    flag_NuMI_numuCC_from_overlaynumu = 0;
-    flag_NuMI_numuCC_from_overlaynue  = 0;
-    flag_NuMI_numuCC_from_appnue      = 0;
-    flag_NuMI_numuCC_from_appnumu     = 0;
-
-    flag_NuMI_CCpi0_from_overlaynumu  = 0;
-    flag_NuMI_CCpi0_from_appnue       = 0;
-  
-    flag_NuMI_NCpi0_from_overlaynumu  = 0;
-    flag_NuMI_NCpi0_from_appnue       = 0;
-
+    flag_NuMI_nueCC_from_intnue         = 0;
+    flag_NuMI_nueCC_from_overlaynumu    = 0;
+    flag_NuMI_nueCC_from_appnue         = 0;
+    flag_NuMI_nueCC_from_appnumu        = 0;
+    flag_NuMI_nueCC_from_overlaynueNC   = 0;
+    flag_NuMI_nueCC_from_overlaynumuNC  = 0;
+    
+    flag_NuMI_numuCC_from_overlaynumu   = 0;
+    flag_NuMI_numuCC_from_overlaynue    = 0;
+    flag_NuMI_numuCC_from_appnue        = 0;
+    flag_NuMI_numuCC_from_appnumu       = 0;
+    flag_NuMI_numuCC_from_overlaynumuNC = 0;
+    flag_NuMI_numuCC_from_overlaynueNC  = 0;
+    
+    flag_NuMI_CCpi0_from_overlaynumu    = 0;
+    flag_NuMI_CCpi0_from_appnue         = 0;
+    flag_NuMI_CCpi0_from_overlaynumuNC  = 0;
+    flag_NuMI_CCpi0_from_overlaynueNC   = 0;
+      
+    flag_NuMI_NCpi0_from_overlaynumu    = 0;
+    flag_NuMI_NCpi0_from_appnue         = 0;
+    flag_NuMI_NCpi0_from_overlaynumuNC  = 0;
+    flag_NuMI_NCpi0_from_overlaynueNC   = 0;
+    
     ///////
   
     flag_BNB_nueCC_from_intnue       = 0;

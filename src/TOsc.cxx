@@ -559,6 +559,8 @@ void TOsc::Set_oscillation_base_minus(vector<double> *vec_ratioPOT, vector< vect
 {
   int total_pred_chs = map_default_h1d_pred.size();
   if( pred_channel_index > total_pred_chs ) { cerr<<TString::Format(" ERROR: pred_channel_index(%d) > total_pred_chs(%d)", pred_channel_index, total_pred_chs)<<endl; exit(1); }  
+  cout<<TString::Format("            ---> (self-check) work on pred_channel: %3d", pred_channel_index)<<endl;
+
   
   for(int isize=0; isize<(int)vec_vec_eventinfo->size(); isize++ ) {
     TH1D *h1d_temp = (TH1D*)map_default_h1d_pred[pred_channel_index]->Clone("h1d_temp"); h1d_temp->Reset();// define and clear
@@ -669,7 +671,7 @@ void TOsc::Set_oscillation_base_subfunc(TString strfile_mcPOT, TString strfile_d
       
   int entries = tree_obj->GetEntries();
 
-  cout<<endl;
+  if( vec_ratioPOT!=NULL ) cout<<endl;
   cout<<TString::Format("            ---> entries %10d     %50s   --> %20s", entries, strfile_mc_e2e.Data(), str_treename.Data())<<endl;
 
   vector<EventInfo>vector_eventinfo;
@@ -803,11 +805,11 @@ void TOsc::Set_default_cv_cov(TString default_cv_file, TString default_dirtadd_f
   cout<<endl<<" ---> Set_default_cv_cov"<<endl;
   
   cout<<endl;
-  cout<<TString::Format("      ---> default_cv_file       %50s", default_cv_file.Data())<<endl;
-  cout<<TString::Format("      ---> default_dirtadd_file  %50s", default_dirtadd_file.Data())<<endl;
-  cout<<TString::Format("      ---> default_mcstat_file   %50s", default_mcstat_file.Data())<<endl;
-  cout<<TString::Format("      ---> default_fluxXs_dir    %50s", default_fluxXs_dir.Data())<<endl;
-  cout<<TString::Format("      ---> default_detector_dir  %50s", default_detector_dir.Data())<<endl;
+  cout<<TString::Format("      ---> default_cv_file       %10s", default_cv_file.Data())<<endl;
+  cout<<TString::Format("      ---> default_dirtadd_file  %10s", default_dirtadd_file.Data())<<endl;
+  cout<<TString::Format("      ---> default_mcstat_file   %10s", default_mcstat_file.Data())<<endl;
+  cout<<TString::Format("      ---> default_fluxXs_dir    %10s", default_fluxXs_dir.Data())<<endl;
+  cout<<TString::Format("      ---> default_detector_dir  %10s", default_detector_dir.Data())<<endl;
 
   //////////////////////////////////////
 
@@ -947,7 +949,7 @@ void TOsc::Set_default_cv_cov(TString default_cv_file, TString default_dirtadd_f
 
   if( flag_syst_dirt ) {
     cout<<endl;
-    cout<<"      ---> Dirt: additional uncertainty"<<endl;
+    cout<<"      ---> Dirt: additional uncertainty, Yes"<<endl;
     
     TFile *roofile_default_dirtadd_file = new TFile(default_dirtadd_file, "read");
     TMatrixD *matrix_temp = (TMatrixD*)roofile_default_dirtadd_file->Get("cov_mat_add");
@@ -955,12 +957,16 @@ void TOsc::Set_default_cv_cov(TString default_cv_file, TString default_dirtadd_f
     delete matrix_temp;
     delete roofile_default_dirtadd_file;
   }
+  else {
+    cout<<endl;
+    cout<<"      ---> Dirt: additional uncertainty, No"<<endl;
+  }
   
   //////////////////////////////////////
 
   if( flag_syst_mcstat ) {
     cout<<endl;
-    cout<<"      ---> MCstat"<<endl;
+    cout<<"      ---> MCstat, Yes"<<endl;
     
     ifstream file_mcstat_aa(default_mcstat_file, ios::in);
     if(!file_mcstat_aa) { cerr<<" Error: No file_mcstat_aa"<<endl; exit(1); }
@@ -979,18 +985,16 @@ void TOsc::Set_default_cv_cov(TString default_cv_file, TString default_dirtadd_f
       matrix_default_newworld_abs_syst_mcstat(idx-1, idx-1) = mc_stat;
     }
   }
+  else {
+    cout<<endl;
+    cout<<"      ---> MCstat, No"<<endl;
+  }
   
   ////////////////////////////////////// flux, geant, Xs
 
   if( flag_syst_flux ) {
     cout<<endl;
-    cout<<"      ---> flux"<<endl;
-    
-    // TFile *roofile_syst_flux = new TFile(default_fluxXs_dir+"cov_3.root", "read");
-    // TMatrixD *matrix_temp_flux = (TMatrixD*)roofile_syst_flux->Get("frac_cov_xf_mat_3");
-    // matrix_default_oldworld_rel_syst_flux += (*matrix_temp_flux);
-    // delete matrix_temp_flux;
-    // delete roofile_syst_flux;
+    cout<<"      ---> flux, Yes"<<endl;
     
     for(int idx=1; idx<=13; idx++) {
       TFile *roofile_syst_flux = new TFile(default_fluxXs_dir+TString::Format("cov_%d.root", idx), "read");
@@ -1001,10 +1005,14 @@ void TOsc::Set_default_cv_cov(TString default_cv_file, TString default_dirtadd_f
     }
 	
   }// if( flag_syst_flux )
-
+  else {
+    cout<<endl;
+    cout<<"      ---> flux, No"<<endl;
+  }
+  
   if( flag_syst_geant ) {
     cout<<endl;
-    cout<<"      ---> geant"<<endl;
+    cout<<"      ---> geant, Yes"<<endl;
 
     for(int idx=14; idx<=16; idx++) {
       TFile *roofile_syst_geant = new TFile(default_fluxXs_dir+TString::Format("cov_%d.root", idx), "read");
@@ -1014,10 +1022,14 @@ void TOsc::Set_default_cv_cov(TString default_cv_file, TString default_dirtadd_f
       delete roofile_syst_geant;
     }   
   }// if( flag_syst_geant )
-
+  else {
+    cout<<endl;
+    cout<<"      ---> geant, No"<<endl;
+  }
+  
   if( flag_syst_Xs ) {
     cout<<endl;
-    cout<<"      ---> Xs"<<endl;
+    cout<<"      ---> Xs, Yes"<<endl;
     
     TFile *roofile_syst_Xs = new TFile(default_fluxXs_dir+"cov_17.root", "read");
     TMatrixD *matrix_temp_Xs = (TMatrixD*)roofile_syst_Xs->Get("frac_cov_xf_mat_17");
@@ -1025,12 +1037,16 @@ void TOsc::Set_default_cv_cov(TString default_cv_file, TString default_dirtadd_f
     delete matrix_temp_Xs;
     delete roofile_syst_Xs; 
   }// if( flag_syst_Xs )
+  else {
+    cout<<endl;
+    cout<<"      ---> Xs, No"<<endl;
+  }
   
   ////////////////////////////////////// detector
 
   if( flag_syst_det ) {
     cout<<endl;
-    cout<<"      ---> detector"<<endl;
+    cout<<"      ---> detector, Yes"<<endl;
  
     map<int, TString>map_detectorfile_str;    
     map_detectorfile_str[1] = "cov_LYDown.root";
@@ -1053,7 +1069,10 @@ void TOsc::Set_default_cv_cov(TString default_cv_file, TString default_dirtadd_f
       delete roofile_det;
     }
   }// if( flag_syst_det )
-
+  else {
+    cout<<endl;
+    cout<<"      ---> detector, No"<<endl;
+  }
   
 }
   
