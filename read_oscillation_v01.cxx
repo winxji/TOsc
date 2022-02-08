@@ -181,7 +181,7 @@ int main(int argc, char** argv)
 
   /// standard order
   val_dm2_41         = 7.3;
-  val_sin2_2theta_14 = 0.36;
+  val_sin2_2theta_14 = 0;
   osc_test->Set_oscillation_pars(val_dm2_41, val_sin2_2theta_14, val_sin2_theta_24, val_sin2_theta_34);  
   osc_test->Apply_oscillation();
   osc_test->Set_apply_POT();// meas, CV, COV: all ready
