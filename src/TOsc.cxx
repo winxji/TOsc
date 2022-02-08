@@ -537,6 +537,7 @@ double TOsc::Prob_oscillaion(double Etrue, double baseline, TString strflag_osc)
     prob = 1 - sin2_2theta_14 * pow(TMath::Sin(1.267 * dm2_41 * baseline/Etrue), 2);
     break;
   case numu2numu:
+    prob = 1 - sin2_2theta_14 * pow(TMath::Sin(1.267 * dm2_41 * baseline/Etrue), 2);// only numu2numu
     break;
   case numu2nue:
     break;
@@ -559,7 +560,7 @@ void TOsc::Set_oscillation_base_minus(vector<double> *vec_ratioPOT, vector< vect
 {
   int total_pred_chs = map_default_h1d_pred.size();
   if( pred_channel_index > total_pred_chs ) { cerr<<TString::Format(" ERROR: pred_channel_index(%d) > total_pred_chs(%d)", pred_channel_index, total_pred_chs)<<endl; exit(1); }  
-  cout<<TString::Format("            ---> (self-check) work on pred_channel: %3d", pred_channel_index)<<endl;
+  cout<<TString::Format("            ---> (self-check) work on pred_channel: %3d,  oscillation mode: %-10s", pred_channel_index, str_osc_mode.Data())<<endl;
 
   
   for(int isize=0; isize<(int)vec_vec_eventinfo->size(); isize++ ) {
@@ -621,19 +622,37 @@ void TOsc::Apply_oscillation()
     Set_oscillation_base_added(&vector_NuMI_nueCC_from_intnue_scaleFPOT, &vector_vector_NuMI_nueCC_from_intnue_PC_eventinfo, 16, "nue2nue");
   }
 
+  if( flag_NuMI_numuCC_from_overlaynumu ) {
+    Set_oscillation_base_added(&vector_NuMI_numuCC_from_overlaynumu_scaleFPOT, &vector_vector_NuMI_numuCC_from_overlaynumu_FC_eventinfo, 17, "numu2numu");// hack
+    Set_oscillation_base_added(&vector_NuMI_numuCC_from_overlaynumu_scaleFPOT, &vector_vector_NuMI_numuCC_from_overlaynumu_PC_eventinfo, 18, "numu2numu");// hack  
+  }
+
+  /////////
+  /////////
+  /////////
+  
   if( flag_BNB_nueCC_from_intnue ) {
     Set_oscillation_base_added(&vector_BNB_nueCC_from_intnue_scaleFPOT, &vector_vector_BNB_nueCC_from_intnue_FC_eventinfo, 1, "nue2nue");
     Set_oscillation_base_added(&vector_BNB_nueCC_from_intnue_scaleFPOT, &vector_vector_BNB_nueCC_from_intnue_PC_eventinfo, 2, "nue2nue");
   }
 
-  /////// check with results from framework
-  // for(int idx=1; idx<=26; idx++) {
-  //   cout<<TString::Format("%3d   %10.6f  %10.6f  %10.6f  %10.6f    %14.6f", idx,
-  //  			  matrix_oscillation_oldworld_pred(0, idx-1), matrix_oscillation_oldworld_pred(0, 26 + idx-1),
-  //  			  matrix_oscillation_oldworld_pred(0, 14*26 + idx-1), matrix_oscillation_oldworld_pred(0, 15*26 + idx-1),
-  // 			  matrix_oscillation_oldworld_pred(0, 26*2 + idx-1)
-  //  			  )<<endl;
-  // }
+  if( flag_BNB_numuCC_from_overlaynumu ) {
+    Set_oscillation_base_added(&vector_BNB_numuCC_from_overlaynumu_scaleFPOT, &vector_vector_BNB_numuCC_from_overlaynumu_FC_eventinfo, 3, "numu2numu");// hack
+    Set_oscillation_base_added(&vector_BNB_numuCC_from_overlaynumu_scaleFPOT, &vector_vector_BNB_numuCC_from_overlaynumu_PC_eventinfo, 4, "numu2numu");// hack    
+  }
+  
+  /////// winxp check with results from framework
+  if( 0 ) {
+    int idx_aa = 26*16;
+    int idx_bb = 26*17;
+    
+    for(int idx=1; idx<=26; idx++) {
+      cout<<TString::Format("%3d   %15.6f  (origin)%15.6f,    %15.6f  (origin)%15.6f", idx,
+			    matrix_oscillation_oldworld_pred(0, idx_aa  + idx-1), matrix_default_oldworld_pred(0, idx_aa  + idx-1),
+			    matrix_oscillation_oldworld_pred(0, idx_bb  + idx-1), matrix_default_oldworld_pred(0, idx_bb  + idx-1)
+			    )<<endl;
+    }
+  }
   
 }
 
@@ -754,7 +773,90 @@ void TOsc::Set_oscillation_base()
   
   }// if( flag_NuMI_nueCC_from_intnue )
 
+  ///////////////////
   ///////////////////  
+
+  if( flag_NuMI_nueCC_from_overlaynumu ) {
+    cout<<endl<<"      ---> flag_NuMI_nueCC_from_overlaynumu"<<endl;        
+    {// run1 FHC
+      TString strfile_mcPOT   = str_dirbase + "checkout_prodgenie_numi_nu_overlay_run1.root";
+      TString strfile_dataPOT = str_dirbase + "run1_data_numi.root";
+      TString strfile_mc_e2e  = str_dirbase + "roofile_obj_NuMI_run1_FHC_nu_overlay.root";
+      TString str_treename = "";      
+      str_treename = "tree_nueCC_from_overlaynumu_FC";
+      Set_oscillation_base_subfunc(strfile_mcPOT, strfile_dataPOT, &vector_NuMI_nueCC_from_overlaynumu_scaleFPOT, strfile_mc_e2e, str_treename, &vector_vector_NuMI_nueCC_from_overlaynumu_FC_eventinfo);
+      str_treename = "tree_nueCC_from_overlaynumu_PC";
+      Set_oscillation_base_subfunc(strfile_mcPOT, strfile_dataPOT, NULL,                                          strfile_mc_e2e, str_treename, &vector_vector_NuMI_nueCC_from_overlaynumu_PC_eventinfo);
+    }
+
+    Set_oscillation_base_minus(&vector_NuMI_nueCC_from_overlaynumu_scaleFPOT, &vector_vector_NuMI_nueCC_from_overlaynumu_FC_eventinfo, 15, "numu2numu");// hack
+    Set_oscillation_base_minus(&vector_NuMI_nueCC_from_overlaynumu_scaleFPOT, &vector_vector_NuMI_nueCC_from_overlaynumu_PC_eventinfo, 16, "numu2numu");// hack
+  
+  }// if( flag_NuMI_nueCC_from_overlaynumu )
+  
+  ///////////////////  
+
+  if( flag_NuMI_numuCC_from_overlaynumu ) {
+    cout<<endl<<"      ---> flag_NuMI_numuCC_from_overlaynumu"<<endl;        
+    {// run1 FHC
+      TString strfile_mcPOT   = str_dirbase + "checkout_prodgenie_numi_nu_overlay_run1.root";
+      TString strfile_dataPOT = str_dirbase + "run1_data_numi.root";
+      TString strfile_mc_e2e  = str_dirbase + "roofile_obj_NuMI_run1_FHC_nu_overlay.root";
+      TString str_treename = "";      
+      str_treename = "tree_numuCC_from_overlaynumu_FC";
+      Set_oscillation_base_subfunc(strfile_mcPOT, strfile_dataPOT, &vector_NuMI_numuCC_from_overlaynumu_scaleFPOT, strfile_mc_e2e, str_treename, &vector_vector_NuMI_numuCC_from_overlaynumu_FC_eventinfo);
+      str_treename = "tree_numuCC_from_overlaynumu_PC";
+      Set_oscillation_base_subfunc(strfile_mcPOT, strfile_dataPOT, NULL,                                           strfile_mc_e2e, str_treename, &vector_vector_NuMI_numuCC_from_overlaynumu_PC_eventinfo);
+    }
+
+    Set_oscillation_base_minus(&vector_NuMI_numuCC_from_overlaynumu_scaleFPOT, &vector_vector_NuMI_numuCC_from_overlaynumu_FC_eventinfo, 17, "numu2numu");// hack
+    Set_oscillation_base_minus(&vector_NuMI_numuCC_from_overlaynumu_scaleFPOT, &vector_vector_NuMI_numuCC_from_overlaynumu_PC_eventinfo, 18, "numu2numu");// hack
+  
+  }// if( flag_NuMI_numuCC_from_overlaynumu )
+  
+  ///////////////////  
+
+  if( flag_NuMI_CCpi0_from_overlaynumu ) {
+    cout<<endl<<"      ---> flag_NuMI_CCpi0_from_overlaynumu"<<endl;        
+    {// run1 FHC
+      TString strfile_mcPOT   = str_dirbase + "checkout_prodgenie_numi_nu_overlay_run1.root";
+      TString strfile_dataPOT = str_dirbase + "run1_data_numi.root";
+      TString strfile_mc_e2e  = str_dirbase + "roofile_obj_NuMI_run1_FHC_nu_overlay.root";
+      TString str_treename = "";      
+      str_treename = "tree_CCpi0_from_overlaynumu_FC";
+      Set_oscillation_base_subfunc(strfile_mcPOT, strfile_dataPOT, &vector_NuMI_CCpi0_from_overlaynumu_scaleFPOT, strfile_mc_e2e, str_treename, &vector_vector_NuMI_CCpi0_from_overlaynumu_FC_eventinfo);
+      str_treename = "tree_CCpi0_from_overlaynumu_PC";
+      Set_oscillation_base_subfunc(strfile_mcPOT, strfile_dataPOT, NULL,                                          strfile_mc_e2e, str_treename, &vector_vector_NuMI_CCpi0_from_overlaynumu_PC_eventinfo);
+    }
+
+    Set_oscillation_base_minus(&vector_NuMI_CCpi0_from_overlaynumu_scaleFPOT, &vector_vector_NuMI_CCpi0_from_overlaynumu_FC_eventinfo, 19, "numu2numu");// hack
+    Set_oscillation_base_minus(&vector_NuMI_CCpi0_from_overlaynumu_scaleFPOT, &vector_vector_NuMI_CCpi0_from_overlaynumu_PC_eventinfo, 20, "numu2numu");// hack
+  
+  }// if( flag_NuMI_CCpi0_from_overlaynumu )
+  
+  ///////////////////  
+
+  if( flag_NuMI_NCpi0_from_overlaynumu ) {
+    cout<<endl<<"      ---> flag_NuMI_NCpi0_from_overlaynumu"<<endl;        
+    {// run1 FHC
+      TString strfile_mcPOT   = str_dirbase + "checkout_prodgenie_numi_nu_overlay_run1.root";
+      TString strfile_dataPOT = str_dirbase + "run1_data_numi.root";
+      TString strfile_mc_e2e  = str_dirbase + "roofile_obj_NuMI_run1_FHC_nu_overlay.root";
+      TString str_treename = "";      
+      str_treename = "tree_NCpi0_from_overlaynumu";
+      Set_oscillation_base_subfunc(strfile_mcPOT, strfile_dataPOT, &vector_NuMI_NCpi0_from_overlaynumu_scaleFPOT, strfile_mc_e2e, str_treename, &vector_vector_NuMI_NCpi0_from_overlaynumu_eventinfo);
+    }
+
+    Set_oscillation_base_minus(&vector_NuMI_NCpi0_from_overlaynumu_scaleFPOT, &vector_vector_NuMI_NCpi0_from_overlaynumu_eventinfo, 21, "numu2numu");// hack
+  
+  }// if( flag_NuMI_NCpi0_from_overlaynumu )
+
+  /////////////////////////////////////////////////////////    
+  /////////////////////////////////////////////////////////    
+  /////////////////////////////////////////////////////////    
+  /////////////////////////////////////////////////////////    
+  /////////////////////////////////////////////////////////    
+  /////////////////////////////////////////////////////////    
 
   if( flag_BNB_nueCC_from_intnue ) {
     cout<<endl<<"      ---> flag_BNB_nueCC_from_intnue"<<endl;    
@@ -794,6 +896,160 @@ void TOsc::Set_oscillation_base()
     
   }// if( flag_BNB_nueCC_from_intnue )
 
+  ///////////////////
+  ///////////////////  
+
+  if( flag_BNB_nueCC_from_overlaynumu ) {
+    cout<<endl<<"      ---> flag_BNB_nueCC_from_overlaynumu"<<endl;    
+    {// run1
+      TString strfile_mcPOT   = str_dirbase + "checkout_prodgenie_bnb_nu_overlay_run1.root";
+      TString strfile_dataPOT = str_dirbase + "run1_data_bnb.root";
+      TString strfile_mc_e2e  = str_dirbase + "roofile_obj_BNB_run1_nu_overlay.root";
+      TString str_treename = "";      
+      str_treename = "tree_nueCC_from_overlaynumu_FC";
+      Set_oscillation_base_subfunc(strfile_mcPOT, strfile_dataPOT, &vector_BNB_nueCC_from_overlaynumu_scaleFPOT, strfile_mc_e2e, str_treename, &vector_vector_BNB_nueCC_from_overlaynumu_FC_eventinfo);
+      str_treename = "tree_nueCC_from_overlaynumu_PC";
+      Set_oscillation_base_subfunc(strfile_mcPOT, strfile_dataPOT, NULL,                                         strfile_mc_e2e, str_treename, &vector_vector_BNB_nueCC_from_overlaynumu_PC_eventinfo);      
+    }    
+    {// run2
+      TString strfile_mcPOT   = str_dirbase + "checkout_prodgenie_bnb_nu_overlay_run2.root";
+      TString strfile_dataPOT = str_dirbase + "run2_data_bnb.root";
+      TString strfile_mc_e2e  = str_dirbase + "roofile_obj_BNB_run2_nu_overlay.root";
+      TString str_treename = "";      
+      str_treename = "tree_nueCC_from_overlaynumu_FC";
+      Set_oscillation_base_subfunc(strfile_mcPOT, strfile_dataPOT, &vector_BNB_nueCC_from_overlaynumu_scaleFPOT, strfile_mc_e2e, str_treename, &vector_vector_BNB_nueCC_from_overlaynumu_FC_eventinfo);
+      str_treename = "tree_nueCC_from_overlaynumu_PC";
+      Set_oscillation_base_subfunc(strfile_mcPOT, strfile_dataPOT, NULL,                                         strfile_mc_e2e, str_treename, &vector_vector_BNB_nueCC_from_overlaynumu_PC_eventinfo);      
+    }    
+    {// run3
+      TString strfile_mcPOT   = str_dirbase + "checkout_prodgenie_bnb_nu_overlay_run3.root";
+      TString strfile_dataPOT = str_dirbase + "run3_data_bnb.root";
+      TString strfile_mc_e2e  = str_dirbase + "roofile_obj_BNB_run3_nu_overlay.root";
+      TString str_treename = "";      
+      str_treename = "tree_nueCC_from_overlaynumu_FC";
+      Set_oscillation_base_subfunc(strfile_mcPOT, strfile_dataPOT, &vector_BNB_nueCC_from_overlaynumu_scaleFPOT, strfile_mc_e2e, str_treename, &vector_vector_BNB_nueCC_from_overlaynumu_FC_eventinfo);
+      str_treename = "tree_nueCC_from_overlaynumu_PC";
+      Set_oscillation_base_subfunc(strfile_mcPOT, strfile_dataPOT, NULL,                                         strfile_mc_e2e, str_treename, &vector_vector_BNB_nueCC_from_overlaynumu_PC_eventinfo);      
+    }
+    
+    Set_oscillation_base_minus(&vector_BNB_nueCC_from_overlaynumu_scaleFPOT, &vector_vector_BNB_nueCC_from_overlaynumu_FC_eventinfo, 1, "numu2numu");// hack
+    Set_oscillation_base_minus(&vector_BNB_nueCC_from_overlaynumu_scaleFPOT, &vector_vector_BNB_nueCC_from_overlaynumu_PC_eventinfo, 2, "numu2numu");// hack
+    
+  }// if( flag_BNB_numuCC_from_overlaynumu )
+  
+  ///////////////////  
+
+  if( flag_BNB_numuCC_from_overlaynumu ) {
+    cout<<endl<<"      ---> flag_BNB_numuCC_from_overlaynumu"<<endl;    
+    {// run1
+      TString strfile_mcPOT   = str_dirbase + "checkout_prodgenie_bnb_nu_overlay_run1.root";
+      TString strfile_dataPOT = str_dirbase + "run1_data_bnb.root";
+      TString strfile_mc_e2e  = str_dirbase + "roofile_obj_BNB_run1_nu_overlay.root";
+      TString str_treename = "";      
+      str_treename = "tree_numuCC_from_overlaynumu_FC";
+      Set_oscillation_base_subfunc(strfile_mcPOT, strfile_dataPOT, &vector_BNB_numuCC_from_overlaynumu_scaleFPOT, strfile_mc_e2e, str_treename, &vector_vector_BNB_numuCC_from_overlaynumu_FC_eventinfo);
+      str_treename = "tree_numuCC_from_overlaynumu_PC";
+      Set_oscillation_base_subfunc(strfile_mcPOT, strfile_dataPOT, NULL,                                          strfile_mc_e2e, str_treename, &vector_vector_BNB_numuCC_from_overlaynumu_PC_eventinfo);      
+    }    
+    {// run2
+      TString strfile_mcPOT   = str_dirbase + "checkout_prodgenie_bnb_nu_overlay_run2.root";
+      TString strfile_dataPOT = str_dirbase + "run2_data_bnb.root";
+      TString strfile_mc_e2e  = str_dirbase + "roofile_obj_BNB_run2_nu_overlay.root";
+      TString str_treename = "";      
+      str_treename = "tree_numuCC_from_overlaynumu_FC";
+      Set_oscillation_base_subfunc(strfile_mcPOT, strfile_dataPOT, &vector_BNB_numuCC_from_overlaynumu_scaleFPOT, strfile_mc_e2e, str_treename, &vector_vector_BNB_numuCC_from_overlaynumu_FC_eventinfo);
+      str_treename = "tree_numuCC_from_overlaynumu_PC";
+      Set_oscillation_base_subfunc(strfile_mcPOT, strfile_dataPOT, NULL,                                          strfile_mc_e2e, str_treename, &vector_vector_BNB_numuCC_from_overlaynumu_PC_eventinfo);      
+    }    
+    {// run3
+      TString strfile_mcPOT   = str_dirbase + "checkout_prodgenie_bnb_nu_overlay_run3.root";
+      TString strfile_dataPOT = str_dirbase + "run3_data_bnb.root";
+      TString strfile_mc_e2e  = str_dirbase + "roofile_obj_BNB_run3_nu_overlay.root";
+      TString str_treename = "";      
+      str_treename = "tree_numuCC_from_overlaynumu_FC";
+      Set_oscillation_base_subfunc(strfile_mcPOT, strfile_dataPOT, &vector_BNB_numuCC_from_overlaynumu_scaleFPOT, strfile_mc_e2e, str_treename, &vector_vector_BNB_numuCC_from_overlaynumu_FC_eventinfo);
+      str_treename = "tree_numuCC_from_overlaynumu_PC";
+      Set_oscillation_base_subfunc(strfile_mcPOT, strfile_dataPOT, NULL,                                          strfile_mc_e2e, str_treename, &vector_vector_BNB_numuCC_from_overlaynumu_PC_eventinfo);      
+    }
+    
+    Set_oscillation_base_minus(&vector_BNB_numuCC_from_overlaynumu_scaleFPOT, &vector_vector_BNB_numuCC_from_overlaynumu_FC_eventinfo, 3, "numu2numu");// hack
+    Set_oscillation_base_minus(&vector_BNB_numuCC_from_overlaynumu_scaleFPOT, &vector_vector_BNB_numuCC_from_overlaynumu_PC_eventinfo, 4, "numu2numu");// hack
+    
+  }// if( flag_BNB_numuCC_from_overlaynumu )
+
+  ///////////////////  
+
+  if( flag_BNB_CCpi0_from_overlaynumu ) {
+    cout<<endl<<"      ---> flag_BNB_CCpi0_from_overlaynumu"<<endl;    
+    {// run1
+      TString strfile_mcPOT   = str_dirbase + "checkout_prodgenie_bnb_nu_overlay_run1.root";
+      TString strfile_dataPOT = str_dirbase + "run1_data_bnb.root";
+      TString strfile_mc_e2e  = str_dirbase + "roofile_obj_BNB_run1_nu_overlay.root";
+      TString str_treename = "";      
+      str_treename = "tree_CCpi0_from_overlaynumu_FC";
+      Set_oscillation_base_subfunc(strfile_mcPOT, strfile_dataPOT, &vector_BNB_CCpi0_from_overlaynumu_scaleFPOT, strfile_mc_e2e, str_treename, &vector_vector_BNB_CCpi0_from_overlaynumu_FC_eventinfo);
+      str_treename = "tree_CCpi0_from_overlaynumu_PC";
+      Set_oscillation_base_subfunc(strfile_mcPOT, strfile_dataPOT, NULL,                                         strfile_mc_e2e, str_treename, &vector_vector_BNB_CCpi0_from_overlaynumu_PC_eventinfo);      
+    }
+    {// run2
+      TString strfile_mcPOT   = str_dirbase + "checkout_prodgenie_bnb_nu_overlay_run2.root";
+      TString strfile_dataPOT = str_dirbase + "run2_data_bnb.root";
+      TString strfile_mc_e2e  = str_dirbase + "roofile_obj_BNB_run2_nu_overlay.root";
+      TString str_treename = "";      
+      str_treename = "tree_CCpi0_from_overlaynumu_FC";
+      Set_oscillation_base_subfunc(strfile_mcPOT, strfile_dataPOT, &vector_BNB_CCpi0_from_overlaynumu_scaleFPOT, strfile_mc_e2e, str_treename, &vector_vector_BNB_CCpi0_from_overlaynumu_FC_eventinfo);
+      str_treename = "tree_CCpi0_from_overlaynumu_PC";
+      Set_oscillation_base_subfunc(strfile_mcPOT, strfile_dataPOT, NULL,                                         strfile_mc_e2e, str_treename, &vector_vector_BNB_CCpi0_from_overlaynumu_PC_eventinfo);      
+    }
+    {// run3
+      TString strfile_mcPOT   = str_dirbase + "checkout_prodgenie_bnb_nu_overlay_run3.root";
+      TString strfile_dataPOT = str_dirbase + "run3_data_bnb.root";
+      TString strfile_mc_e2e  = str_dirbase + "roofile_obj_BNB_run3_nu_overlay.root";
+      TString str_treename = "";      
+      str_treename = "tree_CCpi0_from_overlaynumu_FC";
+      Set_oscillation_base_subfunc(strfile_mcPOT, strfile_dataPOT, &vector_BNB_CCpi0_from_overlaynumu_scaleFPOT, strfile_mc_e2e, str_treename, &vector_vector_BNB_CCpi0_from_overlaynumu_FC_eventinfo);
+      str_treename = "tree_CCpi0_from_overlaynumu_PC";
+      Set_oscillation_base_subfunc(strfile_mcPOT, strfile_dataPOT, NULL,                                         strfile_mc_e2e, str_treename, &vector_vector_BNB_CCpi0_from_overlaynumu_PC_eventinfo);      
+    }
+    
+    Set_oscillation_base_minus(&vector_BNB_CCpi0_from_overlaynumu_scaleFPOT, &vector_vector_BNB_CCpi0_from_overlaynumu_FC_eventinfo, 5, "numu2numu");// hack
+    Set_oscillation_base_minus(&vector_BNB_CCpi0_from_overlaynumu_scaleFPOT, &vector_vector_BNB_CCpi0_from_overlaynumu_PC_eventinfo, 6, "numu2numu");// hack
+    
+  }// if( flag_BNB_CCpi0_from_overlaynumu )
+  
+  ///////////////////  
+
+  if( flag_BNB_NCpi0_from_overlaynumu ) {
+    cout<<endl<<"      ---> flag_BNB_NCpi0_from_overlaynumu"<<endl;    
+    {// run1
+      TString strfile_mcPOT   = str_dirbase + "checkout_prodgenie_bnb_nu_overlay_run1.root";
+      TString strfile_dataPOT = str_dirbase + "run1_data_bnb.root";
+      TString strfile_mc_e2e  = str_dirbase + "roofile_obj_BNB_run1_nu_overlay.root";
+      TString str_treename = "";      
+      str_treename = "tree_NCpi0_from_overlaynumu";
+      Set_oscillation_base_subfunc(strfile_mcPOT, strfile_dataPOT, &vector_BNB_NCpi0_from_overlaynumu_scaleFPOT, strfile_mc_e2e, str_treename, &vector_vector_BNB_NCpi0_from_overlaynumu_eventinfo);
+    }
+    {// run2
+      TString strfile_mcPOT   = str_dirbase + "checkout_prodgenie_bnb_nu_overlay_run2.root";
+      TString strfile_dataPOT = str_dirbase + "run2_data_bnb.root";
+      TString strfile_mc_e2e  = str_dirbase + "roofile_obj_BNB_run2_nu_overlay.root";
+      TString str_treename = "";      
+      str_treename = "tree_NCpi0_from_overlaynumu";
+      Set_oscillation_base_subfunc(strfile_mcPOT, strfile_dataPOT, &vector_BNB_NCpi0_from_overlaynumu_scaleFPOT, strfile_mc_e2e, str_treename, &vector_vector_BNB_NCpi0_from_overlaynumu_eventinfo);
+    }
+    {// run3
+      TString strfile_mcPOT   = str_dirbase + "checkout_prodgenie_bnb_nu_overlay_run3.root";
+      TString strfile_dataPOT = str_dirbase + "run3_data_bnb.root";
+      TString strfile_mc_e2e  = str_dirbase + "roofile_obj_BNB_run3_nu_overlay.root";
+      TString str_treename = "";      
+      str_treename = "tree_NCpi0_from_overlaynumu";
+      Set_oscillation_base_subfunc(strfile_mcPOT, strfile_dataPOT, &vector_BNB_NCpi0_from_overlaynumu_scaleFPOT, strfile_mc_e2e, str_treename, &vector_vector_BNB_NCpi0_from_overlaynumu_eventinfo);
+    }
+
+    Set_oscillation_base_minus(&vector_BNB_NCpi0_from_overlaynumu_scaleFPOT, &vector_vector_BNB_NCpi0_from_overlaynumu_eventinfo, 7, "numu2numu");// hack
+    
+  }// if( flag_BNB_NCpi0_from_overlaynumu )
+  
   cout<<endl;
 }
 

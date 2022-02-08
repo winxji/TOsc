@@ -154,6 +154,9 @@ void plot_CLs()
   ////////////////////////////////////////////////////////////////////////////////////////
   
   TString file_roostr = "./zb_nuedisapp_NuMIBNB/sum_NuMIBNB_both_scalePOT_NuMIrun123_8d4_BNBrun123_1d9.dat";
+  file_roostr = "./zc_numudisapp_NuMIBNB_numuCCchannel/sum_NuMIBNB_BNBonly.dat";
+  file_roostr = "./zc_numudisapp_NuMIBNB_numuCCchannel/sum_NuMIBNB_NuMIonly.dat";
+  file_roostr = "./zc_numudisapp_NuMIBNB_numuCCchannel/sum_NuMIBNB_both.dat";
   
   int bins_theta = 40;
   int bins_dm2   = 40;
@@ -444,8 +447,7 @@ void plot_CLs()
   gh_wilk_CL_pred[index_95]->SetLineColor(kBlue);  
   gh_wilk_CL_pred[index_95]->SetLineWidth(3);
      
-  //gh_n4->Draw("same p");
-  gh_n4new->Draw("same p");
+  //gh_n4new->Draw("same p");
  
   /////////////////////////////////////////////////////// 99
   
@@ -488,8 +490,7 @@ void plot_CLs()
   gh_wilk_CL_pred[index_99]->SetLineColor(kBlue);  
   gh_wilk_CL_pred[index_99]->SetLineWidth(3);
      
-  //gh_n4->Draw("same p");
-  gh_n4new->Draw("same p");
+  //gh_n4new->Draw("same p");
 
   //////////////////////////////////////////////////////
 

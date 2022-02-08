@@ -317,8 +317,8 @@ int main(int argc, char** argv)
 	double grid_sin2_2theta_14 = pow( 10, xcenter );
 	double grid_dm2_41         = pow( 10, ycenter );
 
-	grid_sin2_2theta_14 = 0.36;
-	grid_dm2_41         = 7.3;
+	//grid_sin2_2theta_14 = 0.36;
+	//grid_dm2_41         = 7.3;
 
 	double chi2_4v_on_4vAsimov(0), chi2_3v_on_4vAsimov(0);
 	double chi2_4v_on_3vAsimov(0), chi2_3v_on_3vAsimov(0);
