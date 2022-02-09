@@ -546,7 +546,7 @@ double TOsc::Prob_oscillaion(double Etrue, double baseline, TString strflag_osc)
     prob = 1 - effective_sin2_2theta_14 * pow(TMath::Sin(1.267 * dm2_41 * baseline/Etrue), 2);
     break;
   case numu2numu:
-    prob = 1 - 4*effective_cos2_theta_14*sin2_theta_24 * (1 - effective_cos2_theta_14*sin2_theta_24);
+    prob = 1 - 4*effective_cos2_theta_14*sin2_theta_24 * (1 - effective_cos2_theta_14*sin2_theta_24) * pow(TMath::Sin(1.267 * dm2_41 * baseline/Etrue), 2);
     break;
   case numu2nue:
     prob = effective_sin2_2theta_14 * sin2_theta_24 * pow(TMath::Sin(1.267 * dm2_41 * baseline/Etrue), 2);
