@@ -540,6 +540,7 @@ double TOsc::Prob_oscillaion(double Etrue, double baseline, TString strflag_osc)
     prob = 1 - sin2_2theta_14 * pow(TMath::Sin(1.267 * dm2_41 * baseline/Etrue), 2);// only numu2numu
     break;
   case numu2nue:
+    prob = 1;
     break;
   case nue2numu:
     break;
@@ -617,28 +618,40 @@ void TOsc::Apply_oscillation()
 
   /////////////////// same as the ones in void TOsc::Set_oscillation_base(), but use "added" instead of "minus"
 
-  if( flag_NuMI_nueCC_from_intnue ) {    
-    Set_oscillation_base_added(&vector_NuMI_nueCC_from_intnue_scaleFPOT, &vector_vector_NuMI_nueCC_from_intnue_FC_eventinfo, 15, "nue2nue");// hack
-    Set_oscillation_base_added(&vector_NuMI_nueCC_from_intnue_scaleFPOT, &vector_vector_NuMI_nueCC_from_intnue_PC_eventinfo, 16, "nue2nue");// hack
+  if( flag_NuMI_nueCC_from_intnue ) {
+    Set_oscillation_base_added(&vector_NuMI_nueCC_from_intnue_scaleFPOT, &vector_vector_NuMI_nueCC_from_intnue_FC_eventinfo, 22, "nue2nue");// hack
+    Set_oscillation_base_added(&vector_NuMI_nueCC_from_intnue_scaleFPOT, &vector_vector_NuMI_nueCC_from_intnue_PC_eventinfo, 23, "nue2nue");// hack
   }
-
   if( flag_NuMI_nueCC_from_overlaynumu ) {
-    Set_oscillation_base_added(&vector_NuMI_nueCC_from_overlaynumu_scaleFPOT, &vector_vector_NuMI_nueCC_from_overlaynumu_FC_eventinfo, 15, "numu2numu");// hack
-    Set_oscillation_base_added(&vector_NuMI_nueCC_from_overlaynumu_scaleFPOT, &vector_vector_NuMI_nueCC_from_overlaynumu_PC_eventinfo, 16, "numu2numu");// hack
+    Set_oscillation_base_added(&vector_NuMI_nueCC_from_overlaynumu_scaleFPOT, &vector_vector_NuMI_nueCC_from_overlaynumu_FC_eventinfo, 22, "numu2numu");// hack
+    Set_oscillation_base_added(&vector_NuMI_nueCC_from_overlaynumu_scaleFPOT, &vector_vector_NuMI_nueCC_from_overlaynumu_PC_eventinfo, 23, "numu2numu");// hack
   }
-  
   if( flag_NuMI_numuCC_from_overlaynumu ) {
-    Set_oscillation_base_added(&vector_NuMI_numuCC_from_overlaynumu_scaleFPOT, &vector_vector_NuMI_numuCC_from_overlaynumu_FC_eventinfo, 17, "numu2numu");// hack
-    Set_oscillation_base_added(&vector_NuMI_numuCC_from_overlaynumu_scaleFPOT, &vector_vector_NuMI_numuCC_from_overlaynumu_PC_eventinfo, 18, "numu2numu");// hack
+    Set_oscillation_base_added(&vector_NuMI_numuCC_from_overlaynumu_scaleFPOT, &vector_vector_NuMI_numuCC_from_overlaynumu_FC_eventinfo, 24, "numu2numu");// hack
+    Set_oscillation_base_added(&vector_NuMI_numuCC_from_overlaynumu_scaleFPOT, &vector_vector_NuMI_numuCC_from_overlaynumu_PC_eventinfo, 25, "numu2numu");// hack
   }
-  
   if( flag_NuMI_CCpi0_from_overlaynumu ) {
-    Set_oscillation_base_added(&vector_NuMI_CCpi0_from_overlaynumu_scaleFPOT, &vector_vector_NuMI_CCpi0_from_overlaynumu_FC_eventinfo, 19, "numu2numu");// hack
-    Set_oscillation_base_added(&vector_NuMI_CCpi0_from_overlaynumu_scaleFPOT, &vector_vector_NuMI_CCpi0_from_overlaynumu_PC_eventinfo, 20, "numu2numu");// hack
+    Set_oscillation_base_added(&vector_NuMI_CCpi0_from_overlaynumu_scaleFPOT, &vector_vector_NuMI_CCpi0_from_overlaynumu_FC_eventinfo, 26, "numu2numu");// hack
+    Set_oscillation_base_added(&vector_NuMI_CCpi0_from_overlaynumu_scaleFPOT, &vector_vector_NuMI_CCpi0_from_overlaynumu_PC_eventinfo, 27, "numu2numu");// hack
+  }
+  if( flag_NuMI_NCpi0_from_overlaynumu ) {
+    Set_oscillation_base_added(&vector_NuMI_NCpi0_from_overlaynumu_scaleFPOT, &vector_vector_NuMI_NCpi0_from_overlaynumu_eventinfo, 28, "numu2numu");// hack
   }
 
-  if( flag_NuMI_NCpi0_from_overlaynumu ) {
-    Set_oscillation_base_added(&vector_NuMI_NCpi0_from_overlaynumu_scaleFPOT, &vector_vector_NuMI_NCpi0_from_overlaynumu_eventinfo, 21, "numu2numu");// hack
+  if( flag_NuMI_nueCC_from_appnue ) {
+    Set_oscillation_base_added(&vector_NuMI_nueCC_from_appnue_scaleFPOT, &vector_vector_NuMI_nueCC_from_appnue_FC_eventinfo, 36, "numu2nue");// hack
+    Set_oscillation_base_added(&vector_NuMI_nueCC_from_appnue_scaleFPOT, &vector_vector_NuMI_nueCC_from_appnue_PC_eventinfo, 37, "numu2nue");// hack
+  }
+  if( flag_NuMI_numuCC_from_appnue ) {
+    Set_oscillation_base_added(&vector_NuMI_numuCC_from_appnue_scaleFPOT, &vector_vector_NuMI_numuCC_from_appnue_FC_eventinfo, 38, "numu2nue");// hack
+    Set_oscillation_base_added(&vector_NuMI_numuCC_from_appnue_scaleFPOT, &vector_vector_NuMI_numuCC_from_appnue_PC_eventinfo, 39, "numu2nue");// hack
+  }
+  if( flag_NuMI_CCpi0_from_appnue ) {
+    Set_oscillation_base_added(&vector_NuMI_CCpi0_from_appnue_scaleFPOT, &vector_vector_NuMI_CCpi0_from_appnue_FC_eventinfo, 40, "numu2nue");// hack
+    Set_oscillation_base_added(&vector_NuMI_CCpi0_from_appnue_scaleFPOT, &vector_vector_NuMI_CCpi0_from_appnue_PC_eventinfo, 41, "numu2nue");// hack
+  }
+  if( flag_NuMI_NCpi0_from_appnue ) {
+    Set_oscillation_base_added(&vector_NuMI_NCpi0_from_appnue_scaleFPOT, &vector_vector_NuMI_NCpi0_from_appnue_eventinfo, 42, "numu2nue");// hack
   }
   
   /////////
@@ -649,32 +662,46 @@ void TOsc::Apply_oscillation()
     Set_oscillation_base_added(&vector_BNB_nueCC_from_intnue_scaleFPOT, &vector_vector_BNB_nueCC_from_intnue_FC_eventinfo, 1, "nue2nue");// hack
     Set_oscillation_base_added(&vector_BNB_nueCC_from_intnue_scaleFPOT, &vector_vector_BNB_nueCC_from_intnue_PC_eventinfo, 2, "nue2nue");// hack
   }
-  
   if( flag_BNB_nueCC_from_overlaynumu ) {
     Set_oscillation_base_added(&vector_BNB_nueCC_from_overlaynumu_scaleFPOT, &vector_vector_BNB_nueCC_from_overlaynumu_FC_eventinfo, 1, "numu2numu");// hack
     Set_oscillation_base_added(&vector_BNB_nueCC_from_overlaynumu_scaleFPOT, &vector_vector_BNB_nueCC_from_overlaynumu_PC_eventinfo, 2, "numu2numu");// hack
   }
-    
   if( flag_BNB_numuCC_from_overlaynumu ) {
     Set_oscillation_base_added(&vector_BNB_numuCC_from_overlaynumu_scaleFPOT, &vector_vector_BNB_numuCC_from_overlaynumu_FC_eventinfo, 3, "numu2numu");// hack
-    Set_oscillation_base_added(&vector_BNB_numuCC_from_overlaynumu_scaleFPOT, &vector_vector_BNB_numuCC_from_overlaynumu_PC_eventinfo, 4, "numu2numu");// hack    
+    Set_oscillation_base_added(&vector_BNB_numuCC_from_overlaynumu_scaleFPOT, &vector_vector_BNB_numuCC_from_overlaynumu_PC_eventinfo, 4, "numu2numu");// hack
   }
-
   if( flag_BNB_CCpi0_from_overlaynumu ) {
     Set_oscillation_base_added(&vector_BNB_CCpi0_from_overlaynumu_scaleFPOT, &vector_vector_BNB_CCpi0_from_overlaynumu_FC_eventinfo, 5, "numu2numu");// hack
     Set_oscillation_base_added(&vector_BNB_CCpi0_from_overlaynumu_scaleFPOT, &vector_vector_BNB_CCpi0_from_overlaynumu_PC_eventinfo, 6, "numu2numu");// hack
   }
-
   if( flag_BNB_NCpi0_from_overlaynumu ) {
     Set_oscillation_base_added(&vector_BNB_NCpi0_from_overlaynumu_scaleFPOT, &vector_vector_BNB_NCpi0_from_overlaynumu_eventinfo, 7, "numu2numu");// hack
   }
-  
-  /////// winxp check with results from framework
-  if( 0 ) {// self-check
-    int idx_aa = 26*20;
-    int idx_bb = 26*20;
+
+  if( flag_BNB_nueCC_from_appnue ) {
+    Set_oscillation_base_added(&vector_BNB_nueCC_from_appnue_scaleFPOT, &vector_vector_BNB_nueCC_from_appnue_FC_eventinfo, 15, "numu2nue");// hack
+    Set_oscillation_base_added(&vector_BNB_nueCC_from_appnue_scaleFPOT, &vector_vector_BNB_nueCC_from_appnue_PC_eventinfo, 16, "numu2nue");// hack
+  }
+  if( flag_BNB_numuCC_from_appnue ) {
+    Set_oscillation_base_added(&vector_BNB_numuCC_from_appnue_scaleFPOT, &vector_vector_BNB_numuCC_from_appnue_FC_eventinfo, 17, "numu2nue");// hack
+    Set_oscillation_base_added(&vector_BNB_numuCC_from_appnue_scaleFPOT, &vector_vector_BNB_numuCC_from_appnue_PC_eventinfo, 18, "numu2nue");// hack
+  }
+  if( flag_BNB_CCpi0_from_appnue ) {
+    Set_oscillation_base_added(&vector_BNB_CCpi0_from_appnue_scaleFPOT, &vector_vector_BNB_CCpi0_from_appnue_FC_eventinfo, 19, "numu2nue");// hack
+    Set_oscillation_base_added(&vector_BNB_CCpi0_from_appnue_scaleFPOT, &vector_vector_BNB_CCpi0_from_appnue_PC_eventinfo, 20, "numu2nue");// hack
+  }
+  if( flag_BNB_NCpi0_from_appnue ) {
+    Set_oscillation_base_added(&vector_BNB_NCpi0_from_appnue_scaleFPOT, &vector_vector_BNB_NCpi0_from_appnue_eventinfo, 21, "numu2nue");// hack
+  }
     
-    for(int idx=1; idx<=26; idx++) {
+  /////////
+  /////////
+  ///////// winxp check with results from framework
+  if( 1 ) {// self-check
+    int idx_aa = 26*14;
+    int idx_bb = 26*35;
+    
+    for(int idx=1; idx<=26*7; idx++) {
       cout<<TString::Format("%3d   %15.6f ---> (origin)%15.6f,    %15.6f  ---> (origin)%15.6f", idx,
 			    matrix_oscillation_oldworld_pred(0, idx_aa  + idx-1), matrix_default_oldworld_pred(0, idx_aa  + idx-1),
 			    matrix_oscillation_oldworld_pred(0, idx_bb  + idx-1), matrix_default_oldworld_pred(0, idx_bb  + idx-1)

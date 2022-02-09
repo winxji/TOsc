@@ -175,7 +175,7 @@ int main(int argc, char** argv)
   /////// Set_oscillation_pars(double val_dm2_41, double val_sin2_2theta_14, double val_sin2_theta_24, double val_sin2_theta_34)
   
   double val_dm2_41         = 7.3;
-  double val_sin2_2theta_14 = 0.36;
+  double val_sin2_2theta_14 = 0;
   double val_sin2_theta_24  = 0;
   double val_sin2_theta_34  = 0;
 
