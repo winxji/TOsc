@@ -519,7 +519,7 @@ double TOsc::Prob_oscillaion(double Etrue, double baseline, TString strflag_osc)
   else flag_osc = -1;
 
   if( flag_osc==-1 ) {
-    cerr<<" ERROR: flag_osc==-1, strflag_osc=="<<strflag_osc<<" ---> Candidates: nue2nue numu2numu numu2nue nue2numu"<<endl;
+    cerr<<" ERROR: flag_osc==-1, strflag_osc=="<<strflag_osc<<" ---> Candidates: nue2nue numu2numu numu2nue nue2numu nueNC numuNC"<<endl;
     exit(1);
   }
 
@@ -531,16 +531,25 @@ double TOsc::Prob_oscillaion(double Etrue, double baseline, TString strflag_osc)
   const int numuNC    = 6;
 
   /// dm2*L/4E = 1.267 * dm2(eV2) * L(m) / E(MeV)
-    
+  
+  // double dm2_41;
+  // double sin2_2theta_14; /// in apperance analysis, this term represents for "sin2_theta_14"
+  // double sin2_theta_24;
+  // double sin2_theta_34;
+
+  double effective_sin2_theta_14  = sin2_2theta_14;
+  double effective_cos2_theta_14  = 1 - effective_sin2_theta_14;
+  double effective_sin2_2theta_14 = 4 * effective_sin2_theta_14 * effective_cos2_theta_14;  
+  
   switch( flag_osc ) {
   case nue2nue:
-    prob = 1 - sin2_2theta_14 * pow(TMath::Sin(1.267 * dm2_41 * baseline/Etrue), 2);
+    prob = 1 - effective_sin2_2theta_14 * pow(TMath::Sin(1.267 * dm2_41 * baseline/Etrue), 2);
     break;
   case numu2numu:
-    prob = 1 - sin2_2theta_14 * pow(TMath::Sin(1.267 * dm2_41 * baseline/Etrue), 2);// only numu2numu
+    prob = 4*effective_cos2_theta_14*sin2_theta_24 * (1 - effective_cos2_theta_14*sin2_theta_24);
     break;
   case numu2nue:
-    prob = 1;
+    prob = effective_sin2_2theta_14 * sin2_theta_24 * pow(TMath::Sin(1.267 * dm2_41 * baseline/Etrue), 2);
     break;
   case nue2numu:
     break;
@@ -697,7 +706,7 @@ void TOsc::Apply_oscillation()
   /////////
   /////////
   ///////// winxp check with results from framework
-  if( 1 ) {// self-check
+  if( 0 ) {// self-check
     int idx_aa = 26*14;
     int idx_bb = 26*35;
     
