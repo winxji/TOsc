@@ -7,7 +7,7 @@
 void TOsc::Plot_user()
 {
   if( 0 ) {
-    gStyle->SetPalette(kTemperatureMap);
+    //gStyle->SetPalette(kTemperatureMap);
     gStyle->SetNumberContours(100);
       
     TString roostr = "";
@@ -779,7 +779,7 @@ void TOsc::Set_oscillation_base()
 
   matrix_oscillation_base_oldworld_pred = matrix_default_oldworld_pred;
 
-  TString str_dirbase = "./data_inputs/newdir_BNBNuMI_cv_cov_list/";
+  TString str_dirbase = "./data_inputs/newdir_BNBNuMI_appnue_cv_cov_list/";
   
   ///////////////////
   
@@ -796,8 +796,8 @@ void TOsc::Set_oscillation_base()
       Set_oscillation_base_subfunc(strfile_mcPOT, strfile_dataPOT, NULL,                                     strfile_mc_e2e, str_treename, &vector_vector_NuMI_nueCC_from_intnue_PC_eventinfo);
     }
 
-    Set_oscillation_base_minus(&vector_NuMI_nueCC_from_intnue_scaleFPOT, &vector_vector_NuMI_nueCC_from_intnue_FC_eventinfo, 15, "nue2nue");// hack
-    Set_oscillation_base_minus(&vector_NuMI_nueCC_from_intnue_scaleFPOT, &vector_vector_NuMI_nueCC_from_intnue_PC_eventinfo, 16, "nue2nue");// hack
+    Set_oscillation_base_minus(&vector_NuMI_nueCC_from_intnue_scaleFPOT, &vector_vector_NuMI_nueCC_from_intnue_FC_eventinfo, 22, "nue2nue");// hack
+    Set_oscillation_base_minus(&vector_NuMI_nueCC_from_intnue_scaleFPOT, &vector_vector_NuMI_nueCC_from_intnue_PC_eventinfo, 23, "nue2nue");// hack
   
   }// if( flag_NuMI_nueCC_from_intnue )
 
@@ -817,8 +817,8 @@ void TOsc::Set_oscillation_base()
       Set_oscillation_base_subfunc(strfile_mcPOT, strfile_dataPOT, NULL,                                          strfile_mc_e2e, str_treename, &vector_vector_NuMI_nueCC_from_overlaynumu_PC_eventinfo);
     }
 
-    Set_oscillation_base_minus(&vector_NuMI_nueCC_from_overlaynumu_scaleFPOT, &vector_vector_NuMI_nueCC_from_overlaynumu_FC_eventinfo, 15, "numu2numu");// hack
-    Set_oscillation_base_minus(&vector_NuMI_nueCC_from_overlaynumu_scaleFPOT, &vector_vector_NuMI_nueCC_from_overlaynumu_PC_eventinfo, 16, "numu2numu");// hack
+    Set_oscillation_base_minus(&vector_NuMI_nueCC_from_overlaynumu_scaleFPOT, &vector_vector_NuMI_nueCC_from_overlaynumu_FC_eventinfo, 22, "numu2numu");// hack
+    Set_oscillation_base_minus(&vector_NuMI_nueCC_from_overlaynumu_scaleFPOT, &vector_vector_NuMI_nueCC_from_overlaynumu_PC_eventinfo, 23, "numu2numu");// hack
   
   }// if( flag_NuMI_nueCC_from_overlaynumu )
   
@@ -837,8 +837,8 @@ void TOsc::Set_oscillation_base()
       Set_oscillation_base_subfunc(strfile_mcPOT, strfile_dataPOT, NULL,                                           strfile_mc_e2e, str_treename, &vector_vector_NuMI_numuCC_from_overlaynumu_PC_eventinfo);
     }
 
-    Set_oscillation_base_minus(&vector_NuMI_numuCC_from_overlaynumu_scaleFPOT, &vector_vector_NuMI_numuCC_from_overlaynumu_FC_eventinfo, 17, "numu2numu");// hack
-    Set_oscillation_base_minus(&vector_NuMI_numuCC_from_overlaynumu_scaleFPOT, &vector_vector_NuMI_numuCC_from_overlaynumu_PC_eventinfo, 18, "numu2numu");// hack
+    Set_oscillation_base_minus(&vector_NuMI_numuCC_from_overlaynumu_scaleFPOT, &vector_vector_NuMI_numuCC_from_overlaynumu_FC_eventinfo, 24, "numu2numu");// hack
+    Set_oscillation_base_minus(&vector_NuMI_numuCC_from_overlaynumu_scaleFPOT, &vector_vector_NuMI_numuCC_from_overlaynumu_PC_eventinfo, 25, "numu2numu");// hack
   
   }// if( flag_NuMI_numuCC_from_overlaynumu )
   
@@ -857,8 +857,8 @@ void TOsc::Set_oscillation_base()
       Set_oscillation_base_subfunc(strfile_mcPOT, strfile_dataPOT, NULL,                                          strfile_mc_e2e, str_treename, &vector_vector_NuMI_CCpi0_from_overlaynumu_PC_eventinfo);
     }
 
-    Set_oscillation_base_minus(&vector_NuMI_CCpi0_from_overlaynumu_scaleFPOT, &vector_vector_NuMI_CCpi0_from_overlaynumu_FC_eventinfo, 19, "numu2numu");// hack
-    Set_oscillation_base_minus(&vector_NuMI_CCpi0_from_overlaynumu_scaleFPOT, &vector_vector_NuMI_CCpi0_from_overlaynumu_PC_eventinfo, 20, "numu2numu");// hack
+    Set_oscillation_base_minus(&vector_NuMI_CCpi0_from_overlaynumu_scaleFPOT, &vector_vector_NuMI_CCpi0_from_overlaynumu_FC_eventinfo, 26, "numu2numu");// hack
+    Set_oscillation_base_minus(&vector_NuMI_CCpi0_from_overlaynumu_scaleFPOT, &vector_vector_NuMI_CCpi0_from_overlaynumu_PC_eventinfo, 27, "numu2numu");// hack
   
   }// if( flag_NuMI_CCpi0_from_overlaynumu )
   
@@ -875,10 +875,87 @@ void TOsc::Set_oscillation_base()
       Set_oscillation_base_subfunc(strfile_mcPOT, strfile_dataPOT, &vector_NuMI_NCpi0_from_overlaynumu_scaleFPOT, strfile_mc_e2e, str_treename, &vector_vector_NuMI_NCpi0_from_overlaynumu_eventinfo);
     }
 
-    Set_oscillation_base_minus(&vector_NuMI_NCpi0_from_overlaynumu_scaleFPOT, &vector_vector_NuMI_NCpi0_from_overlaynumu_eventinfo, 21, "numu2numu");// hack
+    Set_oscillation_base_minus(&vector_NuMI_NCpi0_from_overlaynumu_scaleFPOT, &vector_vector_NuMI_NCpi0_from_overlaynumu_eventinfo, 28, "numu2numu");// hack
   
   }// if( flag_NuMI_NCpi0_from_overlaynumu )
+    
+  ///////////////////  
 
+  if( flag_NuMI_nueCC_from_appnue ) {
+    cout<<endl<<"      ---> flag_NuMI_nueCC_from_appnue"<<endl;
+    {// run1
+      TString strfile_mcPOT   = str_dirbase + "checkout_prodgenie_numi_test_numu2nue_overlay_run1.root";
+      TString strfile_dataPOT = str_dirbase + "run1_data_numi.root";
+      TString strfile_mc_e2e  = str_dirbase + "roofile_obj_test_NuMI_run1_FHC_appnue.root";
+      TString str_treename = "";      
+      str_treename = "tree_nueCC_from_appnue_FC";
+      Set_oscillation_base_subfunc(strfile_mcPOT, strfile_dataPOT, &vector_NuMI_nueCC_from_appnue_scaleFPOT, strfile_mc_e2e, str_treename, &vector_vector_NuMI_nueCC_from_appnue_FC_eventinfo);
+      str_treename = "tree_nueCC_from_appnue_PC";
+      Set_oscillation_base_subfunc(strfile_mcPOT, strfile_dataPOT, NULL,                                     strfile_mc_e2e, str_treename, &vector_vector_NuMI_nueCC_from_appnue_PC_eventinfo);      
+    }
+
+    Set_oscillation_base_minus(&vector_NuMI_nueCC_from_appnue_scaleFPOT, &vector_vector_NuMI_nueCC_from_appnue_FC_eventinfo, 36, "numu2nue");// hack
+    Set_oscillation_base_minus(&vector_NuMI_nueCC_from_appnue_scaleFPOT, &vector_vector_NuMI_nueCC_from_appnue_PC_eventinfo, 37, "numu2nue");// hack
+    
+  }// if( flag_NuMI_nueCC_from_appnue )
+       
+  ///////////////////  
+
+  if( flag_NuMI_numuCC_from_appnue ) {
+    cout<<endl<<"      ---> flag_NuMI_numuCC_from_appnue"<<endl;
+    {// run1
+      TString strfile_mcPOT   = str_dirbase + "checkout_prodgenie_numi_test_numu2nue_overlay_run1.root";
+      TString strfile_dataPOT = str_dirbase + "run1_data_numi.root";
+      TString strfile_mc_e2e  = str_dirbase + "roofile_obj_test_NuMI_run1_FHC_appnue.root";
+      TString str_treename = "";      
+      str_treename = "tree_numuCC_from_appnue_FC";
+      Set_oscillation_base_subfunc(strfile_mcPOT, strfile_dataPOT, &vector_NuMI_numuCC_from_appnue_scaleFPOT, strfile_mc_e2e, str_treename, &vector_vector_NuMI_numuCC_from_appnue_FC_eventinfo);
+      str_treename = "tree_numuCC_from_appnue_PC";
+      Set_oscillation_base_subfunc(strfile_mcPOT, strfile_dataPOT, NULL,                                      strfile_mc_e2e, str_treename, &vector_vector_NuMI_numuCC_from_appnue_PC_eventinfo);      
+    }
+
+    Set_oscillation_base_minus(&vector_NuMI_numuCC_from_appnue_scaleFPOT, &vector_vector_NuMI_numuCC_from_appnue_FC_eventinfo, 38, "numu2nue");// hack
+    Set_oscillation_base_minus(&vector_NuMI_numuCC_from_appnue_scaleFPOT, &vector_vector_NuMI_numuCC_from_appnue_PC_eventinfo, 39, "numu2nue");// hack
+    
+  }// if( flag_NuMI_numuCC_from_appnue )
+         
+  ///////////////////  
+
+  if( flag_NuMI_CCpi0_from_appnue ) {
+    cout<<endl<<"      ---> flag_NuMI_CCpi0_from_appnue"<<endl;
+    {// run1
+      TString strfile_mcPOT   = str_dirbase + "checkout_prodgenie_numi_test_numu2nue_overlay_run1.root";
+      TString strfile_dataPOT = str_dirbase + "run1_data_numi.root";
+      TString strfile_mc_e2e  = str_dirbase + "roofile_obj_test_NuMI_run1_FHC_appnue.root";
+      TString str_treename = "";      
+      str_treename = "tree_CCpi0_from_appnue_FC";
+      Set_oscillation_base_subfunc(strfile_mcPOT, strfile_dataPOT, &vector_NuMI_CCpi0_from_appnue_scaleFPOT, strfile_mc_e2e, str_treename, &vector_vector_NuMI_CCpi0_from_appnue_FC_eventinfo);
+      str_treename = "tree_CCpi0_from_appnue_PC";
+      Set_oscillation_base_subfunc(strfile_mcPOT, strfile_dataPOT, NULL,                                     strfile_mc_e2e, str_treename, &vector_vector_NuMI_CCpi0_from_appnue_PC_eventinfo);      
+    }
+
+    Set_oscillation_base_minus(&vector_NuMI_CCpi0_from_appnue_scaleFPOT, &vector_vector_NuMI_CCpi0_from_appnue_FC_eventinfo, 40, "numu2nue");// hack
+    Set_oscillation_base_minus(&vector_NuMI_CCpi0_from_appnue_scaleFPOT, &vector_vector_NuMI_CCpi0_from_appnue_PC_eventinfo, 41, "numu2nue");// hack
+    
+  }// if( flag_NuMI_CCpi0_from_appnue )
+           
+  ///////////////////  
+
+  if( flag_NuMI_NCpi0_from_appnue ) {
+    cout<<endl<<"      ---> flag_NuMI_NCpi0_from_appnue"<<endl;
+    {// run1
+      TString strfile_mcPOT   = str_dirbase + "checkout_prodgenie_numi_test_numu2nue_overlay_run1.root";
+      TString strfile_dataPOT = str_dirbase + "run1_data_numi.root";
+      TString strfile_mc_e2e  = str_dirbase + "roofile_obj_test_NuMI_run1_FHC_appnue.root";
+      TString str_treename = "";      
+      str_treename = "tree_NCpi0_from_appnue";
+      Set_oscillation_base_subfunc(strfile_mcPOT, strfile_dataPOT, &vector_NuMI_NCpi0_from_appnue_scaleFPOT, strfile_mc_e2e, str_treename, &vector_vector_NuMI_NCpi0_from_appnue_eventinfo);
+    }
+
+    Set_oscillation_base_minus(&vector_NuMI_NCpi0_from_appnue_scaleFPOT, &vector_vector_NuMI_NCpi0_from_appnue_eventinfo, 42, "numu2nue");// hack
+    
+  }// if( flag_NuMI_NCpi0_from_appnue )
+         
   /////////////////////////////////////////////////////////    
   /////////////////////////////////////////////////////////    
   /////////////////////////////////////////////////////////    
@@ -1077,6 +1154,160 @@ void TOsc::Set_oscillation_base()
     Set_oscillation_base_minus(&vector_BNB_NCpi0_from_overlaynumu_scaleFPOT, &vector_vector_BNB_NCpi0_from_overlaynumu_eventinfo, 7, "numu2numu");// hack
     
   }// if( flag_BNB_NCpi0_from_overlaynumu )
+    
+  ///////////////////  
+
+  if( flag_BNB_nueCC_from_appnue ) {
+    cout<<endl<<"      ---> flag_BNB_nueCC_from_appnue"<<endl;
+    {// run1
+      TString strfile_mcPOT   = str_dirbase + "checkout_prodgenie_bnb_test_numu2nue_overlay_run1.root";
+      TString strfile_dataPOT = str_dirbase + "run1_data_bnb.root";
+      TString strfile_mc_e2e  = str_dirbase + "roofile_obj_test_BNB_run1_appnue.root";
+      TString str_treename = "";      
+      str_treename = "tree_nueCC_from_appnue_FC";
+      Set_oscillation_base_subfunc(strfile_mcPOT, strfile_dataPOT, &vector_BNB_nueCC_from_appnue_scaleFPOT, strfile_mc_e2e, str_treename, &vector_vector_BNB_nueCC_from_appnue_FC_eventinfo);
+      str_treename = "tree_nueCC_from_appnue_PC";
+      Set_oscillation_base_subfunc(strfile_mcPOT, strfile_dataPOT, NULL,                                    strfile_mc_e2e, str_treename, &vector_vector_BNB_nueCC_from_appnue_PC_eventinfo);      
+    }
+    {// run2
+      TString strfile_mcPOT   = str_dirbase + "checkout_prodgenie_bnb_test_numu2nue_overlay_run2.root";
+      TString strfile_dataPOT = str_dirbase + "run2_data_bnb.root";
+      TString strfile_mc_e2e  = str_dirbase + "roofile_obj_test_BNB_run2_appnue.root";
+      TString str_treename = "";      
+      str_treename = "tree_nueCC_from_appnue_FC";
+      Set_oscillation_base_subfunc(strfile_mcPOT, strfile_dataPOT, &vector_BNB_nueCC_from_appnue_scaleFPOT, strfile_mc_e2e, str_treename, &vector_vector_BNB_nueCC_from_appnue_FC_eventinfo);
+      str_treename = "tree_nueCC_from_appnue_PC";
+      Set_oscillation_base_subfunc(strfile_mcPOT, strfile_dataPOT, NULL,                                    strfile_mc_e2e, str_treename, &vector_vector_BNB_nueCC_from_appnue_PC_eventinfo);      
+    }
+    {// run3
+      TString strfile_mcPOT   = str_dirbase + "checkout_prodgenie_bnb_test_numu2nue_overlay_run3.root";
+      TString strfile_dataPOT = str_dirbase + "run3_data_bnb.root";
+      TString strfile_mc_e2e  = str_dirbase + "roofile_obj_test_BNB_run3_appnue.root";
+      TString str_treename = "";      
+      str_treename = "tree_nueCC_from_appnue_FC";
+      Set_oscillation_base_subfunc(strfile_mcPOT, strfile_dataPOT, &vector_BNB_nueCC_from_appnue_scaleFPOT, strfile_mc_e2e, str_treename, &vector_vector_BNB_nueCC_from_appnue_FC_eventinfo);
+      str_treename = "tree_nueCC_from_appnue_PC";
+      Set_oscillation_base_subfunc(strfile_mcPOT, strfile_dataPOT, NULL,                                    strfile_mc_e2e, str_treename, &vector_vector_BNB_nueCC_from_appnue_PC_eventinfo);      
+    }
+    
+    Set_oscillation_base_minus(&vector_BNB_nueCC_from_appnue_scaleFPOT, &vector_vector_BNB_nueCC_from_appnue_FC_eventinfo, 15, "numu2nue");// hack
+    Set_oscillation_base_minus(&vector_BNB_nueCC_from_appnue_scaleFPOT, &vector_vector_BNB_nueCC_from_appnue_PC_eventinfo, 16, "numu2nue");// hack
+    
+  }// if( flag_BNB_nueCC_from_appnue )
+    
+  ///////////////////  
+
+  if( flag_BNB_numuCC_from_appnue ) {
+    cout<<endl<<"      ---> flag_BNB_numuCC_from_appnue"<<endl;
+    {// run1
+      TString strfile_mcPOT   = str_dirbase + "checkout_prodgenie_bnb_test_numu2nue_overlay_run1.root";
+      TString strfile_dataPOT = str_dirbase + "run1_data_bnb.root";
+      TString strfile_mc_e2e  = str_dirbase + "roofile_obj_test_BNB_run1_appnue.root";
+      TString str_treename = "";      
+      str_treename = "tree_numuCC_from_appnue_FC";
+      Set_oscillation_base_subfunc(strfile_mcPOT, strfile_dataPOT, &vector_BNB_numuCC_from_appnue_scaleFPOT, strfile_mc_e2e, str_treename, &vector_vector_BNB_numuCC_from_appnue_FC_eventinfo);
+      str_treename = "tree_numuCC_from_appnue_PC";
+      Set_oscillation_base_subfunc(strfile_mcPOT, strfile_dataPOT, NULL,                                    strfile_mc_e2e, str_treename, &vector_vector_BNB_numuCC_from_appnue_PC_eventinfo);      
+    }
+    {// run2
+      TString strfile_mcPOT   = str_dirbase + "checkout_prodgenie_bnb_test_numu2nue_overlay_run2.root";
+      TString strfile_dataPOT = str_dirbase + "run2_data_bnb.root";
+      TString strfile_mc_e2e  = str_dirbase + "roofile_obj_test_BNB_run2_appnue.root";
+      TString str_treename = "";      
+      str_treename = "tree_numuCC_from_appnue_FC";
+      Set_oscillation_base_subfunc(strfile_mcPOT, strfile_dataPOT, &vector_BNB_numuCC_from_appnue_scaleFPOT, strfile_mc_e2e, str_treename, &vector_vector_BNB_numuCC_from_appnue_FC_eventinfo);
+      str_treename = "tree_numuCC_from_appnue_PC";
+      Set_oscillation_base_subfunc(strfile_mcPOT, strfile_dataPOT, NULL,                                    strfile_mc_e2e, str_treename, &vector_vector_BNB_numuCC_from_appnue_PC_eventinfo);      
+    }
+    {// run3
+      TString strfile_mcPOT   = str_dirbase + "checkout_prodgenie_bnb_test_numu2nue_overlay_run3.root";
+      TString strfile_dataPOT = str_dirbase + "run3_data_bnb.root";
+      TString strfile_mc_e2e  = str_dirbase + "roofile_obj_test_BNB_run3_appnue.root";
+      TString str_treename = "";      
+      str_treename = "tree_numuCC_from_appnue_FC";
+      Set_oscillation_base_subfunc(strfile_mcPOT, strfile_dataPOT, &vector_BNB_numuCC_from_appnue_scaleFPOT, strfile_mc_e2e, str_treename, &vector_vector_BNB_numuCC_from_appnue_FC_eventinfo);
+      str_treename = "tree_numuCC_from_appnue_PC";
+      Set_oscillation_base_subfunc(strfile_mcPOT, strfile_dataPOT, NULL,                                    strfile_mc_e2e, str_treename, &vector_vector_BNB_numuCC_from_appnue_PC_eventinfo);      
+    }
+    
+    Set_oscillation_base_minus(&vector_BNB_numuCC_from_appnue_scaleFPOT, &vector_vector_BNB_numuCC_from_appnue_FC_eventinfo, 17, "numu2nue");// hack
+    Set_oscillation_base_minus(&vector_BNB_numuCC_from_appnue_scaleFPOT, &vector_vector_BNB_numuCC_from_appnue_PC_eventinfo, 18, "numu2nue");// hack
+    
+  }// if( flag_BNB_numuCC_from_appnue )
+    
+  ///////////////////  
+
+  if( flag_BNB_CCpi0_from_appnue ) {
+    cout<<endl<<"      ---> flag_BNB_CCpi0_from_appnue"<<endl;
+    {// run1
+      TString strfile_mcPOT   = str_dirbase + "checkout_prodgenie_bnb_test_numu2nue_overlay_run1.root";
+      TString strfile_dataPOT = str_dirbase + "run1_data_bnb.root";
+      TString strfile_mc_e2e  = str_dirbase + "roofile_obj_test_BNB_run1_appnue.root";
+      TString str_treename = "";      
+      str_treename = "tree_CCpi0_from_appnue_FC";
+      Set_oscillation_base_subfunc(strfile_mcPOT, strfile_dataPOT, &vector_BNB_CCpi0_from_appnue_scaleFPOT, strfile_mc_e2e, str_treename, &vector_vector_BNB_CCpi0_from_appnue_FC_eventinfo);
+      str_treename = "tree_CCpi0_from_appnue_PC";
+      Set_oscillation_base_subfunc(strfile_mcPOT, strfile_dataPOT, NULL,                                    strfile_mc_e2e, str_treename, &vector_vector_BNB_CCpi0_from_appnue_PC_eventinfo);      
+    }
+    {// run2
+      TString strfile_mcPOT   = str_dirbase + "checkout_prodgenie_bnb_test_numu2nue_overlay_run2.root";
+      TString strfile_dataPOT = str_dirbase + "run2_data_bnb.root";
+      TString strfile_mc_e2e  = str_dirbase + "roofile_obj_test_BNB_run2_appnue.root";
+      TString str_treename = "";      
+      str_treename = "tree_CCpi0_from_appnue_FC";
+      Set_oscillation_base_subfunc(strfile_mcPOT, strfile_dataPOT, &vector_BNB_CCpi0_from_appnue_scaleFPOT, strfile_mc_e2e, str_treename, &vector_vector_BNB_CCpi0_from_appnue_FC_eventinfo);
+      str_treename = "tree_CCpi0_from_appnue_PC";
+      Set_oscillation_base_subfunc(strfile_mcPOT, strfile_dataPOT, NULL,                                    strfile_mc_e2e, str_treename, &vector_vector_BNB_CCpi0_from_appnue_PC_eventinfo);      
+    }
+    {// run3
+      TString strfile_mcPOT   = str_dirbase + "checkout_prodgenie_bnb_test_numu2nue_overlay_run3.root";
+      TString strfile_dataPOT = str_dirbase + "run3_data_bnb.root";
+      TString strfile_mc_e2e  = str_dirbase + "roofile_obj_test_BNB_run3_appnue.root";
+      TString str_treename = "";      
+      str_treename = "tree_CCpi0_from_appnue_FC";
+      Set_oscillation_base_subfunc(strfile_mcPOT, strfile_dataPOT, &vector_BNB_CCpi0_from_appnue_scaleFPOT, strfile_mc_e2e, str_treename, &vector_vector_BNB_CCpi0_from_appnue_FC_eventinfo);
+      str_treename = "tree_CCpi0_from_appnue_PC";
+      Set_oscillation_base_subfunc(strfile_mcPOT, strfile_dataPOT, NULL,                                    strfile_mc_e2e, str_treename, &vector_vector_BNB_CCpi0_from_appnue_PC_eventinfo);      
+    }
+    
+    Set_oscillation_base_minus(&vector_BNB_CCpi0_from_appnue_scaleFPOT, &vector_vector_BNB_CCpi0_from_appnue_FC_eventinfo, 19, "numu2nue");// hack
+    Set_oscillation_base_minus(&vector_BNB_CCpi0_from_appnue_scaleFPOT, &vector_vector_BNB_CCpi0_from_appnue_PC_eventinfo, 20, "numu2nue");// hack
+    
+  }// if( flag_BNB_CCpi0_from_appnue )
+    
+  ///////////////////  
+
+  if( flag_BNB_NCpi0_from_appnue ) {
+    cout<<endl<<"      ---> flag_BNB_NCpi0_from_appnue"<<endl;
+    {// run1
+      TString strfile_mcPOT   = str_dirbase + "checkout_prodgenie_bnb_test_numu2nue_overlay_run1.root";
+      TString strfile_dataPOT = str_dirbase + "run1_data_bnb.root";
+      TString strfile_mc_e2e  = str_dirbase + "roofile_obj_test_BNB_run1_appnue.root";
+      TString str_treename = "";      
+      str_treename = "tree_NCpi0_from_appnue";
+      Set_oscillation_base_subfunc(strfile_mcPOT, strfile_dataPOT, &vector_BNB_NCpi0_from_appnue_scaleFPOT, strfile_mc_e2e, str_treename, &vector_vector_BNB_NCpi0_from_appnue_eventinfo);
+    }
+    {// run2
+      TString strfile_mcPOT   = str_dirbase + "checkout_prodgenie_bnb_test_numu2nue_overlay_run2.root";
+      TString strfile_dataPOT = str_dirbase + "run2_data_bnb.root";
+      TString strfile_mc_e2e  = str_dirbase + "roofile_obj_test_BNB_run2_appnue.root";
+      TString str_treename = "";      
+      str_treename = "tree_NCpi0_from_appnue";
+      Set_oscillation_base_subfunc(strfile_mcPOT, strfile_dataPOT, &vector_BNB_NCpi0_from_appnue_scaleFPOT, strfile_mc_e2e, str_treename, &vector_vector_BNB_NCpi0_from_appnue_eventinfo);
+    }
+    {// run3
+      TString strfile_mcPOT   = str_dirbase + "checkout_prodgenie_bnb_test_numu2nue_overlay_run3.root";
+      TString strfile_dataPOT = str_dirbase + "run3_data_bnb.root";
+      TString strfile_mc_e2e  = str_dirbase + "roofile_obj_test_BNB_run3_appnue.root";
+      TString str_treename = "";      
+      str_treename = "tree_NCpi0_from_appnue";
+      Set_oscillation_base_subfunc(strfile_mcPOT, strfile_dataPOT, &vector_BNB_NCpi0_from_appnue_scaleFPOT, strfile_mc_e2e, str_treename, &vector_vector_BNB_NCpi0_from_appnue_eventinfo);
+    }
+    
+    Set_oscillation_base_minus(&vector_BNB_NCpi0_from_appnue_scaleFPOT, &vector_vector_BNB_NCpi0_from_appnue_eventinfo, 21, "numu2nue");// hack
+    
+  }// if( flag_BNB_NCpi0_from_appnue )
+
   
   cout<<endl;
 }

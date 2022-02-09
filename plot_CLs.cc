@@ -154,9 +154,9 @@ void plot_CLs()
   ////////////////////////////////////////////////////////////////////////////////////////
   
   TString file_roostr = "./zb_nuedisapp_NuMIBNB/sum_NuMIBNB_both_scalePOT_NuMIrun123_8d4_BNBrun123_1d9.dat";
-  file_roostr = "./zc_numudisapp_NuMIBNB_numuCCchannel/sum_NuMIBNB_BNBonly.dat";
-  file_roostr = "./zc_numudisapp_NuMIBNB_numuCCchannel/sum_NuMIBNB_NuMIonly.dat";
-  file_roostr = "./zc_numudisapp_NuMIBNB_numuCCchannel/sum_NuMIBNB_both.dat";
+  file_roostr = "./zd_numudisapp_NuMIBNB_numuCC_related7chs/sum_NuMIBNB_BNBonly.dat";
+  file_roostr = "./zd_numudisapp_NuMIBNB_numuCC_related7chs/sum_NuMIBNB_NuMIonly.dat";
+  file_roostr = "./zd_numudisapp_NuMIBNB_numuCC_related7chs/sum_NuMIBNB_both.dat";
   
   int bins_theta = 40;
   int bins_dm2   = 40;
