@@ -106,7 +106,19 @@ void func_get_contours(TH2D *h2_CL, TGraph *gh_CL[3], int index)
       double t14 = 0;
       double m41 = 0;
       gh_curv_mc[ic]->GetPoint(idx, t14, m41);
-      gh_CL[ic]->SetPoint(idx, pow(10., t14), pow(10., m41) );      
+      
+      double xx_value = pow(10., t14);
+      
+      /// user convert from sin2_theta_14 to sin2_2theta_14
+      //if( xx_value>0.5 ) continue;      
+      //xx_value = 4*xx_value*(1-xx_value);
+
+      /// user convert from sin2_theta_24 to sin2_2theta_ue with fix t14
+      //double fix_sin2_theta_14 = 0.99;
+      //xx_value = 4*fix_sin2_theta_14*(1-fix_sin2_theta_14)*xx_value;
+      
+      gh_CL[ic]->SetPoint(gh_CL[ic]->GetN(), xx_value, pow(10., m41) );
+      
     }    
   }
 
@@ -157,43 +169,76 @@ void plot_CLs()
   file_roostr = "./zd_numudisapp_NuMIBNB_numuCC_related7chs/sum_NuMIBNB_BNBonly.dat";
   file_roostr = "./zd_numudisapp_NuMIBNB_numuCC_related7chs/sum_NuMIBNB_NuMIonly.dat";
   file_roostr = "./zd_numudisapp_NuMIBNB_numuCC_related7chs/sum_NuMIBNB_both.dat";
+
+  file_roostr = "./zm_nueapp/sum_both_t24_fix0d0.dat";
+  file_roostr = "./zm_nueapp/sum_both_t24_fix0d1.dat";
+
+
   
-  int bins_theta = 40;
-  int bins_dm2   = 40;
+  file_roostr = "./tresult_note/sum_BNBonly_nueDisonly.dat";
+  file_roostr = "./tresult_note/sum_both_nueDisonly.dat";
+
+  file_roostr = "./tresult_note/sum_BNBonly_nueAPPonly.dat";
+  file_roostr = "./tresult_note/sum_both_nueAPPonly.dat";
+
+  file_roostr = "./tresult_note/sum_BNBonly_nueDisonly_270m.dat";
+  file_roostr = "./tresult_note/sum_BNBonly_nueDisonly_670m.dat";
+  file_roostr = "./tresult_note/sum_BNBonly_nueDisonly_470m.dat";
+
+
+
+  file_roostr = "./tresult_note/sum_BNBonly_nueDisonly.dat";
+  file_roostr = "./tresult_note/sum_BNBonly_nueAPPonly.dat";
+
+
+  
+  file_roostr = "./tresult_note/sum_BNBonly_APPonly_670m.dat";
+
+
+  
+  file_roostr = "./tresult_note/sum_BNBonly_nueAPPonly.dat";
+  //file_roostr = "./tresult_note/sum_both_nueAPPonly.dat";
+
+  
+  int bins_theta = 60;
+  int bins_dm2   = 60;
   
   ////// X: sin22t14, 1e-2 -> 1   ---> "log10()" ---> -2 -> 0
   ////// Y: m41^2,    1e-1 -> 20  ---> "log10()" ---> -1 -> 1.30103
 
+  double xlow = -4;
+  double xhgh = 0;
+  
   roostr = "h2_space_data";
-  TH2D *h2_space_data = new TH2D(roostr, roostr, bins_theta, -2, 0, bins_dm2, -1, 1.30103);
+  TH2D *h2_space_data = new TH2D(roostr, roostr, bins_theta, xlow, xhgh, bins_dm2, -1, 2);
 
   roostr = "h2_space_pred";
-  TH2D *h2_space_pred = new TH2D(roostr, roostr, bins_theta, -2, 0, bins_dm2, -1, 1.30103);
+  TH2D *h2_space_pred = new TH2D(roostr, roostr, bins_theta, xlow, xhgh, bins_dm2, -1, 2);
 
   roostr = "h2_space_pred_1sigma_plus";
-  TH2D *h2_space_pred_1sigma_plus = new TH2D(roostr, roostr, bins_theta, -2, 0, bins_dm2, -1, 1.30103);
+  TH2D *h2_space_pred_1sigma_plus = new TH2D(roostr, roostr, bins_theta, xlow, xhgh, bins_dm2, -1, 2);
 
   roostr = "h2_space_pred_1sigma_minus";
-  TH2D *h2_space_pred_1sigma_minus = new TH2D(roostr, roostr, bins_theta, -2, 0, bins_dm2, -1, 1.30103);
+  TH2D *h2_space_pred_1sigma_minus = new TH2D(roostr, roostr, bins_theta, xlow, xhgh, bins_dm2, -1, 2);
 
   roostr = "h2_space_pred_2sigma_plus";
-  TH2D *h2_space_pred_2sigma_plus = new TH2D(roostr, roostr, bins_theta, -2, 0, bins_dm2, -1, 1.30103);
+  TH2D *h2_space_pred_2sigma_plus = new TH2D(roostr, roostr, bins_theta, xlow, xhgh, bins_dm2, -1, 2);
 
   roostr = "h2_space_pred_2sigma_minus";
-  TH2D *h2_space_pred_2sigma_minus = new TH2D(roostr, roostr, bins_theta, -2, 0, bins_dm2, -1, 1.30103);
+  TH2D *h2_space_pred_2sigma_minus = new TH2D(roostr, roostr, bins_theta, xlow, xhgh, bins_dm2, -1, 2);
 
 
   //////////////////////////////////////////////
 
   roostr = "h2_wilk_chi2_data";
-  TH2D *h2_wilk_chi2_data = new TH2D(roostr, roostr, bins_theta, -2, 0, bins_dm2, -1, 1.30103);
+  TH2D *h2_wilk_chi2_data = new TH2D(roostr, roostr, bins_theta, xlow, xhgh, bins_dm2, -1, 2);
   roostr = "h2_wilk_chi2_pred";
-  TH2D *h2_wilk_chi2_pred = new TH2D(roostr, roostr, bins_theta, -2, 0, bins_dm2, -1, 1.30103);
+  TH2D *h2_wilk_chi2_pred = new TH2D(roostr, roostr, bins_theta, xlow, xhgh, bins_dm2, -1, 2);
   
   roostr = "h2_wilk_CL_data";
-  TH2D *h2_wilk_CL_data = new TH2D(roostr, roostr, bins_theta, -2, 0, bins_dm2, -1, 1.30103);
+  TH2D *h2_wilk_CL_data = new TH2D(roostr, roostr, bins_theta, xlow, xhgh, bins_dm2, -1, 2);
   roostr = "h2_wilk_CL_pred";
-  TH2D *h2_wilk_CL_pred = new TH2D(roostr, roostr, bins_theta, -2, 0, bins_dm2, -1, 1.30103);
+  TH2D *h2_wilk_CL_pred = new TH2D(roostr, roostr, bins_theta, xlow, xhgh, bins_dm2, -1, 2);
   
   //////////////////////////////////////////////
   
@@ -201,7 +246,7 @@ void plot_CLs()
   if(!InputFile) { cerr<<" No input-list"<<endl; exit(1); }
 
   for(int idx=1; idx<=bins_theta*bins_dm2; idx++) {
-    int theta(0), dm2(0);    
+    int theta(0), dm2(0), t24(0);    
     double chi2_4v_4vAsimov(0), chi2_3v_4vAsimov(0),
       chi2_4v_3vAsimov(0), chi2_3v_3vAsimov(0),
       chi2_4v_data(0), chi2_3v_data(0),
@@ -209,7 +254,7 @@ void plot_CLs()
       CL_pred_1sigma_plus(0), CL_pred_1sigma_minus(0),
       CL_pred_2sigma_plus(0), CL_pred_2sigma_minus(0);
 
-    InputFile >> theta >> dm2
+    InputFile >> theta >> dm2 >> t24
 	      >> chi2_4v_4vAsimov >> chi2_3v_4vAsimov
 	      >> chi2_4v_3vAsimov >> chi2_3v_3vAsimov
 	      >> chi2_4v_data >> chi2_3v_data
