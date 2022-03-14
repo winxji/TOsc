@@ -199,6 +199,8 @@ void plot_CLs()
   file_roostr = "./tresult_note/sum_BNBonly_nueAPPonly.dat";
   //file_roostr = "./tresult_note/sum_both_nueAPPonly.dat";
 
+
+  file_roostr = "./tresult_note/sum_BNBonly_numuDISonly_fix470m.dat";
   
   int bins_theta = 60;
   int bins_dm2   = 60;
