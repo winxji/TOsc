@@ -248,8 +248,16 @@ double TOsc::FCN(const double *par)
   TMatrixD matrix_data_total = matrix_fitdata_newworld.GetSub(0,0, 26*7, 26*14-1);
   TMatrixD matrix_pred_total = matrix_eff_newworld_pred.GetSub(0,0, 26*7, 26*14-1);
   TMatrixD matrix_cov_syst_total = matrix_eff_newworld_abs_syst_total.GetSub(26*7, 26*14-1, 26*7, 26*14-1);
-  int rows = matrix_cov_syst_total.GetNrows();
+  int rows = matrix_cov_syst_total.GetNrows();  
   */
+  
+  // for(int idx=0; idx<rows; idx++) {
+  //   double val_data = matrix_data_total(0, idx);
+  //   double val_pred = matrix_pred_total(0, idx);
+  //   if( val_data<1e-3 ) matrix_data_total(0, idx) = 0;
+  //   if( val_pred<1e-3 ) matrix_pred_total(0, idx) = 0;    
+  // }
+  
   ///////  
 
   TMatrixD matrix_cov_stat_total(rows, rows);
@@ -259,7 +267,7 @@ double TOsc::FCN(const double *par)
     double val_stat_cov = 0;        
     double val_data = matrix_data_total(0, idx);
     double val_pred = matrix_pred_total(0, idx);
-        
+    
     if( val_data==0 ) { val_stat_cov = val_pred/2; }
     else {
       if( val_pred!=0 ) val_stat_cov = 3./( 1./val_data + 2./val_pred );
@@ -269,7 +277,8 @@ double TOsc::FCN(const double *par)
     if( val_stat_cov==0 ) val_stat_cov = 1e-6;
     if( matrix_cov_syst_total(idx, idx)==0 ) matrix_cov_syst_total(idx, idx) = 1e-6;
     
-    matrix_cov_stat_total(idx, idx) = val_stat_cov;    
+    matrix_cov_stat_total(idx, idx) = val_stat_cov;
+
   }
   
   matrix_cov_total = matrix_cov_syst_total + matrix_cov_stat_total;
@@ -452,6 +461,10 @@ void TOsc::Set_apply_POT()
   matrix_eff_newworld_pred *= 0;
   matrix_eff_newworld_abs_syst_total *= 0;
 
+  for(int idx=0; idx<default_oldworld_rows; idx++) {
+    if( matrix_oscillation_oldworld_pred(0, idx)<1e-4 ) matrix_oscillation_oldworld_pred(0, idx) = 0;// protect
+  }
+  
   /////// hack, oldworld
   TMatrixD matrix_temp_oscillation_oldworld_pred = matrix_oscillation_oldworld_pred;
   TMatrixD matrix_temp_oldworld_abs_syst_addi = matrix_default_oldworld_abs_syst_addi;
@@ -503,7 +516,7 @@ void TOsc::Set_apply_POT()
   }
   
   TMatrixD matrix_transform_T =  matrix_transform.T();  matrix_transform.T();
-
+  /*
   matrix_eff_newworld_abs_syst_addi   = matrix_transform_T * matrix_temp_oldworld_abs_syst_addi * matrix_transform;
   matrix_eff_newworld_abs_syst_mcstat = matrix_temp_newworld_abs_syst_mcstat;
   matrix_eff_newworld_abs_syst_flux   = matrix_transform_T * matrix_temp_oldworld_abs_syst_flux * matrix_transform;
@@ -517,155 +530,20 @@ void TOsc::Set_apply_POT()
   if( flag_syst_geant )  matrix_eff_newworld_abs_syst_total += matrix_eff_newworld_abs_syst_geant;
   if( flag_syst_Xs )     matrix_eff_newworld_abs_syst_total += matrix_eff_newworld_abs_syst_Xs;
   if( flag_syst_det )    matrix_eff_newworld_abs_syst_total += matrix_eff_newworld_abs_syst_det;
+  */
 
   
-  if( 0 ) {
-    TMatrixD matrix_user_transform(26*21*2, 26*14);
-    for(int idx=1; idx<=26*7; idx++) matrix_user_transform(idx-1, idx-1) = 1;
-    for(int idx=1; idx<=26*7; idx++) matrix_user_transform(26*14+idx-1, 26*7 + idx-1) = 1;
-    TMatrixD matrix_user_transform_T = matrix_user_transform.T(); matrix_user_transform.T();
+  TMatrixD matrix_temp_oldworld_abs_syst(default_oldworld_rows, default_oldworld_rows);
+  if( flag_syst_dirt )  matrix_temp_oldworld_abs_syst += matrix_temp_oldworld_abs_syst_addi;
+  if( flag_syst_flux )  matrix_temp_oldworld_abs_syst += matrix_temp_oldworld_abs_syst_flux;
+  if( flag_syst_geant ) matrix_temp_oldworld_abs_syst += matrix_temp_oldworld_abs_syst_geant;
+  if( flag_syst_Xs )    matrix_temp_oldworld_abs_syst += matrix_temp_oldworld_abs_syst_Xs;
+  if( flag_syst_det )   matrix_temp_oldworld_abs_syst += matrix_temp_oldworld_abs_syst_det;
 
-    TMatrixD matrix__user_default_oldworld_rel_syst_Xs   = matrix_user_transform_T * matrix_default_oldworld_rel_syst_Xs * matrix_user_transform;
-    TMatrixD matrix__user_default_oldworld_rel_syst_flux = matrix_user_transform_T * matrix_default_oldworld_rel_syst_flux * matrix_user_transform;
-    TMatrixD matrix__user_default_oldworld_rel_syst_det  = matrix_user_transform_T * matrix_default_oldworld_rel_syst_det * matrix_user_transform;
+  matrix_eff_newworld_abs_syst_total = matrix_transform_T * matrix_temp_oldworld_abs_syst * matrix_transform;
 
-    TH2D *h2_user_Xs = new TH2D("h2_user_Xs", "",     26*14, 0, 26*14, 26*14, 0, 26*14);
-    TH2D *h2_user_flux = new TH2D("h2_user_flux", "", 26*14, 0, 26*14, 26*14, 0, 26*14);
-    TH2D *h2_user_det = new TH2D("h2_user_det", "",   26*14, 0, 26*14, 26*14, 0, 26*14);
+  if( flag_syst_mcstat ) matrix_eff_newworld_abs_syst_total += matrix_eff_newworld_abs_syst_mcstat;
 
-    TH1D *h1_user_rel_Xs = new TH1D("h1_user_rel_Xs", "", 26*14, 0, 26*14);
-    TH1D *h1_user_rel_flux = new TH1D("h1_user_rel_flux", "", 26*14, 0, 26*14);
-    TH1D *h1_user_rel_det = new TH1D("h1_user_rel_det", "", 26*14, 0, 26*14);
-    
-    for(int idx=1; idx<=26*14; idx++) {
-      double val_ij = 0;
-      double sigma_i = 0;
-      double sigma_j = 0;
-      
-      for(int jdx=1; jdx<=26*14; jdx++) {
-	val_ij = matrix__user_default_oldworld_rel_syst_Xs(idx-1, jdx-1);
-	sigma_i = sqrt( matrix__user_default_oldworld_rel_syst_Xs(idx-1, idx-1) );
-	sigma_j = sqrt( matrix__user_default_oldworld_rel_syst_Xs(jdx-1, jdx-1) );
-	if(sigma_i==0 || sigma_j==0) h2_user_Xs->SetBinContent(idx, jdx, 0);
-	else h2_user_Xs->SetBinContent(idx, jdx, val_ij/sigma_i/sigma_j);	
-	
-	val_ij = matrix__user_default_oldworld_rel_syst_flux(idx-1, jdx-1);
-	sigma_i = sqrt( matrix__user_default_oldworld_rel_syst_flux(idx-1, idx-1) );
-	sigma_j = sqrt( matrix__user_default_oldworld_rel_syst_flux(jdx-1, jdx-1) );
-	if(sigma_i==0 || sigma_j==0) h2_user_flux->SetBinContent(idx, jdx, 0);
-	else h2_user_flux->SetBinContent(idx, jdx, val_ij/sigma_i/sigma_j);
-	
-	val_ij = matrix__user_default_oldworld_rel_syst_det(idx-1, jdx-1);
-	sigma_i = sqrt( matrix__user_default_oldworld_rel_syst_det(idx-1, idx-1) );
-	sigma_j = sqrt( matrix__user_default_oldworld_rel_syst_det(jdx-1, jdx-1) );
-	if(sigma_i==0 || sigma_j==0) h2_user_det->SetBinContent(idx, jdx, 0);
-	else h2_user_det->SetBinContent(idx, jdx, val_ij/sigma_i/sigma_j);
-
-      }
-
-      sigma_i = sqrt( matrix__user_default_oldworld_rel_syst_Xs(idx-1, idx-1) );
-      h1_user_rel_Xs->SetBinContent(idx, sigma_i);
- 
-      sigma_i = sqrt( matrix__user_default_oldworld_rel_syst_flux(idx-1, idx-1) );
-      h1_user_rel_flux->SetBinContent(idx, sigma_i);
-
-      sigma_i = sqrt( matrix__user_default_oldworld_rel_syst_det(idx-1, idx-1) );
-      h1_user_rel_det->SetBinContent(idx, sigma_i);
-       
-    }
-
-    TLine *line_user_xx[13];
-    TLine *line_user_yy[13];
-    for(int idx=1; idx<=13; idx++) {
-      line_user_xx[idx-1] = new TLine(26*idx, 0, 26*idx, 26*14);
-      line_user_xx[idx-1]->SetLineStyle(7); line_user_xx[idx-1]->SetLineColor(kBlack); line_user_xx[idx-1]->SetLineWidth(1);
-      line_user_yy[idx-1] = new TLine(0, 26*idx, 26*14, 26*idx);
-      line_user_yy[idx-1]->SetLineStyle(7); line_user_yy[idx-1]->SetLineColor(kBlack); line_user_yy[idx-1]->SetLineWidth(1);
-    }
-
-    TLine *line_user_XX = new TLine(26*7, 0, 26*7, 26*14);
-    line_user_XX->SetLineStyle(7); line_user_XX->SetLineWidth(6); line_user_XX->SetLineColor(kBlack);
-    TLine *line_user_YY = new TLine(0, 26*7, 26*14, 26*7);
-    line_user_YY->SetLineStyle(7); line_user_YY->SetLineWidth(6); line_user_YY->SetLineColor(kBlack);
-  
-    if( 0 ) {
-      TCanvas *canv_rel_err = new TCanvas("canv_rel_err", "canv_rel_err", 900, 650);///xab
-      func_canv_margin(canv_rel_err, 0.15, 0.1, 0.1, 0.15);
-      func_xy_title(h1_user_rel_Xs, "Bin index", "Fractional uncertainty");
-      h1_user_rel_Xs->Draw("hist");
-      h1_user_rel_Xs->SetLineColor(kBlue);
-      h1_user_rel_Xs->GetYaxis()->SetRangeUser(0, 2);
-      func_title_size(h1_user_rel_Xs, 0.05, 0.05, 0.05, 0.05);
-      func_center_title(h1_user_rel_Xs);
-
-      h1_user_rel_flux->Draw("same hist"); h1_user_rel_flux->SetLineColor(kRed);
-      h1_user_rel_det->Draw("same hist"); h1_user_rel_det->SetLineColor(kMagenta-9);
-      h1_user_rel_Xs->Draw("same hist");
-      h1_user_rel_flux->Draw("same hist");
-
-      for(int idx=1; idx<=13; idx++) { line_user_xx[idx-1]->Draw();}
- 	
-      TLine *line_osc_rel = new TLine(26*7, 0, 26*7, 2);      
-      line_osc_rel->Draw();
-      line_osc_rel->SetLineStyle(7);
-      line_osc_rel->SetLineColor(kBlack);
-      line_osc_rel->SetLineWidth(6);
-      
-      TLegend *lg_rel_err = new TLegend(0.55,0.7,0.85,0.88);
-      lg_rel_err->AddEntry( h1_user_rel_Xs, "cross section", "l");
-      lg_rel_err->AddEntry( h1_user_rel_flux, "flux", "l");
-      lg_rel_err->AddEntry( h1_user_rel_det, "detector", "l");
-      lg_rel_err->Draw();
-      lg_rel_err->SetBorderSize(1);
-      //lg_rel_err->SetFillStyle(1);
-      //lg_rel_err->SetFillColor(10);
-      lg_rel_err->SetTextSize(0.05);
-
-      canv_rel_err->SaveAs("canv_rel_err.png");
-    }
-    
-    if( 1 ) {
-      TCanvas *canv_user_correlation_Xs = new TCanvas("canv_user_correlation_Xs", "canv_user_correlation_Xs", 900, 650);///xab
-      func_canv_margin(canv_user_correlation_Xs, 0.15, 0.21, 0.1, 0.15); 
-      func_xy_title(h2_user_Xs, "Bin index", "Bin index");
-      h2_user_Xs->Draw("colz");    
-      func_title_size(h2_user_Xs, 0.05, 0.05, 0.05, 0.05);
-      h2_user_Xs->GetZaxis()->SetLabelSize(0.05); h2_user_Xs->GetZaxis()->SetRangeUser(-1,1); h2_user_Xs->SetZTitle("Correlation");
-      h2_user_Xs->GetZaxis()->SetTitleSize(0.05); h2_user_Xs->GetZaxis()->CenterTitle(); h2_user_Xs->GetZaxis()->SetTitleOffset(1.2);
-      func_center_title(h2_user_Xs);
-      for(int idx=1; idx<=13; idx++) { line_user_xx[idx-1]->Draw(); line_user_yy[idx-1]->Draw();}
-      line_user_XX->Draw();
-      line_user_YY->Draw();
-      canv_user_correlation_Xs->SaveAs("canv_user_correlation_Xs.png");
-          
-      TCanvas *canv_user_correlation_flux = new TCanvas("canv_user_correlation_flux", "canv_user_correlation_flux", 900, 650);///xab
-      func_canv_margin(canv_user_correlation_flux, 0.15, 0.21, 0.1, 0.15); 
-      func_xy_title(h2_user_flux, "Bin index", "Bin index");
-      h2_user_flux->Draw("colz");    
-      func_title_size(h2_user_flux, 0.05, 0.05, 0.05, 0.05);
-      h2_user_flux->GetZaxis()->SetLabelSize(0.05); h2_user_flux->GetZaxis()->SetRangeUser(-1,1); h2_user_flux->SetZTitle("Correlation");
-      h2_user_flux->GetZaxis()->SetTitleSize(0.05); h2_user_flux->GetZaxis()->CenterTitle(); h2_user_flux->GetZaxis()->SetTitleOffset(1.2);
-      func_center_title(h2_user_flux);
-      for(int idx=1; idx<=13; idx++) { line_user_xx[idx-1]->Draw(); line_user_yy[idx-1]->Draw();}
-      line_user_XX->Draw();
-      line_user_YY->Draw();
-      canv_user_correlation_flux->SaveAs("canv_user_correlation_flux.png");
-    
-      TCanvas *canv_user_correlation_det = new TCanvas("canv_user_correlation_det", "canv_user_correlation_det", 900, 650);///xab
-      func_canv_margin(canv_user_correlation_det, 0.15, 0.21, 0.1, 0.15); 
-      func_xy_title(h2_user_det, "Bin index", "Bin index");
-      h2_user_det->Draw("colz");    
-      func_title_size(h2_user_det, 0.05, 0.05, 0.05, 0.05);
-      h2_user_det->GetZaxis()->SetLabelSize(0.05); h2_user_det->GetZaxis()->SetRangeUser(-1,1); h2_user_det->SetZTitle("Correlation");
-      h2_user_det->GetZaxis()->SetTitleSize(0.05); h2_user_det->GetZaxis()->CenterTitle(); h2_user_det->GetZaxis()->SetTitleOffset(1.2);
-      func_center_title(h2_user_det);
-      for(int idx=1; idx<=13; idx++) { line_user_xx[idx-1]->Draw(); line_user_yy[idx-1]->Draw();}
-      line_user_XX->Draw();
-      line_user_YY->Draw();
-      canv_user_correlation_det->SaveAs("canv_user_correlation_det.png");
-    }
-    
-  }
   
 }
 
@@ -708,11 +586,13 @@ double TOsc::Prob_oscillaion(double Etrue, double baseline, TString strflag_osc)
   double effective_sin2_2theta_14 = 4 * effective_sin2_theta_14 * effective_cos2_theta_14;  
 
   double sin2_Delta = pow(TMath::Sin(1.267 * dm2_41 * baseline/Etrue), 2);
+  //sin2_Delta = 1;
   
   switch( flag_osc ) {
   case nue2nue:
     prob = 1 - effective_sin2_2theta_14 * sin2_Delta;
     //prob = 1;
+    //prob = 1 - sin2_2theta_14 * sin2_Delta;
     break;
   case numu2numu:
     prob = 1 - 4*effective_cos2_theta_14*sin2_theta_24 * (1 - effective_cos2_theta_14*sin2_theta_24) * sin2_Delta;
@@ -721,6 +601,7 @@ double TOsc::Prob_oscillaion(double Etrue, double baseline, TString strflag_osc)
   case numu2nue:
     prob = effective_sin2_2theta_14 * sin2_theta_24 * sin2_Delta;
     //prob = 0;
+    //prob = sin2_2theta_14 * sin2_Delta;
     break;
   case nue2numu:
     break;
@@ -763,7 +644,9 @@ void TOsc::Set_oscillation_base_minus(vector<double> *vec_ratioPOT, vector< vect
     int bin_index_base = 0;
     if( pred_channel_index > 1 ) { for(int ich=1; ich<pred_channel_index; ich++) bin_index_base += ( map_default_h1d_pred[ich]->GetNbinsX()+1 ); }
     for(int ibin=1; ibin<=h1d_temp->GetNbinsX()+1; ibin++) { matrix_temp(0, bin_index_base + ibin -1) = h1d_temp->GetBinContent(ibin); }
-    matrix_oscillation_base_oldworld_pred -= matrix_temp;    
+    matrix_oscillation_base_oldworld_pred -= matrix_temp;
+
+    delete h1d_temp;
   }// for(int isize=0; isize<(int)vec_vec_eventinfo->size(); isize++ )  
 }
 
@@ -771,6 +654,19 @@ void TOsc::Set_oscillation_base_added(vector<double> *vec_ratioPOT, vector< vect
 {
   int total_pred_chs = map_default_h1d_pred.size();
   if( pred_channel_index > total_pred_chs ) { cerr<<TString::Format(" ERROR: pred_channel_index(%d) > total_pred_chs(%d)", pred_channel_index, total_pred_chs)<<endl; exit(1); }  
+
+  
+  // TH1D *h1d_bnb_nue2nue;
+  // TH1D *h1d_bnb_numu2nue;
+  // if( pred_channel_index==1 && str_osc_mode=="nue2nue" ) h1d_bnb_nue2nue = new TH1D("h1d_bnb_nue2nue", "h1d_bnb_nue2nue", 200, 0, 4);
+  // if( pred_channel_index==15 && str_osc_mode=="numu2nue" ) h1d_bnb_numu2nue = new TH1D("h1d_bnb_numu2nue", "h1d_bnb_numu2nue", 200, 0, 4);
+ 
+  // TH1D *h1d_numi_nue2nue;
+  // TH1D *h1d_numi_numu2nue;
+  // if( pred_channel_index==22 && str_osc_mode=="nue2nue" ) h1d_numi_nue2nue = new TH1D("h1d_numi_nue2nue", "h1d_numi_nue2nue", 200, 0, 4);
+  // if( pred_channel_index==36 && str_osc_mode=="numu2nue" ) h1d_numi_numu2nue = new TH1D("h1d_numi_numu2nue", "h1d_numi_numu2nue", 200, 0, 4);
+ 
+
   
   for(int isize=0; isize<(int)vec_vec_eventinfo->size(); isize++ ) {
     TH1D *h1d_temp = (TH1D*)map_default_h1d_pred[pred_channel_index]->Clone("h1d_temp"); h1d_temp->Reset();// define and clear
@@ -779,6 +675,13 @@ void TOsc::Set_oscillation_base_added(vector<double> *vec_ratioPOT, vector< vect
       EventInfo info = vec_vec_eventinfo->at(isize).at(ievent);
       double prob = Prob_oscillaion(info.e2e_Etrue, info.e2e_baseline, str_osc_mode);
       h1d_temp->Fill(info.e2e_Ereco, prob * info.e2e_weight_xs);
+
+      
+      // if( pred_channel_index==1 && str_osc_mode=="nue2nue" ) h1d_bnb_nue2nue->Fill( info.e2e_baseline/info.e2e_Etrue, prob * info.e2e_weight_xs * (vec_ratioPOT->at(isize)) );
+      // if( pred_channel_index==15 && str_osc_mode=="numu2nue" ) h1d_bnb_numu2nue->Fill( info.e2e_baseline/info.e2e_Etrue, prob * info.e2e_weight_xs * (vec_ratioPOT->at(isize)) );
+      // if( pred_channel_index==22 && str_osc_mode=="nue2nue" ) h1d_numi_nue2nue->Fill( info.e2e_baseline/info.e2e_Etrue, prob * info.e2e_weight_xs * (vec_ratioPOT->at(isize)) );
+      // if( pred_channel_index==36 && str_osc_mode=="numu2nue" ) h1d_numi_numu2nue->Fill( info.e2e_baseline/info.e2e_Etrue, prob * info.e2e_weight_xs * (vec_ratioPOT->at(isize)) );
+      
     }
 
     h1d_temp->Scale( vec_ratioPOT->at(isize) );
@@ -788,8 +691,17 @@ void TOsc::Set_oscillation_base_added(vector<double> *vec_ratioPOT, vector< vect
     int bin_index_base = 0;
     if( pred_channel_index > 1 ) { for(int ich=1; ich<pred_channel_index; ich++) bin_index_base += ( map_default_h1d_pred[ich]->GetNbinsX()+1 ); }
     for(int ibin=1; ibin<=h1d_temp->GetNbinsX()+1; ibin++) { matrix_temp(0, bin_index_base + ibin -1) = h1d_temp->GetBinContent(ibin); }
-    matrix_oscillation_oldworld_pred += matrix_temp;    
-  }// for(int isize=0; isize<(int)vec_vec_eventinfo->size(); isize++ )  
+    matrix_oscillation_oldworld_pred += matrix_temp;
+    
+    delete h1d_temp;
+  }// for(int isize=0; isize<(int)vec_vec_eventinfo->size(); isize++ )
+
+  
+  // if( pred_channel_index==1 && str_osc_mode=="nue2nue" ) h1d_bnb_nue2nue->SaveAs("file_h1d_bnb_nue2nue.root");
+  // if( pred_channel_index==15 && str_osc_mode=="numu2nue" ) h1d_bnb_numu2nue->SaveAs("file_h1d_bnb_numu2nue.root");
+  // if( pred_channel_index==22 && str_osc_mode=="nue2nue" ) h1d_numi_nue2nue->SaveAs("file_h1d_numi_nue2nue.root");
+  // if( pred_channel_index==36 && str_osc_mode=="numu2nue" ) h1d_numi_numu2nue->SaveAs("file_h1d_numi_numu2nue.root");
+  
 }
 
 ///////////////////
@@ -1002,9 +914,16 @@ void TOsc::Set_oscillation_base_subfunc(TString strfile_mcPOT, TString strfile_d
   cout<<TString::Format("            ---> entries %10d     %50s   --> %20s", entries, strfile_mc_e2e.Data(), str_treename.Data())<<endl;
 
   vector<EventInfo>vector_eventinfo;
-  
+
+  //if( strfile_mcPOT.Contains("numi") ) cout<<" ################ "<<strfile_mc_e2e<<endl;
+
   for(int ientry=0; ientry<entries; ientry++) {
     tree_obj->GetEntry(ientry);
+
+    if( strfile_mcPOT.Contains("numi") ) e2e_baseline = 680;// hhack
+    //if( strfile_mcPOT.Contains("numi") && strfile_mc_e2e.Contains("appnue")) e2e_baseline = 680;// hhack
+    //e2e_baseline = 680;
+
     EventInfo eventinfo;
     eventinfo.e2e_pdg = e2e_pdg;
     //eventinfo.e2e_flag_FC = e2e_flag_FC;
@@ -1059,7 +978,7 @@ void TOsc::Set_oscillation_base()
 
   matrix_oscillation_base_oldworld_pred = matrix_default_oldworld_pred;
 
-  TString str_dirbase = "./data_inputs/note_data/";
+  TString str_dirbase = "./data_inputs/yyyd_BNBplusNuMI_OSC/";
   
   ///////////////////
   

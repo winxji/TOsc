@@ -16,11 +16,11 @@ namespace Configure_Osc
   TString default_detector_dir = "./data_inputs/newdir_BNBNuMI_appnue_cv_cov_list/DetVar/";
   */
   
-  TString default_cv_file      = "./data_inputs/note_data/merge.root";
-  TString default_dirtadd_file = "./data_inputs/note_data/merge.root";
-  TString default_mcstat_file  = "./data_inputs/note_data/mc_stat/0.log";// mc_stat from on oscillation    
-  TString default_fluxXs_dir   = "./data_inputs/note_data/XsFlux_edit/";// hack flux for NuMI
-  TString default_detector_dir = "./data_inputs/note_data/DetVar_edit/";// hack oscillation to use the intrinsic  
+  TString default_cv_file      = "./data_inputs/yyyd_BNBplusNuMI_OSC/merge.root";
+  TString default_dirtadd_file = "./data_inputs/yyyd_BNBplusNuMI_OSC/merge.root";
+  TString default_mcstat_file  = "./data_inputs/yyyd_BNBplusNuMI_OSC/mc_stat/0.log";// mc_stat from on oscillation    
+  TString default_fluxXs_dir   = "./data_inputs/yyyd_BNBplusNuMI_OSC/XsFlux_edit/";// hack flux for NuMI
+  TString default_detector_dir = "./data_inputs/yyyd_BNBplusNuMI_OSC/DetVar_edit/";// hack oscillation to use the intrinsic  
   
   ///////////////////////////
 

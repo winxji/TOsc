@@ -135,7 +135,7 @@ void plot_CLs()
   //////////////////////////////////////////////////////////////////////////////////////// Draw style
   
   gStyle->SetOptStat(0);
-  //gStyle->SetPalette(kBird);
+  gStyle->SetPalette(kBird);
 
   double snWidth = 2;
 
@@ -201,6 +201,10 @@ void plot_CLs()
 
 
   file_roostr = "./tresult_note/sum_BNBonly_numuDISonly_fix470m.dat";
+  file_roostr = "./tresult_note/sum_BNBonly_numuDISonly.dat";
+  
+  //file_roostr = "./tresult_note/sum_BNBonly_nueDisonly.dat";
+
   
   int bins_theta = 60;
   int bins_dm2   = 60;
@@ -278,6 +282,10 @@ void plot_CLs()
     h2_space_pred_2sigma_plus->SetBinContent( theta, dm2, CL_pred_2sigma_plus );
     h2_space_pred_2sigma_minus->SetBinContent( theta, dm2, CL_pred_2sigma_minus );
 
+    if( theta==1 && dm2==1) {
+      cout<<CL_data<<"\t"<<CL_pred<<"\t"<<CL_pred_1sigma_minus<<"\t"<<CL_pred_2sigma_minus<<endl;
+    }
+    
     h2_wilk_chi2_pred->SetBinContent(theta, dm2, chi2_3v_4vAsimov);
     //double pvalue = TMath::Prob(chi2_3v_4vAsimov, 2); // wrong
     double pvalue = TMath::Prob(chi2_4v_3vAsimov, 2);// right
@@ -289,6 +297,9 @@ void plot_CLs()
 
   int index = 0;
   
+  // h2_space_pred_1sigma_minus->SaveAs("h2_space_pred_1sigma_minus.root");
+  // h2_space_pred_1sigma_plus->SaveAs("h2_space_pred_1sigma_plus.root");
+    
   ////////////////////////////////////////////////////////////
   
   index++;
@@ -357,6 +368,31 @@ void plot_CLs()
   }
   func_get_contours( h2_space_pred_2sigma_minus, gh_CLs_pred_2sigma_minus, index);
 
+
+  //////////////////////
+
+  for(int idx=0; idx<gh_CLs_pred[1]->GetN(); idx++) {
+     double tt, dm2;
+     gh_CLs_pred[1]->GetPoint(idx, tt, dm2);
+     cout<<idx<<"\t CV \t"<<tt<<"\t"<<dm2<<endl;
+   }
+
+  // cout<<endl;
+  
+  // for(int idx=0; idx<gh_CLs_pred_1sigma_minus[1]->GetN(); idx++) {
+  //   double tt, dm2;
+  //   gh_CLs_pred_1sigma_minus[1]->GetPoint(idx, tt, dm2);
+  //   cout<<idx<<"1sigma  \t"<<tt<<"\t"<<dm2<<endl;
+  // }
+
+  // cout<<endl;
+  
+  // for(int idx=0; idx<gh_CLs_pred_2sigma_minus[1]->GetN(); idx++) {
+  //   double tt, dm2;
+  //   gh_CLs_pred_2sigma_minus[1]->GetPoint(idx, tt, dm2);
+  //   cout<<idx<<"2sigma \t"<<tt<<"\t"<<dm2<<endl;
+  // }  
+  
   ////////////////////////////////////////////////////////////
 
   TGraph *gh_contour_1sigma[Ncontour];
@@ -539,6 +575,19 @@ void plot_CLs()
      
   //gh_n4new->Draw("same p");
 
+  ////////////////////////////////////////////////////////////
+
+  // roostr = "canv_h2_space_pred_1sigma_minus";
+  // TCanvas *canv_h2_space_pred_1sigma_minus = new TCanvas(roostr, roostr, 900, 650);
+  // h2_space_pred_1sigma_minus->Draw("colz");
+  
+  // roostr = "canv_h2_space_pred_2sigma_minus";
+  // TCanvas *canv_h2_space_pred_2sigma_minus = new TCanvas(roostr, roostr, 900, 650);
+  // h2_space_pred_2sigma_minus->Draw("colz");
+
+  // cout<<h2_space_pred_1sigma_minus->GetBinContent(1,1)<<endl;
+  // cout<<h2_space_pred_1sigma_minus->GetBinContent(60,60)<<endl;
+  
   //////////////////////////////////////////////////////
 
   TFile *roofile = new TFile("za_roofile_CL.root", "recreate");
